@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#19191e">
+  <meta name="description" content="Izzy — Discord bot developer, programmer, and website builder.">
+  <title>Izzy — Developer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="boot" aria-hidden="true"><span>IZZY</span><i></i><small>INITIALIZING PORTFOLIO</small></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="header-wrap">
+    <nav class="header-pill" aria-label="Main navigation">
+      <a class="home-orb magnetic" href="#home" aria-label="Home"><span>IZ</span></a>
+      <div class="header-rule"></div>
+      <div class="header-links">
+        <a href="#about">About</a><a href="#stack">Stack</a><a href="#discord">Discord</a>
+      </div>
+      <div class="presence-mini"><i id="navDot"></i><span id="navStatus">syncing</span></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <canvas id="scene" aria-hidden="true"></canvas>
+      <div class="scene-vignette" aria-hidden="true"></div>
+      <div class="hero-system"><span>PORTFOLIO / 2026</span><span>DISCORD DEVELOPER</span><span>SYS.1313630076809510975</span></div>
+      <div class="hero-content">
+        <div class="hero-identity reveal">
+          <p class="micro-label">HELLO, I'M</p>
+          <h1 class="glitch" data-text="IZZY">IZZY</h1>
+          <p class="hero-tagline">PROGRAMMER&nbsp; · &nbsp;DISCORD BOTS&nbsp; · &nbsp;WEB</p>
+          <button class="explore magnetic" data-scroll="#about"><span>SCROLL TO EXPLORE</span><b>↓</b></button>
+        </div>
+        <div class="hero-menu reveal" aria-label="Section menu">
+          <p>INDEX</p>
+          <a href="#about" class="menu-item active"><i></i><span>ABOUT</span><small>01</small></a>
+          <a href="#stack" class="menu-item"><i></i><span>STACK</span><small>02</small></a>
+          <a href="#discord" class="menu-item"><i></i><span>DISCORD</span><small>03</small></a>
+          <a href="#contact" class="menu-item"><i></i><span>CONTACT</span><small>04</small></a>
+        </div>
+      </div>
+      <div class="hero-corner"><span>001</span><i></i><span>V2.0</span></div>
+    </section>
+
+    <section class="page-section about" id="about">
+      <div class="section-label reveal"><i></i><span>01 / ABOUT ME</span></div>
+      <div class="about-layout">
+        <div class="about-title reveal"><p>HEY, I'M</p><h2>IZZY<span>.</span></h2></div>
+        <div class="about-copy reveal">
+          <blockquote>“I luv cats! And i love<br>to program alott”</blockquote>
+          <p>I build Discord bots, websites, and systems that make communities more useful and fun. Most of my work lives somewhere between a weird idea and a project I absolutely had to bring to life.</p>
+          <div class="about-specs">
+            <div><span>FOCUS</span><b>Discord development</b></div>
+            <div><span>BUILDING WITH</span><b>JavaScript + Python</b></div>
+            <div><span>DISCORD</span><b>izzy.js</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section stack" id="stack">
+      <div class="section-label reveal"><i></i><span>02 / TECH STACK</span></div>
+      <div class="section-heading reveal"><div><p>TOOLS I USE TO</p><h2>MAKE THINGS.</h2></div><span>My everyday stack for building bots,<br>APIs, databases, and websites.</span></div>
+      <div class="stack-list">
+        <article class="stack-row reveal tilt"><span class="row-num">01</span><h3>LANGUAGES</h3><div class="row-items"><span>Python</span><span>JavaScript</span><span>HTML</span></div><b>↗</b></article>
+        <article class="stack-row reveal tilt"><span class="row-num">02</span><h3>DISCORD</h3><div class="row-items"><span>Discord.js</span><span>discord.py</span></div><b>↗</b></article>
+        <article class="stack-row reveal tilt"><span class="row-num">03</span><h3>DATA & APIS</h3><div class="row-items"><span>SQLite</span><span>REST APIs</span></div><b>↗</b></article>
+        <article class="stack-row reveal tilt"><span class="row-num">04</span><h3>TOOLS</h3><div class="row-items"><span>GitHub</span><span>PyCharm</span><span>JetBrains</span></div><b>↗</b></article>
+      </div>
+      <div class="tech-marquee" aria-hidden="true"><div>JAVASCRIPT <i>◆</i> DISCORD.JS <i>◆</i> PYTHON <i>◆</i> DISCORD.PY <i>◆</i> HTML <i>◆</i> SQLITE <i>◆</i> GITHUB <i>◆</i>&nbsp;</div><div>JAVASCRIPT <i>◆</i> DISCORD.JS <i>◆</i> PYTHON <i>◆</i> DISCORD.PY <i>◆</i> HTML <i>◆</i> SQLITE <i>◆</i> GITHUB <i>◆</i>&nbsp;</div></div>
+    </section>
+
+    <section class="page-section discord" id="discord">
+      <div class="section-label reveal"><i></i><span>03 / LIVE DISCORD</span></div>
+      <div class="discord-layout">
+        <div class="discord-copy reveal"><p>CONNECTED THROUGH LANDYARD</p><h2>MY STATUS,<br><em>RIGHT NOW.</em></h2><span>Live profile, avatar decoration, nameplate, status, and current activity.</span></div>
+        <article class="profile-card reveal tilt" id="profileCard">
+          <video class="nameplate" id="nameplate" autoplay muted loop playsinline aria-hidden="true"></video>
+          <div class="card-scan" aria-hidden="true"></div>
+          <div class="profile-head">
+            <div class="avatar-shell"><img id="avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Izzy's Discord avatar"><img id="decoration" alt="" aria-hidden="true"><i id="statusDot"></i></div>
+            <div class="profile-names"><strong id="displayName">Izzy</strong><span id="username">@izzy.js</span></div>
+            <small><i></i> LIVE</small>
+          </div>
+          <div class="card-rule"></div>
+          <div class="activity"><label>CURRENTLY</label><strong id="activityName">Connecting…</strong><span id="activityDetails">Requesting presence</span></div>
+          <button class="copy-discord magnetic" id="copyDiscord"><span>izzy.js</span><b>COPY</b></button>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="contact-meta reveal"><span>04 / CONTACT</span><span id="clock">00:00:00 EST</span></div>
+      <div class="contact-center reveal"><p>WANT TO BUILD SOMETHING?</p><a href="https://discord.com/users/1313630076809510975" target="_blank" rel="noreferrer">LET'S TALK <b>↗</b></a></div>
+      <footer><span>© <span id="year"></span> IZZY</span><a href="https://github.com/izzydizzyy" target="_blank" rel="noreferrer">GITHUB ↗</a><span>MADE WITH CODE + CATS</span></footer>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
