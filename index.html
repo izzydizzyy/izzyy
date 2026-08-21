@@ -1,0 +1,1708 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#080c13" />
+  <meta name="description" content="izzy — programmer, discord bot developer, and website builder." />
+  <title>izzy.</title>
+
+  <link rel="preconnect" href="https://api.lanyard.rest">
+  <link rel="preconnect" href="https://cdn.discordapp.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <style>
+    :root {
+      --bg: #070a10;
+      --bg-2: #0c121d;
+      --text: #f1f3f6;
+      --muted: #959eaa;
+      --faint: #66707d;
+      --dim: #4f5967;
+      --line: rgba(255,255,255,.095);
+      --line-soft: rgba(255,255,255,.055);
+      --cyan: #38cfe0;
+      --green: #3ed07b;
+      --yellow: #f3c45a;
+      --red: #ef6671;
+      --mx: 50%;
+      --my: 25%;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+      background: rgba(56,207,224,.22);
+      color: #fff;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .background {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 100vh;
+      z-index: -5;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(72,124,174,.14), transparent 26%),
+        radial-gradient(circle at 78% -5%, rgba(79,133,192,.25), transparent 28%),
+        radial-gradient(circle at 26% 7%, rgba(58,106,150,.19), transparent 31%),
+        linear-gradient(180deg, #0e1b2d 0%, #0a111c 49%, #070a10 94%);
+    }
+
+    .background::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 86%);
+    }
+
+    .background::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(4,8,14,.08), rgba(4,8,14,.22) 48%, rgba(4,8,14,.56)),
+        linear-gradient(180deg, rgba(4,8,14,.02), rgba(4,8,14,.22) 55%, #070a10 97%);
+    }
+
+    .beam,
+    .orb,
+    .ghost-shape,
+    .haze {
+      position: absolute;
+      will-change: transform;
+    }
+
+    .beam {
+      top: -15%;
+      width: 70px;
+      height: 88%;
+      border-radius: 999px;
+      transform: rotate(8deg);
+      filter: blur(14px);
+      background: linear-gradient(180deg, rgba(185,221,255,.30), rgba(91,137,181,.07), transparent);
+    }
+
+    .beam.one { left: 18%; }
+    .beam.two { left: 43%; width: 42px; opacity: .55; }
+    .beam.three { right: 18%; width: 118px; opacity: .27; }
+
+    .orb {
+      width: 500px;
+      height: 318px;
+      right: 4%;
+      top: 2%;
+      border-radius: 52% 48% 55% 45%;
+      border: 2px solid rgba(128,168,211,.10);
+      box-shadow: inset 0 0 86px rgba(126,170,219,.08);
+      transform: rotate(-17deg);
+      filter: blur(9px);
+    }
+
+    .ghost-shape {
+      width: 650px;
+      height: 270px;
+      left: 24%;
+      top: 31%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 41% 44%, rgba(147,172,201,.16), transparent 24%),
+        linear-gradient(150deg, rgba(38,63,90,.20), rgba(7,13,21,.02));
+      transform: rotate(-5deg);
+      filter: blur(24px);
+    }
+
+    .haze {
+      width: 700px;
+      height: 300px;
+      right: -11%;
+      top: 39%;
+      border-radius: 50%;
+      background: rgba(34,55,80,.13);
+      filter: blur(65px);
+      transform: rotate(-12deg);
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      opacity: .09;
+      background-image: radial-gradient(rgba(255,255,255,.22) .45px, transparent .45px);
+      background-size: 4px 4px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.2));
+    }
+
+    .cursor-glow {
+      position: fixed;
+      z-index: -1;
+      width: 340px;
+      height: 340px;
+      left: 0;
+      top: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: .22;
+      filter: blur(44px);
+      background: radial-gradient(circle, rgba(75,138,196,.28), transparent 66%);
+      transform: translate(-50%, -50%);
+      transition: opacity .25s ease;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 64px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 5;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #bbc1ca;
+      font: 700 11px/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      letter-spacing: .34em;
+      text-transform: lowercase;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px rgba(56,207,224,.55);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    nav a {
+      position: relative;
+      color: #747e8b;
+      font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .16em;
+      text-transform: lowercase;
+      transition: color .2s ease;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -7px;
+      height: 1px;
+      background: #a9b2bd;
+      transition: right .2s ease;
+    }
+
+    nav a:hover {
+      color: #d3d8df;
+    }
+
+    nav a:hover::after {
+      right: 0;
+    }
+
+    .hero {
+      min-height: calc(100vh - 80px);
+      padding: 18px 0 84px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .layout {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, .9fr);
+      gap: 84px;
+      align-items: start;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #727c8b;
+      font: 700 9px/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      margin: 1px 0 36px;
+    }
+
+    .eyebrow::before,
+    .section-kicker::before {
+      content: "";
+      width: 30px;
+      height: 1px;
+      background: #596270;
+      opacity: .7;
+    }
+
+    .hero-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      min-height: 108px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      flex: 0 0 auto;
+      width: 84px;
+      height: 84px;
+    }
+
+    .avatar-ring {
+      width: 84px;
+      height: 84px;
+      padding: 3px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #31d4e8, #1e8ebf 70%, #315d86);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08),
+        0 12px 34px rgba(0,0,0,.28);
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+      background: #121821;
+      border: 2px solid rgba(3,8,14,.72);
+    }
+
+    .avatar-decoration {
+      position: absolute;
+      inset: -9px;
+      width: calc(100% + 18px);
+      height: calc(100% + 18px);
+      pointer-events: none;
+      object-fit: contain;
+      display: none;
+    }
+
+    .intro-small {
+      color: var(--muted);
+      font-size: 19px;
+      font-weight: 550;
+      letter-spacing: -.03em;
+      margin-bottom: 2px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(52px, 6.4vw, 74px);
+      line-height: .92;
+      letter-spacing: -.065em;
+      font-weight: 790;
+    }
+
+    .bio {
+      max-width: 660px;
+      margin: 28px 0 21px;
+      color: #a3abb5;
+      font-size: 17px;
+      font-weight: 510;
+      line-height: 1.75;
+      letter-spacing: -.022em;
+    }
+
+    .mini-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      margin-bottom: 25px;
+      color: #66717e;
+      font: 650 10px/1.4 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .045em;
+    }
+
+    .mini-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .mini-meta i {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #535d69;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px 17px;
+      align-items: center;
+      max-width: 690px;
+    }
+
+    .stack-icon {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      opacity: .9;
+      transition: transform .18s ease, opacity .18s ease, filter .18s ease;
+    }
+
+    .stack-icon:hover {
+      transform: translateY(-3px);
+      opacity: 1;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,.28));
+    }
+
+    .stack-icon img {
+      width: 23px;
+      height: 23px;
+      display: block;
+    }
+
+    .stack-icon[data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%) translateY(4px);
+      padding: 6px 8px;
+      border-radius: 5px;
+      color: #dde3ec;
+      background: rgba(15,18,24,.94);
+      border: 1px solid rgba(255,255,255,.11);
+      box-shadow: 0 8px 24px rgba(0,0,0,.26);
+      font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease, transform .15s ease;
+    }
+
+    .stack-icon:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .side {
+      padding-top: 1px;
+    }
+
+    .presence {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 22px;
+      color: #7f8996;
+      font: 700 10px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .15em;
+      text-transform: lowercase;
+      margin-bottom: 5px;
+    }
+
+    .presence-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(67,209,124,.55);
+    }
+
+    .presence.idle .presence-dot {
+      background: var(--yellow);
+      box-shadow: 0 0 12px rgba(243,196,90,.45);
+    }
+
+    .presence.dnd .presence-dot {
+      background: var(--red);
+      box-shadow: 0 0 12px rgba(239,102,113,.42);
+    }
+
+    .presence.offline .presence-dot {
+      background: #626b77;
+      box-shadow: none;
+    }
+
+    .custom-status {
+      min-height: 20px;
+      margin: 0 0 8px 14px;
+      color: #565f6c;
+      font: 600 10px/1.45 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .035em;
+    }
+
+    .social-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .social {
+      min-height: 48px;
+      display: grid;
+      grid-template-columns: 22px 98px 14px 1fr;
+      align-items: center;
+      gap: 5px;
+      color: #717b89;
+      border-bottom: 1px solid var(--line);
+      transition: color .18s ease, transform .18s ease, border-color .18s ease;
+    }
+
+    .social:hover {
+      color: #dfe4eb;
+      transform: translateX(4px);
+      border-color: rgba(255,255,255,.17);
+    }
+
+    .social svg {
+      width: 15px;
+      height: 15px;
+      opacity: .74;
+    }
+
+    .social .label {
+      color: #9aa2ad;
+      font: 650 12px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+    }
+
+    .social .slash {
+      color: #444d59;
+      font: 17px/1 monospace;
+    }
+
+    .social .value {
+      min-width: 0;
+      overflow: hidden;
+      color: #747d89;
+      font-size: 14px;
+      letter-spacing: -.01em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: color .18s ease;
+    }
+
+    .social:hover .value {
+      color: #d1d6de;
+    }
+
+    .activity {
+      display: none;
+      margin-top: 27px;
+      padding-top: 17px;
+      border-top: 1px solid var(--line-soft);
+      min-height: 70px;
+    }
+
+    .activity.show {
+      display: block;
+      animation: fadeUp .35s ease both;
+    }
+
+    .activity-label {
+      margin-bottom: 9px;
+      color: #66717e;
+      font: 700 9px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+
+    .spotify-art {
+      width: 43px;
+      height: 43px;
+      object-fit: cover;
+      border-radius: 6px;
+      float: left;
+      margin-right: 11px;
+      background: #11161f;
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    }
+
+    .activity-name {
+      overflow: hidden;
+      color: #c1c7d0;
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.45;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .activity-detail {
+      overflow: hidden;
+      margin-top: 2px;
+      color: #747f8d;
+      font-size: 12px;
+      line-height: 1.45;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .activity-progress {
+      display: none;
+      height: 2px;
+      margin: 10px 0 0 54px;
+      overflow: hidden;
+      background: rgba(255,255,255,.08);
+    }
+
+    .activity-progress.show {
+      display: block;
+    }
+
+    .activity-progress > span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: rgba(255,255,255,.45);
+      transition: width .8s linear;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      color: #4f5967;
+      font: 700 8px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint span {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, #5b6674, transparent);
+      animation: scrollPulse 1.8s ease-in-out infinite;
+    }
+
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 108px 0;
+      border-top: 1px solid rgba(255,255,255,.045);
+      background:
+        radial-gradient(circle at 85% 20%, rgba(47,79,109,.06), transparent 28%),
+        #070a10;
+    }
+
+    .section + .section {
+      padding-top: 90px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 38px;
+    }
+
+    .section-title {
+      margin: 16px 0 0;
+      color: #e5e8ec;
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1;
+      letter-spacing: -.045em;
+      font-weight: 730;
+    }
+
+    .section-note {
+      max-width: 360px;
+      color: #626c79;
+      font: 600 11px/1.65 "SFMono-Regular", Consolas, monospace;
+      text-align: right;
+    }
+
+    .project-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .project {
+      position: relative;
+      display: grid;
+      grid-template-columns: 48px minmax(160px, .7fr) minmax(260px, 1.5fr) 110px 24px;
+      gap: 22px;
+      align-items: center;
+      min-height: 92px;
+      border-bottom: 1px solid var(--line);
+      transition: padding .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    .project::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(90deg, rgba(255,255,255,.025), transparent 72%);
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .project:hover {
+      padding: 0 8px;
+      border-color: rgba(255,255,255,.16);
+    }
+
+    .project:hover::before {
+      opacity: 1;
+    }
+
+    .project-num {
+      color: #4f5965;
+      font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+    }
+
+    .project-name {
+      color: #cbd0d7;
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: -.025em;
+    }
+
+    .project-desc {
+      max-width: 520px;
+      color: #707a87;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .project-tech {
+      color: #56616f;
+      font: 650 10px/1.5 "SFMono-Regular", Consolas, monospace;
+      text-align: right;
+    }
+
+    .project-arrow {
+      color: #606b79;
+      font-size: 16px;
+      text-align: right;
+      transition: transform .2s ease, color .2s ease;
+    }
+
+    .project:hover .project-arrow {
+      transform: translate(3px, -3px);
+      color: #d3d8df;
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .stack-group {
+      min-height: 205px;
+      padding: 27px 28px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stack-group h3 {
+      margin: 0 0 20px;
+      color: #919ba8;
+      font: 700 10px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .stack-group p {
+      margin: 0;
+      color: #6b7582;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .stack-group strong {
+      color: #c0c6ce;
+      font-weight: 570;
+    }
+
+    .now-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 52px;
+      align-items: start;
+    }
+
+    .now-copy {
+      color: #838d9a;
+      font-size: 16px;
+      line-height: 1.8;
+      letter-spacing: -.015em;
+    }
+
+    .now-copy strong {
+      color: #d7dbe1;
+      font-weight: 620;
+    }
+
+    .discord-live {
+      border-top: 1px solid var(--line);
+    }
+
+    .live-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      min-height: 47px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .live-row .key {
+      color: #626c79;
+      font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+    }
+
+    .live-row .val {
+      overflow: hidden;
+      color: #a5adb8;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    footer {
+      padding: 45px 0 55px;
+      border-top: 1px solid rgba(255,255,255,.05);
+      background: #06090e;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      align-items: center;
+      color: #4f5966;
+      font: 650 9px/1.6 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+    }
+
+    .footer-row a {
+      color: #687381;
+      transition: color .2s ease;
+    }
+
+    .footer-row a:hover {
+      color: #b7bec7;
+    }
+
+    .tiny {
+      position: fixed;
+      right: 20px;
+      bottom: 14px;
+      z-index: 20;
+      color: #48515e;
+      font: 9px/1.2 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .07em;
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .7s ease, transform .7s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: .3; transform: scaleY(.65); transform-origin: top; }
+      50% { opacity: .8; transform: scaleY(1); transform-origin: top; }
+    }
+
+    @media (max-width: 900px) {
+      .shell {
+        width: min(720px, calc(100% - 40px));
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 58px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-bottom: 110px;
+      }
+
+      .side,
+      .bio {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .scroll-hint {
+        display: none;
+      }
+
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .section-note {
+        text-align: left;
+      }
+
+      .project {
+        grid-template-columns: 38px minmax(130px,.65fr) 1.4fr 24px;
+      }
+
+      .project-tech {
+        display: none;
+      }
+
+      .stack-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .now-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .shell {
+        width: min(100% - 28px, 720px);
+      }
+
+      .topbar {
+        height: 68px;
+      }
+
+      nav {
+        gap: 16px;
+      }
+
+      nav a:nth-child(2) {
+        display: none;
+      }
+
+      .brand {
+        letter-spacing: .22em;
+      }
+
+      .hero {
+        padding-top: 8px;
+      }
+
+      .hero-row {
+        gap: 16px;
+      }
+
+      .avatar-wrap,
+      .avatar-ring {
+        width: 68px;
+        height: 68px;
+      }
+
+      .intro-small {
+        font-size: 15px;
+      }
+
+      h1 {
+        font-size: clamp(43px, 15vw, 58px);
+      }
+
+      .bio {
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .social {
+        grid-template-columns: 20px 82px 12px 1fr;
+      }
+
+      .section {
+        padding: 80px 0;
+      }
+
+      .project {
+        grid-template-columns: 32px 1fr 20px;
+        gap: 12px;
+        min-height: 96px;
+      }
+
+      .project-desc,
+      .project-tech {
+        display: none;
+      }
+
+      .project-name {
+        font-size: 15px;
+      }
+
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .cursor-glow {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .cursor-glow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="page">
+    <div class="background" id="background" aria-hidden="true">
+      <div class="beam one" data-depth="10"></div>
+      <div class="beam two" data-depth="16"></div>
+      <div class="beam three" data-depth="7"></div>
+      <div class="orb" data-depth="14"></div>
+      <div class="ghost-shape" data-depth="9"></div>
+      <div class="haze" data-depth="5"></div>
+    </div>
+
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="#about">
+          <span class="brand-dot"></span>
+          <span>izzy</span>
+        </a>
+
+        <nav aria-label="Main navigation">
+          <a href="#about">about</a>
+          <a href="#work">work</a>
+          <a href="#stack">stack</a>
+          <a href="#now">now</a>
+        </nav>
+      </header>
+
+      <section class="hero" id="about">
+        <div class="layout">
+          <section>
+            <div class="eyebrow">about me</div>
+
+            <div class="hero-row">
+              <div class="avatar-wrap">
+                <div class="avatar-ring">
+                  <img
+                    class="avatar"
+                    id="avatar"
+                    alt="Discord avatar"
+                    src="https://cdn.discordapp.com/embed/avatars/0.png"
+                  />
+                </div>
+                <img class="avatar-decoration" id="avatarDecoration" alt="" />
+              </div>
+
+              <div>
+                <div class="intro-small">hey, i'm</div>
+                <h1 id="displayName">izzy.</h1>
+              </div>
+            </div>
+
+            <p class="bio">
+              i luv cats! and i love to program alott. i build discord bots,
+              websites, and random projects that sound cool at 2am.
+            </p>
+
+            <div class="mini-meta">
+              <span><i></i> discord bot developer</span>
+              <span><i></i> website builder</span>
+              <span><i></i> programmer</span>
+            </div>
+
+            <div class="stack" aria-label="Tech stack">
+              <span class="stack-icon" data-tip="JavaScript">
+                <img alt="JavaScript" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="APIs">
+                <img alt="APIs" src="https://api.iconify.design/mdi:api.svg?color=%23f4c542">
+              </span>
+
+              <span class="stack-icon" data-tip="Python">
+                <img alt="Python" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="Node.js">
+                <img alt="Node.js" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="discord.js">
+                <img alt="discord.js" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/discordjs/discordjs-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="discord.py">
+                <img alt="discord.py" src="https://api.iconify.design/simple-icons:discord.svg?color=%235865F2">
+              </span>
+
+              <span class="stack-icon" data-tip="HTML">
+                <img alt="HTML" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="Discord">
+                <img alt="Discord" src="https://api.iconify.design/selfhst:discord.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="SQLite">
+                <img alt="SQLite" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="Git">
+                <img alt="Git" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="GitHub">
+                <img alt="GitHub" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="PyCharm">
+                <img alt="PyCharm" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pycharm/pycharm-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="JetBrains">
+                <img alt="JetBrains" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jetbrains/jetbrains-original.svg">
+              </span>
+
+              <span class="stack-icon" data-tip="REST APIs">
+                <img alt="REST APIs" src="https://api.iconify.design/mdi:api.svg?color=%236fd3ff">
+              </span>
+            </div>
+          </section>
+
+          <aside class="side">
+            <div class="presence" id="presence">
+              <span class="presence-dot"></span>
+              <span id="presenceText">loading discord status</span>
+            </div>
+
+            <div class="custom-status" id="customStatus"></div>
+
+            <div class="social-list">
+              <a class="social" href="https://github.com/izzydizzyy" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.2c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.04 1.78 2.72 1.26 3.39.96.1-.75.4-1.26.73-1.55-2.57-.29-5.28-1.29-5.28-5.72 0-1.26.45-2.3 1.2-3.11-.12-.29-.52-1.47.11-3.07 0 0 .98-.31 3.16 1.19a10.9 10.9 0 0 1 5.75 0c2.18-1.5 3.16-1.2 3.16-1.2.63 1.6.23 2.79.11 3.08.75.81 1.2 1.84 1.2 3.1 0 4.45-2.72 5.43-5.3 5.72.42.36.78 1.07.78 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/>
+                </svg>
+                <span class="label">github</span>
+                <span class="slash">/</span>
+                <span class="value">izzydizzyy</span>
+              </a>
+
+              <a class="social" href="https://izzyy.me" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M3.5 12h17M12 3c2.4 2.5 3.7 5.5 3.7 9S14.4 18.5 12 21M12 3C9.6 5.5 8.3 8.5 8.3 12S9.6 18.5 12 21"/>
+                </svg>
+                <span class="label">website</span>
+                <span class="slash">/</span>
+                <span class="value">izzyy.me</span>
+              </a>
+
+              <div class="social">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M19.6 5.34A16.9 16.9 0 0 0 15.44 4l-.52 1.07a15.5 15.5 0 0 0-5.84 0L8.56 4A17 17 0 0 0 4.4 5.35C1.77 9.25 1.06 13.06 1.42 16.8a16.8 16.8 0 0 0 5.1 2.58l1.23-1.69c-.68-.25-1.33-.57-1.93-.95l.47-.36c3.72 1.72 7.76 1.72 11.44 0l.47.36c-.61.38-1.26.7-1.94.95l1.23 1.69a16.7 16.7 0 0 0 5.1-2.58c.42-4.33-.72-8.1-2.99-11.46ZM8.5 14.52c-1.12 0-2.04-1.02-2.04-2.27S7.36 10 8.5 10c1.15 0 2.06 1.03 2.04 2.26 0 1.24-.9 2.26-2.04 2.26Zm7 0c-1.12 0-2.04-1.02-2.04-2.27S14.36 10 15.5 10c1.15 0 2.06 1.03 2.04 2.26 0 1.24-.89 2.26-2.04 2.26Z"/>
+                </svg>
+                <span class="label">discord</span>
+                <span class="slash">/</span>
+                <span class="value" id="discordHandle">izzy.js</span>
+              </div>
+
+              <a class="social" href="mailto:izzyyggs@gmail.com">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/>
+                  <path d="m4.5 7 7.5 5 7.5-5"/>
+                </svg>
+                <span class="label">email</span>
+                <span class="slash">/</span>
+                <span class="value">izzyyggs@gmail.com</span>
+              </a>
+            </div>
+
+            <div class="activity" id="activity">
+              <div class="activity-label" id="activityLabel">currently doing</div>
+              <img class="spotify-art" id="spotifyArt" alt="" />
+              <div class="activity-name" id="activityName"></div>
+              <div class="activity-detail" id="activityDetail"></div>
+              <div class="activity-progress" id="activityProgress">
+                <span id="activityProgressBar"></span>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <a class="scroll-hint" href="#work" aria-label="Scroll to work">
+          scroll
+          <span></span>
+        </a>
+      </section>
+    </div>
+
+    <section class="section" id="work">
+      <div class="shell reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">selected work</div>
+            <h2 class="section-title">stuff i've been building.</h2>
+          </div>
+          <div class="section-note">
+            mostly discord bots, web experiments, and projects i thought sounded way too cool not to make.
+          </div>
+        </div>
+
+        <div class="project-list">
+          <div class="project">
+            <span class="project-num">01</span>
+            <span class="project-name">Replay</span>
+            <span class="project-desc">discord analytics that turns server activity, vc time, reactions, games, and presence into actual stats.</span>
+            <span class="project-tech">python / discord.py</span>
+            <span class="project-arrow">↗</span>
+          </div>
+
+          <div class="project">
+            <span class="project-num">02</span>
+            <span class="project-name">MoneyTalks</span>
+            <span class="project-desc">an economy bot built around earning, risk, leaderboards, games, and a full discord-native economy.</span>
+            <span class="project-tech">python / sqlite</span>
+            <span class="project-arrow">↗</span>
+          </div>
+
+          <div class="project">
+            <span class="project-num">03</span>
+            <span class="project-name">Bread</span>
+            <span class="project-desc">a moderation-focused voice bot experimenting with local speech recognition and smarter vc moderation.</span>
+            <span class="project-tech">python / whisper</span>
+            <span class="project-arrow">↗</span>
+          </div>
+
+          <div class="project">
+            <span class="project-num">04</span>
+            <span class="project-name">RoleRNG</span>
+            <span class="project-desc">a collectible role rng system with rolling, inventories, equipping, indexes, and leaderboards.</span>
+            <span class="project-tech">discord.py / sqlite</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="stack">
+      <div class="shell reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">toolbox</div>
+            <h2 class="section-title">what i build with.</h2>
+          </div>
+          <div class="section-note">
+            no giant percentage bars. just the stuff i actually use.
+          </div>
+        </div>
+
+        <div class="stack-grid">
+          <div class="stack-group">
+            <h3>languages</h3>
+            <p>
+              <strong>Python</strong><br>
+              <strong>JavaScript</strong><br>
+              HTML<br>
+              JSON
+            </p>
+          </div>
+
+          <div class="stack-group">
+            <h3>discord</h3>
+            <p>
+              <strong>discord.py</strong><br>
+              <strong>discord.js</strong><br>
+              Discord APIs<br>
+              slash + prefix commands
+            </p>
+          </div>
+
+          <div class="stack-group">
+            <h3>backend + data</h3>
+            <p>
+              <strong>REST APIs</strong><br>
+              SQLite<br>
+              Node.js<br>
+              HTTP / JSON
+            </p>
+          </div>
+
+          <div class="stack-group">
+            <h3>development</h3>
+            <p>
+              <strong>PyCharm</strong><br>
+              JetBrains<br>
+              Git<br>
+              GitHub
+            </p>
+          </div>
+
+          <div class="stack-group">
+            <h3>bot systems</h3>
+            <p>
+              moderation systems<br>
+              economy systems<br>
+              presence tracking<br>
+              voice features
+            </p>
+          </div>
+
+          <div class="stack-group">
+            <h3>web</h3>
+            <p>
+              HTML<br>
+              JavaScript<br>
+              API integrations<br>
+              responsive UI
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="now">
+      <div class="shell reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">right now</div>
+            <h2 class="section-title">live from discord.</h2>
+          </div>
+          <div class="section-note">
+            pulled from lanyard. if i'm online, playing something, or listening to spotify, this updates itself.
+          </div>
+        </div>
+
+        <div class="now-strip">
+          <div class="now-copy">
+            <strong>this page is connected to my discord presence.</strong>
+            the profile at the top isn't fake demo data — it can update from my current discord account using lanyard.
+          </div>
+
+          <div class="discord-live">
+            <div class="live-row">
+              <span class="key">status</span>
+              <span class="val" id="liveStatus">loading...</span>
+            </div>
+            <div class="live-row">
+              <span class="key">username</span>
+              <span class="val" id="liveUsername">loading...</span>
+            </div>
+            <div class="live-row">
+              <span class="key">activity</span>
+              <span class="val" id="liveActivity">loading...</span>
+            </div>
+            <div class="live-row">
+              <span class="key">spotify</span>
+              <span class="val" id="liveSpotify">loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="shell footer-row">
+        <span>© <span id="year"></span> izzy — built by hand.</span>
+        <span>
+          <a href="#about">back to top ↑</a>
+        </span>
+      </div>
+    </footer>
+
+    <div class="tiny" id="connectionText">connecting to lanyard</div>
+  </main>
+
+  <script>
+    const DISCORD_ID = "1313630076809510975";
+    const API_URL = `https://api.lanyard.rest/v1/users/${DISCORD_ID}`;
+    const SOCKET_URL = "wss://api.lanyard.rest/socket";
+
+    const $ = id => document.getElementById(id);
+
+    const avatar = $("avatar");
+    const avatarDecoration = $("avatarDecoration");
+    const displayName = $("displayName");
+    const discordHandle = $("discordHandle");
+    const presence = $("presence");
+    const presenceText = $("presenceText");
+    const customStatus = $("customStatus");
+
+    const activity = $("activity");
+    const activityLabel = $("activityLabel");
+    const activityName = $("activityName");
+    const activityDetail = $("activityDetail");
+    const spotifyArt = $("spotifyArt");
+    const activityProgress = $("activityProgress");
+    const activityProgressBar = $("activityProgressBar");
+
+    const liveStatus = $("liveStatus");
+    const liveUsername = $("liveUsername");
+    const liveActivity = $("liveActivity");
+    const liveSpotify = $("liveSpotify");
+    const connectionText = $("connectionText");
+
+    let lastPresenceData = null;
+    let spotifyTimestamps = null;
+    let progressTimer = null;
+    let heartbeatTimer = null;
+    let socket = null;
+    let reconnectTimer = null;
+
+    $("year").textContent = new Date().getFullYear();
+
+    function getAvatarURL(user) {
+      if (!user?.avatar) {
+        let fallback = 0;
+        try {
+          fallback = Number(BigInt(user?.id || DISCORD_ID) >> 22n) % 6;
+        } catch {}
+        return `https://cdn.discordapp.com/embed/avatars/${fallback}.png`;
+      }
+
+      const ext = user.avatar.startsWith("a_") ? "gif" : "png";
+      return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256`;
+    }
+
+    function getDecorationURL(user) {
+      const asset = user?.avatar_decoration_data?.asset;
+      if (!asset) return null;
+      return `https://cdn.discordapp.com/avatar-decoration-presets/${asset}.png?size=240`;
+    }
+
+    function setPresence(status) {
+      const normalized = ["online", "idle", "dnd", "offline"].includes(status)
+        ? status
+        : "offline";
+
+      presence.className = `presence ${normalized}`;
+
+      const labels = {
+        online: "online on discord",
+        idle: "idle on discord",
+        dnd: "do not disturb",
+        offline: "offline on discord"
+      };
+
+      presenceText.textContent = labels[normalized];
+      liveStatus.textContent = labels[normalized];
+    }
+
+    function setCustomStatus(data) {
+      const custom = (data.activities || []).find(a => a?.type === 4 || a?.name === "Custom Status");
+      const text = custom?.state?.trim() || "";
+      customStatus.textContent = text ? `“${text}”` : "";
+    }
+
+    function getUsefulActivity(data) {
+      const ignored = new Set(["Custom Status", "Spotify"]);
+      return (data.activities || []).find(a => a?.name && !ignored.has(a.name));
+    }
+
+    function updateProgress() {
+      if (!spotifyTimestamps?.start || !spotifyTimestamps?.end) return;
+
+      const now = Date.now();
+      const total = spotifyTimestamps.end - spotifyTimestamps.start;
+      const elapsed = now - spotifyTimestamps.start;
+      const pct = total > 0 ? Math.max(0, Math.min(100, (elapsed / total) * 100)) : 0;
+
+      activityProgressBar.style.width = `${pct}%`;
+    }
+
+    function startSpotifyProgress(spotify) {
+      if (progressTimer) clearInterval(progressTimer);
+      spotifyTimestamps = spotify?.timestamps || null;
+
+      if (spotifyTimestamps?.start && spotifyTimestamps?.end) {
+        activityProgress.classList.add("show");
+        updateProgress();
+        progressTimer = setInterval(updateProgress, 1000);
+      } else {
+        activityProgress.classList.remove("show");
+        activityProgressBar.style.width = "0%";
+      }
+    }
+
+    function setActivity(data) {
+      const spotify = data.spotify;
+      const useful = getUsefulActivity(data);
+
+      if (spotify) {
+        activity.classList.add("show");
+        activityLabel.textContent = "listening on spotify";
+        activityName.textContent = spotify.song || "unknown track";
+        activityDetail.textContent = spotify.artist
+          ? `${spotify.artist}${spotify.album ? ` • ${spotify.album}` : ""}`
+          : "";
+
+        spotifyArt.src = spotify.album_art_url || "";
+        spotifyArt.style.display = spotify.album_art_url ? "block" : "none";
+
+        liveSpotify.textContent = `${spotify.song || "unknown"} — ${spotify.artist || "unknown artist"}`;
+        liveActivity.textContent = useful
+          ? [useful.name, useful.details || useful.state].filter(Boolean).join(" — ")
+          : "nothing else right now";
+
+        startSpotifyProgress(spotify);
+        return;
+      }
+
+      liveSpotify.textContent = "not listening right now";
+      startSpotifyProgress(null);
+
+      if (useful) {
+        activity.classList.add("show");
+        activityLabel.textContent = "currently doing";
+        activityName.textContent = useful.name;
+        activityDetail.textContent = useful.details || useful.state || "";
+        spotifyArt.style.display = "none";
+        liveActivity.textContent = [useful.name, useful.details || useful.state].filter(Boolean).join(" — ");
+        return;
+      }
+
+      activity.classList.remove("show");
+      liveActivity.textContent = "nothing right now";
+    }
+
+    function applyPresenceData(data) {
+      if (!data) return;
+
+      lastPresenceData = data;
+      const user = data.discord_user;
+
+      if (user) {
+        avatar.src = getAvatarURL(user);
+
+        const name = user.global_name || user.display_name || user.username || "izzy";
+        displayName.textContent = `${name.toLowerCase()}.`;
+
+        if (user.username) {
+          discordHandle.textContent = user.username;
+          liveUsername.textContent = user.username;
+        }
+
+        const decorationURL = getDecorationURL(user);
+        if (decorationURL) {
+          avatarDecoration.src = decorationURL;
+          avatarDecoration.style.display = "block";
+        } else {
+          avatarDecoration.style.display = "none";
+        }
+      }
+
+      setPresence(data.discord_status);
+      setCustomStatus(data);
+      setActivity(data);
+    }
+
+    async function fetchPresence() {
+      try {
+        const res = await fetch(API_URL, { cache: "no-store" });
+        const json = await res.json();
+
+        if (!json.success || !json.data) throw new Error("Lanyard returned no data.");
+
+        applyPresenceData(json.data);
+        connectionText.textContent = "lanyard connected";
+      } catch (error) {
+        console.warn("Lanyard REST fetch failed:", error);
+
+        if (!lastPresenceData) {
+          presence.className = "presence offline";
+          presenceText.textContent = "lanyard unavailable";
+          liveStatus.textContent = "unavailable";
+          liveUsername.textContent = "izzy.js";
+          liveActivity.textContent = "unavailable";
+          liveSpotify.textContent = "unavailable";
+        }
+
+        connectionText.textContent = "lanyard reconnecting";
+      }
+    }
+
+    function connectLanyard() {
+      try {
+        socket = new WebSocket(SOCKET_URL);
+      } catch {
+        fetchPresence();
+        return;
+      }
+
+      socket.addEventListener("open", () => {
+        connectionText.textContent = "lanyard connected";
+      });
+
+      socket.addEventListener("message", event => {
+        let msg;
+        try {
+          msg = JSON.parse(event.data);
+        } catch {
+          return;
+        }
+
+        if (msg.op === 1) {
+          const interval = msg.d?.heartbeat_interval || 30000;
+
+          socket.send(JSON.stringify({
+            op: 2,
+            d: { subscribe_to_id: DISCORD_ID }
+          }));
+
+          if (heartbeatTimer) clearInterval(heartbeatTimer);
+          heartbeatTimer = setInterval(() => {
+            if (socket?.readyState === WebSocket.OPEN) {
+              socket.send(JSON.stringify({ op: 3 }));
+            }
+          }, interval);
+
+          return;
+        }
+
+        if (msg.op === 0 && (msg.t === "INIT_STATE" || msg.t === "PRESENCE_UPDATE")) {
+          applyPresenceData(msg.d);
+        }
+      });
+
+      socket.addEventListener("close", () => {
+        connectionText.textContent = "lanyard reconnecting";
+        if (heartbeatTimer) clearInterval(heartbeatTimer);
+        clearTimeout(reconnectTimer);
+        reconnectTimer = setTimeout(connectLanyard, 5000);
+      });
+
+      socket.addEventListener("error", () => {
+        fetchPresence();
+      });
+    }
+
+    fetchPresence();
+    connectLanyard();
+
+    const reveals = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: .13 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    const glow = $("cursorGlow");
+    const bg = $("background");
+    const depthEls = [...document.querySelectorAll("[data-depth]")];
+
+    window.addEventListener("mousemove", e => {
+      const x = e.clientX;
+      const y = e.clientY;
+
+      glow.style.left = `${x}px`;
+      glow.style.top = `${y}px`;
+
+      const xp = x / window.innerWidth;
+      const yp = y / window.innerHeight;
+
+      document.documentElement.style.setProperty("--mx", `${xp * 100}%`);
+      document.documentElement.style.setProperty("--my", `${yp * 100}%`);
+
+      depthEls.forEach(el => {
+        const depth = Number(el.dataset.depth || 0);
+        const dx = (xp - .5) * depth;
+        const dy = (yp - .5) * depth;
+        el.style.translate = `${dx}px ${dy}px`;
+      });
+    });
+
+    document.addEventListener("mouseleave", () => {
+      glow.style.opacity = ".06";
+    });
+
+    document.addEventListener("mouseenter", () => {
+      glow.style.opacity = ".22";
+    });
+  </script>
+</body>
+</html>
