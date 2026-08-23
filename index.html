@@ -104,6 +104,45 @@
         linear-gradient(180deg, rgba(4,8,14,.02), rgba(4,8,14,.22) 55%, #070a10 97%);
     }
 
+    .aurora {
+      position: absolute;
+      inset: -20% -10% auto -10%;
+      height: 130%;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(38% 26% at 20% 18%, rgba(56,207,224,.16), transparent 62%),
+        radial-gradient(30% 22% at 82% 8%, rgba(94,150,220,.20), transparent 60%),
+        radial-gradient(34% 24% at 55% 46%, rgba(62,208,123,.07), transparent 65%);
+      filter: blur(50px) saturate(115%);
+      opacity: .8;
+      mix-blend-mode: screen;
+      animation: auroraDrift 22s ease-in-out infinite alternate;
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .55;
+      background-image:
+        radial-gradient(1.4px 1.4px at 12% 22%, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1.1px 1.1px at 27% 8%, rgba(255,255,255,.6), transparent 60%),
+        radial-gradient(1.6px 1.6px at 41% 34%, rgba(255,255,255,.7), transparent 60%),
+        radial-gradient(1.1px 1.1px at 58% 12%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(1.4px 1.4px at 68% 27%, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(1.1px 1.1px at 77% 6%, rgba(255,255,255,.5), transparent 60%),
+        radial-gradient(1.6px 1.6px at 85% 32%, rgba(255,255,255,.8), transparent 60%),
+        radial-gradient(1.1px 1.1px at 93% 15%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(1.3px 1.3px at 6% 40%, rgba(255,255,255,.6), transparent 60%),
+        radial-gradient(1.2px 1.2px at 49% 22%, rgba(255,255,255,.55), transparent 60%);
+      background-repeat: no-repeat;
+      background-size: 100% 60vh;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+      animation: twinkle 5s ease-in-out infinite alternate;
+    }
+
     .beam,
     .orb,
     .ghost-shape,
@@ -120,11 +159,19 @@
       transform: rotate(8deg);
       filter: blur(14px);
       background: linear-gradient(180deg, rgba(185,221,255,.30), rgba(91,137,181,.07), transparent);
+      animation: beamGlow 7s ease-in-out infinite;
     }
 
     .beam.one { left: 18%; }
-    .beam.two { left: 43%; width: 42px; opacity: .55; }
-    .beam.three { right: 18%; width: 118px; opacity: .27; }
+    .beam.two { left: 43%; width: 42px; opacity: .55; animation-delay: -2.3s; }
+    .beam.three { right: 18%; width: 118px; opacity: .27; animation-delay: -4.6s; }
+    .beam.four {
+      left: 65%;
+      width: 30px;
+      opacity: .32;
+      animation-delay: -1.2s;
+      background: linear-gradient(180deg, rgba(120,220,235,.28), rgba(56,207,224,.06), transparent);
+    }
 
     .orb {
       width: 500px;
@@ -136,6 +183,7 @@
       box-shadow: inset 0 0 86px rgba(126,170,219,.08);
       transform: rotate(-17deg);
       filter: blur(9px);
+      animation: orbFloat 16s ease-in-out infinite;
     }
 
     .ghost-shape {
@@ -149,6 +197,7 @@
         linear-gradient(150deg, rgba(38,63,90,.20), rgba(7,13,21,.02));
       transform: rotate(-5deg);
       filter: blur(24px);
+      animation: ghostFloat 20s ease-in-out infinite;
     }
 
     .haze {
@@ -160,6 +209,38 @@
       background: rgba(34,55,80,.13);
       filter: blur(65px);
       transform: rotate(-12deg);
+      animation: hazeFloat 18s ease-in-out infinite;
+    }
+
+    @keyframes auroraDrift {
+      0% { transform: translate3d(-2%, -2%, 0) rotate(0deg); }
+      50% { transform: translate3d(2%, 3%, 0) rotate(3deg); }
+      100% { transform: translate3d(-3%, 1%, 0) rotate(-2deg); }
+    }
+
+    @keyframes twinkle {
+      0% { opacity: .38; }
+      100% { opacity: .68; }
+    }
+
+    @keyframes beamGlow {
+      0%, 100% { opacity: .85; }
+      50% { opacity: .45; }
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: rotate(-17deg) translate3d(0, 0, 0); }
+      50% { transform: rotate(-14deg) translate3d(-14px, 16px, 0); }
+    }
+
+    @keyframes ghostFloat {
+      0%, 100% { transform: rotate(-5deg) translate3d(0, 0, 0); }
+      50% { transform: rotate(-8deg) translate3d(18px, -12px, 0); }
+    }
+
+    @keyframes hazeFloat {
+      0%, 100% { transform: rotate(-12deg) translate3d(0, 0, 0); }
+      50% { transform: rotate(-9deg) translate3d(-20px, 10px, 0); }
     }
 
     .grain {
@@ -903,12 +984,12 @@
 
       .layout {
         grid-template-columns: 1fr;
-        gap: 58px;
+        gap: 46px;
       }
 
       .hero {
         min-height: auto;
-        padding-bottom: 110px;
+        padding: 12px 0 72px;
       }
 
       .side,
@@ -921,16 +1002,245 @@
         display: none;
       }
 
+      .eyebrow {
+        margin-bottom: 26px;
+      }
+
+      h1 {
+        font-size: clamp(46px, 8.5vw, 66px);
+      }
+
+      .mini-meta {
+        gap: 8px 16px;
+      }
+
+      .stack {
+        gap: 14px 16px;
+      }
+
+      .stack-icon {
+        width: 28px;
+        height: 28px;
+      }
+
+      .stack-icon img {
+        width: 26px;
+        height: 26px;
+      }
+
+      .presence {
+        margin-bottom: 8px;
+      }
+
+      .social {
+        min-height: 54px;
+      }
+
+      .section {
+        padding: 84px 0;
+      }
+
       .section-head {
         grid-template-columns: 1fr;
+        gap: 12px;
       }
 
       .section-note {
         text-align: left;
+        max-width: 100%;
       }
 
       .project {
         grid-template-columns: 38px minmax(130px,.65fr) 1.4fr 24px;
+        gap: 16px;
+        min-height: 100px;
+      }
+
+      .project-tech {
+        display: none;
+      }
+
+      .stack-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stack-group {
+        min-height: 176px;
+        padding: 22px 22px;
+      }
+
+      .now-strip {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .now-copy {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .shell {
+        width: min(100% - 24px, 720px);
+      }
+
+      .topbar {
+        height: 62px;
+      }
+
+      nav {
+        gap: 14px;
+      }
+
+      nav a {
+        font-size: 9px;
+        letter-spacing: .13em;
+      }
+
+      nav a:nth-child(2) {
+        display: none;
+      }
+
+      .brand {
+        font-size: 10px;
+        letter-spacing: .2em;
+      }
+
+      .hero {
+        padding: 6px 0 64px;
+      }
+
+      .eyebrow {
+        margin-bottom: 20px;
+        font-size: 8px;
+        letter-spacing: .28em;
+      }
+
+      .hero-row {
+        gap: 14px;
+        min-height: 0;
+      }
+
+      .avatar-wrap,
+      .avatar-ring {
+        width: 60px;
+        height: 60px;
+      }
+
+      .intro-small {
+        font-size: 14px;
+        margin-bottom: 0;
+      }
+
+      h1 {
+        font-size: clamp(38px, 13.5vw, 52px);
+      }
+
+      .bio {
+        margin: 22px 0 18px;
+        font-size: 14.5px;
+        line-height: 1.7;
+      }
+
+      .mini-meta {
+        gap: 7px 14px;
+        margin-bottom: 22px;
+        font-size: 9px;
+      }
+
+      .stack {
+        gap: 12px 14px;
+      }
+
+      .stack-icon[data-tip]::after {
+        display: none;
+      }
+
+      .side {
+        padding-top: 6px;
+      }
+
+      .presence {
+        font-size: 9px;
+      }
+
+      .custom-status {
+        margin-left: 12px;
+      }
+
+      .social {
+        grid-template-columns: 20px 76px 10px 1fr;
+        min-height: 52px;
+        gap: 4px;
+      }
+
+      .social .label {
+        font-size: 11px;
+      }
+
+      .social .value {
+        font-size: 12.5px;
+      }
+
+      .activity {
+        margin-top: 22px;
+        padding-top: 15px;
+      }
+
+      .section {
+        padding: 64px 0;
+      }
+
+      .section + .section {
+        padding-top: 56px;
+      }
+
+      .section-title {
+        font-size: clamp(26px, 8vw, 34px);
+      }
+
+      .section-note {
+        font-size: 10.5px;
+        line-height: 1.6;
+      }
+
+      .project {
+        grid-template-columns: 1fr 20px;
+        grid-template-rows: auto auto;
+        row-gap: 4px;
+        column-gap: 12px;
+        padding: 16px 0;
+        min-height: 0;
+        align-items: start;
+      }
+
+      .project:hover {
+        padding: 16px 8px;
+      }
+
+      .project-num {
+        display: none;
+      }
+
+      .project-name {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: 16px;
+      }
+
+      .project-arrow {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: start;
+      }
+
+      .project-desc {
+        display: block;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        max-width: 100%;
+        font-size: 12.5px;
+        line-height: 1.6;
       }
 
       .project-tech {
@@ -941,85 +1251,40 @@
         grid-template-columns: 1fr;
       }
 
-      .now-strip {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 580px) {
-      .shell {
-        width: min(100% - 28px, 720px);
+      .stack-group {
+        min-height: 0;
+        padding: 20px 4px;
       }
 
-      .topbar {
-        height: 68px;
+      .stack-group p {
+        line-height: 1.85;
       }
 
-      nav {
-        gap: 16px;
+      .now-copy {
+        font-size: 14.5px;
+        line-height: 1.75;
       }
 
-      nav a:nth-child(2) {
-        display: none;
+      .live-row {
+        grid-template-columns: 90px 1fr;
+        min-height: 42px;
       }
 
-      .brand {
-        letter-spacing: .22em;
-      }
-
-      .hero {
-        padding-top: 8px;
-      }
-
-      .hero-row {
-        gap: 16px;
-      }
-
-      .avatar-wrap,
-      .avatar-ring {
-        width: 68px;
-        height: 68px;
-      }
-
-      .intro-small {
-        font-size: 15px;
-      }
-
-      h1 {
-        font-size: clamp(43px, 15vw, 58px);
-      }
-
-      .bio {
-        font-size: 15px;
-        line-height: 1.65;
-      }
-
-      .social {
-        grid-template-columns: 20px 82px 12px 1fr;
-      }
-
-      .section {
-        padding: 80px 0;
-      }
-
-      .project {
-        grid-template-columns: 32px 1fr 20px;
-        gap: 12px;
-        min-height: 96px;
-      }
-
-      .project-desc,
-      .project-tech {
-        display: none;
-      }
-
-      .project-name {
-        font-size: 15px;
+      .live-row .val {
+        font-size: 12.5px;
+        white-space: normal;
       }
 
       .footer-row {
         align-items: flex-start;
         flex-direction: column;
+        gap: 10px;
+      }
+
+      .tiny {
+        right: 12px;
+        bottom: 10px;
+        font-size: 8px;
       }
 
       .cursor-glow {
@@ -1039,6 +1304,15 @@
       .cursor-glow {
         display: none;
       }
+
+      .aurora,
+      .stars,
+      .beam,
+      .orb,
+      .ghost-shape,
+      .haze {
+        animation: none !important;
+      }
     }
   </style>
 </head>
@@ -1049,9 +1323,12 @@
 
   <main class="page">
     <div class="background" id="background" aria-hidden="true">
+      <div class="stars"></div>
+      <div class="aurora"></div>
       <div class="beam one" data-depth="10"></div>
       <div class="beam two" data-depth="16"></div>
       <div class="beam three" data-depth="7"></div>
+      <div class="beam four" data-depth="12"></div>
       <div class="orb" data-depth="14"></div>
       <div class="ghost-shape" data-depth="9"></div>
       <div class="haze" data-depth="5"></div>
