@@ -856,32 +856,149 @@
     $("year").textContent = new Date().getFullYear();
 
     // ---------------------------------------------------------------
-    // TOTAL PAGE VIEWS — real, working counter via CountAPI (no signup,
-    // no backend needed). Every visitor who loads this page increments
-    // it. Swap NAMESPACE/KEY for anything unique to your domain.
+    // Session identity — same session id scheme as the homepage, so a
+    // visitor browsing both pages counts as one presence, not two.
     // ---------------------------------------------------------------
-    const COUNTAPI_NAMESPACE = "izzyy-me";
-    const COUNTAPI_KEY = "stats-page-views";
+    const sessionId = (() => {
+      const existing = sessionStorage.getItem("izzy_session_id");
+      if (existing) return existing;
+      const id = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2);
+      sessionStorage.setItem("izzy_session_id", id);
+      return id;
+    })();
 
-    async function loadTotalViews() {
+    const device = /Mobi|Android/i.test(navigator.userAgent)
+      ? (window.innerWidth < 768 ? "mobile" : "tablet")
+      : "desktop";
+
+    const referrer = (() => {
+      if (!document.referrer) return "direct";
       try {
-        const res = await fetch(
-          `https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_KEY}`
-        );
+        const host = new URL(document.referrer).hostname.replace(/^www\./, "");
+        return host.split(".")[0] || "direct";
+      } catch {
+        return "direct";
+      }
+    })();
+
+    // record this visit, then keep the heartbeat alive while on the page
+    fetch("/api/hit", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ path: "stats", device, referrer }),
+    }).catch(() => {});
+
+    function ping() {
+      fetch("/api/heartbeat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sessionId, path: "stats" }),
+      }).catch(() => {});
+    }
+    ping();
+    setInterval(ping, 15000);
+
+    // ---------------------------------------------------------------
+    // Who's on the site — real data from /api/online, refreshed every
+    // 20s. KV is eventually consistent, so this is "within the last
+    // ~30-60s" rather than instant, but it's genuinely live.
+    // ---------------------------------------------------------------
+    function renderWhoList(visitors) {
+      const list = $("whoList");
+      list.innerHTML = "";
+
+      if (!visitors.length) {
+        list.innerHTML = `<div class="who-empty">nobody else here right now — just you.</div>`;
+      } else {
+        visitors.forEach(v => {
+          const row = document.createElement("div");
+          row.className = "who-row";
+          const secsAgo = Math.max(0, Math.floor((Date.now() - v.since) / 1000));
+          row.innerHTML = `
+            <span class="dot"></span>
+            <span class="path">${v.path}</span>
+            <span class="meta">${secsAgo}s ago</span>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      $("onlineNow").textContent = visitors.length;
+      $("viewingAbout").textContent = visitors.filter(v => v.path.includes("about")).length;
+      $("viewingWork").textContent = visitors.filter(v => v.path.includes("work")).length;
+    }
+
+    async function loadOnline() {
+      try {
+        const res = await fetch("/api/online");
         const json = await res.json();
-        if (typeof json.value === "number") {
-          $("totalViews").textContent = json.value.toLocaleString();
-          $("totalViewsSub").textContent = "counted live via countapi";
-        } else {
-          throw new Error("bad response");
-        }
-      } catch (err) {
-        $("totalViews").textContent = "—";
-        $("totalViewsSub").textContent = "counter unavailable right now";
+        renderWhoList(json.visitors || []);
+        $("livePillText").textContent = `${json.count || 1} session${json.count === 1 ? "" : "s"} tracked`;
+      } catch {
+        $("livePillText").textContent = "presence unavailable";
       }
     }
 
-    loadTotalViews();
+    loadOnline();
+    setInterval(loadOnline, 20000);
+
+    // ---------------------------------------------------------------
+    // Totals + top pages + devices/referrers — real data from /api/stats
+    // ---------------------------------------------------------------
+    async function loadStats() {
+      try {
+        const res = await fetch("/api/stats");
+        const json = await res.json();
+
+        $("totalViews").textContent = (json.totalViews || 0).toLocaleString();
+        $("totalViewsSub").textContent = "counted live via cloudflare kv";
+
+        const pages = json.pages || [];
+        const topPagesList = $("topPagesList");
+        topPagesList.innerHTML = "";
+        const maxCount = Math.max(1, ...pages.map(p => p.count));
+        pages.slice(0, 6).forEach((p, i) => {
+          const pct = Math.round((p.count / maxCount) * 100);
+          const row = document.createElement("div");
+          row.className = "table-row";
+          row.innerHTML = `
+            <span class="idx">0${i + 1}</span>
+            <span class="name">${p.name}</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
+            <span class="count">${p.count}</span>
+          `;
+          topPagesList.appendChild(row);
+        });
+        if (!pages.length) {
+          topPagesList.innerHTML = `<div class="who-empty">no page data yet — check back after a few visits.</div>`;
+        }
+
+        fillSplit($("deviceList"), json.devices || [], "device");
+        fillSplit($("referrerList"), json.referrers || [], "referrer");
+      } catch {
+        $("totalViewsSub").textContent = "stats backend unavailable";
+      }
+    }
+
+    function fillSplit(el, data, kind) {
+      el.innerHTML = "";
+      if (!data.length) {
+        el.innerHTML = `<div class="split-row"><span>no ${kind} data yet</span><span>—</span></div>`;
+        return;
+      }
+      data.forEach(d => {
+        const row = document.createElement("div");
+        row.className = "split-row";
+        row.innerHTML = `<span>${d.name}</span><span>${d.count}</span>`;
+        el.appendChild(row);
+      });
+    }
+
+    loadStats();
+    setInterval(loadStats, 30000);
+
+    // session views is always 1 for this tab — kept simple and honest
+    $("sessionViews").textContent = "1";
 
     // ---------------------------------------------------------------
     // Site age / last deploy — set SITE_LAUNCH to whenever the site
@@ -893,89 +1010,6 @@
 
     $("lastDeploy").textContent = new Date(document.lastModified || Date.now())
       .toLocaleDateString(undefined, { month: "short", day: "numeric" });
-
-    // ---------------------------------------------------------------
-    // "Who's on the site" — UI + hook, ready for a realtime backend.
-    // Call renderWhoList([{path:'/about', since: Date.now()}, ...])
-    // whenever you get live data (e.g. from a Firebase onValue listener).
-    // ---------------------------------------------------------------
-    function renderWhoList(visitors) {
-      const list = $("whoList");
-      if (!visitors || !visitors.length) return;
-
-      list.innerHTML = "";
-      visitors.forEach(v => {
-        const row = document.createElement("div");
-        row.className = "who-row";
-        const secsAgo = Math.max(0, Math.floor((Date.now() - v.since) / 1000));
-        row.innerHTML = `
-          <span class="dot"></span>
-          <span class="path">${v.path}</span>
-          <span class="meta">${secsAgo}s ago</span>
-        `;
-        list.appendChild(row);
-      });
-
-      $("onlineNow").textContent = visitors.length;
-      $("viewingAbout").textContent = visitors.filter(v => v.path.includes("about")).length;
-      $("viewingWork").textContent = visitors.filter(v => v.path.includes("work")).length;
-    }
-
-    // demo placeholders so the panel isn't just zeros while no backend exists
-    $("onlineNow").textContent = "1";
-    $("viewingAbout").textContent = "1";
-    $("viewingWork").textContent = "0";
-    $("avgSession").innerHTML = '2<span class="unit">min</span>';
-    $("livePillText").textContent = "you're the only tracked session";
-
-    // ---------------------------------------------------------------
-    // Top sections / devices / referrers — sample data.
-    // Replace SAMPLE_PAGES etc. with real numbers from your analytics
-    // provider once one is connected (Cloudflare, Plausible, Vercel...).
-    // ---------------------------------------------------------------
-    const SAMPLE_PAGES = [
-      { name: "about", pct: 100, count: 0 },
-      { name: "work", pct: 62, count: 0 },
-      { name: "stack", pct: 41, count: 0 },
-      { name: "now", pct: 27, count: 0 },
-    ];
-
-    const topPagesList = $("topPagesList");
-    SAMPLE_PAGES.forEach((p, i) => {
-      const row = document.createElement("div");
-      row.className = "table-row";
-      row.innerHTML = `
-        <span class="idx">0${i + 1}</span>
-        <span class="name">${p.name}</span>
-        <span class="bar-track"><span class="bar-fill" style="width:${p.pct}%"></span></span>
-        <span class="count">${p.pct}%</span>
-      `;
-      topPagesList.appendChild(row);
-    });
-
-    const SAMPLE_DEVICES = [
-      { label: "mobile", value: "—" },
-      { label: "desktop", value: "—" },
-      { label: "tablet", value: "—" },
-    ];
-
-    const SAMPLE_REFERRERS = [
-      { label: "direct", value: "—" },
-      { label: "discord", value: "—" },
-      { label: "github", value: "—" },
-    ];
-
-    function fillSplit(el, data) {
-      data.forEach(d => {
-        const row = document.createElement("div");
-        row.className = "split-row";
-        row.innerHTML = `<span>${d.label}</span><span>${d.value}</span>`;
-        el.appendChild(row);
-      });
-    }
-
-    fillSplit($("deviceList"), SAMPLE_DEVICES);
-    fillSplit($("referrerList"), SAMPLE_REFERRERS);
 
     // reveal on scroll
     const reveals = document.querySelectorAll(".reveal");
