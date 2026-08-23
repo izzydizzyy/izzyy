@@ -2018,6 +2018,54 @@
     document.addEventListener("mouseenter", () => {
       glow.style.opacity = ".22";
     });
+
+    // ---------------------------------------------------------------
+    // Real stats tracking — reports to /api/hit once on load, then
+    // pings /api/heartbeat every 15s so this session shows up as
+    // "online now" on /stats while the tab is open.
+    // ---------------------------------------------------------------
+    (function trackVisit() {
+      const sessionId = (() => {
+        const existing = sessionStorage.getItem("izzy_session_id");
+        if (existing) return existing;
+        const id = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2);
+        sessionStorage.setItem("izzy_session_id", id);
+        return id;
+      })();
+
+      const device = /Mobi|Android/i.test(navigator.userAgent)
+        ? (window.innerWidth < 768 ? "mobile" : "tablet")
+        : "desktop";
+
+      const referrer = (() => {
+        if (!document.referrer) return "direct";
+        try {
+          const host = new URL(document.referrer).hostname.replace(/^www\./, "");
+          return host.split(".")[0] || "direct";
+        } catch {
+          return "direct";
+        }
+      })();
+
+      const currentPath = "about"; // homepage default section
+
+      fetch("/api/hit", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ path: currentPath, device, referrer }),
+      }).catch(() => {});
+
+      function ping() {
+        fetch("/api/heartbeat", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ sessionId, path: currentPath }),
+        }).catch(() => {});
+      }
+
+      ping();
+      setInterval(ping, 15000);
+    })();
   </script>
 </body>
 </html>
