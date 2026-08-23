@@ -1,7 +1,12 @@
 // POST /api/heartbeat
 // Body: { sessionId: "abc123", path: "about" }
-// Writes presence:<sessionId> = { path, ts } with a short TTL so it
-// naturally expires ~30s after the last heartbeat (tab closed / idle).
+// Writes presence:<sessionId> = { path, ts } with a TTL so it naturally
+// expires shortly after the last heartbeat (tab closed / idle).
+//
+// TTL is intentionally longer than the heartbeat interval (15s) to give
+// Cloudflare KV's cross-region propagation (~up to 60s) enough headroom —
+// otherwise a key can expire before every edge location has even seen it,
+// making presence flicker to 0 even while heartbeats are actively firing.
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -30,7 +35,7 @@ export async function onRequestPost(context) {
   await kv.put(
     `presence:${sessionId}`,
     JSON.stringify({ path, ts: Date.now() }),
-    { expirationTtl: 40 } // seconds — auto-clears stale sessions
+    { expirationTtl: 90 } // seconds — gives KV propagation lag enough room
   );
 
   return new Response(JSON.stringify({ ok: true }), {
