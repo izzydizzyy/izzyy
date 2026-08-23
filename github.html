@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#080c13" />
+  <meta name="description" content="izzy — all repos, live from GitHub." />
+  <title>izzy / github</title>
+  <link rel="preconnect" href="https://api.github.com">
+  <style>
+    :root {
+      --bg: #070a10;
+      --text: #f1f3f6;
+      --muted: #959eaa;
+      --line: rgba(255,255,255,.095);
+      --cyan: #38cfe0;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--bg); }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .shell {
+      width: min(900px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #bbc1ca;
+      font: 700 11px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .34em;
+      text-transform: lowercase;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px rgba(56,207,224,.55);
+    }
+
+    nav a {
+      color: #747e8b;
+      font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .16em;
+      text-transform: lowercase;
+      margin-left: 24px;
+    }
+    nav a:hover { color: #d3d8df; }
+
+    header.hero {
+      padding: 40px 0 30px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #727c8b;
+      font: 700 9px/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .eyebrow::before { content: ""; width: 30px; height: 1px; background: #596270; }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(32px, 5vw, 46px);
+      letter-spacing: -.05em;
+      font-weight: 780;
+    }
+
+    p.sub {
+      max-width: 560px;
+      color: #8892a0;
+      font-size: 15px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin: 24px 0 0;
+      flex-wrap: wrap;
+    }
+
+    input#search {
+      flex: 1;
+      min-width: 180px;
+      background: #0c121d;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    input#search:focus { outline: 1px solid var(--cyan); }
+
+    select#sort {
+      background: #0c121d;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    .status {
+      padding: 60px 0;
+      text-align: center;
+      color: #626c79;
+      font: 600 12px/1.6 "SFMono-Regular", Consolas, monospace;
+    }
+
+    .repo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      padding: 28px 0 70px;
+    }
+
+    .repo-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px;
+      background: rgba(255,255,255,.015);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .repo-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,.2);
+      background: rgba(255,255,255,.03);
+    }
+
+    .repo-name {
+      color: #d9dee5;
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: -.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .repo-name .fork-tag {
+      font: 650 9px/1 "SFMono-Regular", Consolas, monospace;
+      color: #7f8996;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 2px 6px;
+      letter-spacing: .06em;
+    }
+
+    .repo-desc {
+      color: #7c8592;
+      font-size: 12.5px;
+      line-height: 1.6;
+      flex: 1;
+      min-height: 34px;
+    }
+
+    .repo-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #626c79;
+      font: 600 11px/1 "SFMono-Regular", Consolas, monospace;
+      flex-wrap: wrap;
+    }
+
+    .repo-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #57606f;
+    }
+
+    footer {
+      padding: 30px 0 50px;
+      border-top: 1px solid var(--line);
+      color: #4f5966;
+      font: 650 9px/1.6 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+    }
+
+    footer a:hover { color: #b7bec7; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span class="brand-dot"></span>
+        <span>izzy</span>
+      </a>
+      <nav>
+        <a href="/#work">work</a>
+        <a href="/#stack">stack</a>
+        <a href="/stats">stats</a>
+        <a href="https://github.com/izzydizzyy" target="_blank" rel="noreferrer">github ↗</a>
+      </nav>
+    </header>
+
+    <header class="hero">
+      <div class="eyebrow">all repos</div>
+      <h1>everything on github.</h1>
+      <p class="sub">pulled live from the GitHub API — every public repo, with its description, primary language, and stars, sorted by whatever you pick below.</p>
+
+      <div class="controls">
+        <input id="search" type="text" placeholder="filter repos..." autocomplete="off" />
+        <select id="sort">
+          <option value="updated">recently updated</option>
+          <option value="created">newest</option>
+          <option value="stars">most stars</option>
+          <option value="name">name (a–z)</option>
+        </select>
+      </div>
+    </header>
+
+    <div id="status" class="status">loading repos from github...</div>
+    <div id="grid" class="repo-grid"></div>
+
+    <footer>
+      <span>© <span id="year"></span> izzy — data from the GitHub REST API.</span>
+    </footer>
+  </div>
+
+  <script>
+    const USERNAME = "izzydizzyy";
+    const API_URL = `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
+
+    const $ = id => document.getElementById(id);
+    const grid = $("grid");
+    const status = $("status");
+    const search = $("search");
+    const sort = $("sort");
+
+    $("year").textContent = new Date().getFullYear();
+
+    let repos = [];
+
+    const langColors = {
+      JavaScript: "#f1e05a",
+      TypeScript: "#3178c6",
+      Python: "#3572A5",
+      HTML: "#e34c26",
+      CSS: "#563d7c",
+      Shell: "#89e051",
+      Java: "#b07219",
+      "C++": "#f34b7d",
+      C: "#555555",
+      Go: "#00ADD8",
+      Rust: "#dea584",
+    };
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      let list = repos.filter(r =>
+        !q ||
+        r.name.toLowerCase().includes(q) ||
+        (r.description || "").toLowerCase().includes(q) ||
+        (r.language || "").toLowerCase().includes(q)
+      );
+
+      const mode = sort.value;
+      if (mode === "updated") {
+        list = list.slice().sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
+      } else if (mode === "created") {
+        list = list.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      } else if (mode === "stars") {
+        list = list.slice().sort((a, b) => b.stargazers_count - a.stargazers_count);
+      } else if (mode === "name") {
+        list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      grid.innerHTML = "";
+
+      if (!list.length) {
+        status.textContent = repos.length ? "no repos match that filter." : "no public repos found.";
+        status.style.display = "block";
+        return;
+      }
+
+      status.style.display = "none";
+
+      for (const r of list) {
+        const card = document.createElement("a");
+        card.className = "repo-card";
+        card.href = r.html_url;
+        card.target = "_blank";
+        card.rel = "noreferrer";
+
+        const langColor = langColors[r.language] || "#57606f";
+
+        card.innerHTML = `
+          <div class="repo-name">
+            ${r.name}
+            ${r.fork ? '<span class="fork-tag">fork</span>' : ""}
+          </div>
+          <div class="repo-desc">${r.description ? escapeHtml(r.description) : "no description yet."}</div>
+          <div class="repo-meta">
+            ${r.language ? `<span><span class="lang-dot" style="background:${langColor}"></span>${r.language}</span>` : ""}
+            <span>★ ${r.stargazers_count}</span>
+            <span>⑂ ${r.forks_count}</span>
+            <span>updated ${timeAgo(r.pushed_at)}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function timeAgo(dateStr) {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const days = Math.floor(diff / 86400000);
+      if (days < 1) return "today";
+      if (days === 1) return "1 day ago";
+      if (days < 30) return `${days} days ago`;
+      const months = Math.floor(days / 30);
+      if (months < 12) return `${months} mo ago`;
+      const years = Math.floor(months / 12);
+      return `${years} yr ago`;
+    }
+
+    async function loadRepos() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
+        const data = await res.json();
+        repos = data.filter(r => !r.private);
+        render();
+      } catch (err) {
+        console.warn("Failed to load GitHub repos:", err);
+        status.textContent = "couldn't load repos right now — try again later or visit github.com/" + USERNAME + " directly.";
+      }
+    }
+
+    search.addEventListener("input", render);
+    sort.addEventListener("change", render);
+
+    loadRepos();
+  </script>
+</body>
+</html>
