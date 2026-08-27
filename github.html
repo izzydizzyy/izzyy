@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#080c13" />
+  <meta name="theme-color" content="#050505" />
   <meta name="description" content="izzy — all repos, live from GitHub." />
   <title>izzy / github</title>
   <link rel="preconnect" href="https://api.github.com">
   <style>
     :root {
-      --bg: #070a10;
-      --text: #f1f3f6;
-      --muted: #959eaa;
-      --line: rgba(255,255,255,.095);
-      --cyan: #38cfe0;
+      --bg: #060606;
+      --text: #f1f1f1;
+      --muted: #9a9a9a;
+      --line: rgba(255,255,255,.09);
+      --accent: #d8d8d8;
     }
     * { box-sizing: border-box; }
     html { background: var(--bg); }
@@ -42,7 +42,7 @@
       display: flex;
       align-items: center;
       gap: 11px;
-      color: #bbc1ca;
+      color: #bdbdbd;
       font: 700 11px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .34em;
       text-transform: lowercase;
@@ -52,18 +52,18 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 14px rgba(56,207,224,.55);
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(255,255,255,.35);
     }
 
     nav a {
-      color: #747e8b;
+      color: #767676;
       font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .16em;
       text-transform: lowercase;
       margin-left: 24px;
     }
-    nav a:hover { color: #d3d8df; }
+    nav a:hover { color: #d6d6d6; }
 
     header.hero {
       padding: 40px 0 30px;
@@ -74,13 +74,13 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #727c8b;
+      color: #757575;
       font: 700 9px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .34em;
       text-transform: uppercase;
       margin-bottom: 14px;
     }
-    .eyebrow::before { content: ""; width: 30px; height: 1px; background: #596270; }
+    .eyebrow::before { content: ""; width: 30px; height: 1px; background: #5c5c5c; }
 
     h1 {
       margin: 0 0 10px;
@@ -91,7 +91,7 @@
 
     p.sub {
       max-width: 560px;
-      color: #8892a0;
+      color: #8c8c8c;
       font-size: 15px;
       line-height: 1.7;
       margin: 0;
@@ -108,7 +108,7 @@
     input#search {
       flex: 1;
       min-width: 180px;
-      background: #0c121d;
+      background: #0c0c0c;
       border: 1px solid var(--line);
       color: var(--text);
       padding: 10px 14px;
@@ -116,10 +116,10 @@
       font-size: 13px;
       font-family: inherit;
     }
-    input#search:focus { outline: 1px solid var(--cyan); }
+    input#search:focus { outline: 1px solid #b8b8b8; }
 
     select#sort {
-      background: #0c121d;
+      background: #0c0c0c;
       border: 1px solid var(--line);
       color: var(--text);
       padding: 10px 12px;
@@ -131,7 +131,7 @@
     .status {
       padding: 60px 0;
       text-align: center;
-      color: #626c79;
+      color: #656565;
       font: 600 12px/1.6 "SFMono-Regular", Consolas, monospace;
     }
 
@@ -159,7 +159,7 @@
     }
 
     .repo-name {
-      color: #d9dee5;
+      color: #dcdcdc;
       font-size: 15px;
       font-weight: 650;
       letter-spacing: -.02em;
@@ -169,7 +169,7 @@
     }
     .repo-name .fork-tag {
       font: 650 9px/1 "SFMono-Regular", Consolas, monospace;
-      color: #7f8996;
+      color: #838383;
       border: 1px solid var(--line);
       border-radius: 5px;
       padding: 2px 6px;
@@ -177,7 +177,7 @@
     }
 
     .repo-desc {
-      color: #7c8592;
+      color: #7f7f7f;
       font-size: 12.5px;
       line-height: 1.6;
       flex: 1;
@@ -188,7 +188,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      color: #626c79;
+      color: #656565;
       font: 600 11px/1 "SFMono-Regular", Consolas, monospace;
       flex-wrap: wrap;
     }
@@ -203,18 +203,18 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #57606f;
+      background: #5a5a5a;
     }
 
     footer {
       padding: 30px 0 50px;
       border-top: 1px solid var(--line);
-      color: #4f5966;
+      color: #525252;
       font: 650 9px/1.6 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .08em;
     }
 
-    footer a:hover { color: #b7bec7; }
+    footer a:hover { color: #bababa; }
   </style>
 </head>
 <body>
@@ -271,17 +271,17 @@
     let repos = [];
 
     const langColors = {
-      JavaScript: "#f1e05a",
-      TypeScript: "#3178c6",
-      Python: "#3572A5",
-      HTML: "#e34c26",
-      CSS: "#563d7c",
-      Shell: "#89e051",
-      Java: "#b07219",
-      "C++": "#f34b7d",
-      C: "#555555",
-      Go: "#00ADD8",
-      Rust: "#dea584",
+      JavaScript: "#e0d68a",
+      TypeScript: "#7ea6d8",
+      Python: "#7fa8c9",
+      HTML: "#d98a6a",
+      CSS: "#9a86c9",
+      Shell: "#8fce7a",
+      Java: "#c9a06a",
+      "C++": "#d98a9e",
+      C: "#a8a8a8",
+      Go: "#6ec9d8",
+      Rust: "#d0a98a",
     };
 
     function render() {
@@ -321,7 +321,7 @@
         card.target = "_blank";
         card.rel = "noreferrer";
 
-        const langColor = langColors[r.language] || "#57606f";
+        const langColor = langColors[r.language] || "#5a5a5a";
 
         card.innerHTML = `
           <div class="repo-name">
