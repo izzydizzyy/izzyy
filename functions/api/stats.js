@@ -1,6 +1,3 @@
-// GET /api/stats
-// Returns: { totalViews, pages: [{name, count}], devices: [...], referrers: [...] }
-
 async function readPrefixed(kv, prefix) {
   const list = await kv.list({ prefix });
   const out = [];
@@ -13,18 +10,15 @@ async function readPrefixed(kv, prefix) {
   }
   return out.sort((a, b) => b.count - a.count);
 }
-
 export async function onRequestGet(context) {
   const { env } = context;
   const kv = env.STATS;
-
   const [totalViewsRaw, pages, devices, referrers] = await Promise.all([
     kv.get("total:views"),
     readPrefixed(kv, "page:"),
     readPrefixed(kv, "device:"),
     readPrefixed(kv, "ref:"),
   ]);
-
   return new Response(
     JSON.stringify({
       totalViews: parseInt(totalViewsRaw || "0", 10) || 0,
