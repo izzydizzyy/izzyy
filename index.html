@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#080c13" />
+  <meta name="theme-color" content="#050505" />
   <meta name="description" content="izzy — programmer, discord bot developer, and website builder." />
   <title>izzy</title>
 
@@ -14,15 +14,15 @@
 
   <style>
     :root {
-      --bg: #070a10;
-      --bg-2: #0c121d;
-      --text: #f1f3f6;
-      --muted: #959eaa;
-      --faint: #66707d;
-      --dim: #4f5967;
-      --line: rgba(255,255,255,.095);
-      --line-soft: rgba(255,255,255,.055);
-      --cyan: #38cfe0;
+      --bg: #060606;
+      --bg-2: #0c0c0c;
+      --text: #f1f1f1;
+      --muted: #9a9a9a;
+      --faint: #6b6b6b;
+      --dim: #545454;
+      --line: rgba(255,255,255,.09);
+      --line-soft: rgba(255,255,255,.05);
+      --accent: #d8d8d8;
       --green: #3ed07b;
       --yellow: #f3c45a;
       --red: #ef6671;
@@ -48,7 +48,7 @@
     }
 
     ::selection {
-      background: rgba(56,207,224,.22);
+      background: rgba(255,255,255,.16);
       color: #fff;
     }
 
@@ -77,20 +77,18 @@
       overflow: hidden;
       pointer-events: none;
       background:
-        radial-gradient(circle at var(--mx) var(--my), rgba(72,124,174,.14), transparent 26%),
-        radial-gradient(circle at 78% -5%, rgba(79,133,192,.25), transparent 28%),
-        radial-gradient(circle at 26% 7%, rgba(58,106,150,.19), transparent 31%),
-        linear-gradient(180deg, #0e1b2d 0%, #0a111c 49%, #070a10 94%);
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.03), transparent 26%),
+        linear-gradient(180deg, #0d0d0d 0%, #080808 49%, #050505 94%);
     }
 
     .background::before {
       content: "";
       position: absolute;
       inset: 0;
-      opacity: .18;
+      opacity: .12;
       background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
       background-size: 48px 48px;
       mask-image: linear-gradient(to bottom, black, transparent 86%);
     }
@@ -100,147 +98,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(4,8,14,.08), rgba(4,8,14,.22) 48%, rgba(4,8,14,.56)),
-        linear-gradient(180deg, rgba(4,8,14,.02), rgba(4,8,14,.22) 55%, #070a10 97%);
-    }
-
-    .aurora {
-      position: absolute;
-      inset: -20% -10% auto -10%;
-      height: 130%;
-      z-index: -1;
-      pointer-events: none;
-      background:
-        radial-gradient(38% 26% at 20% 18%, rgba(56,207,224,.16), transparent 62%),
-        radial-gradient(30% 22% at 82% 8%, rgba(94,150,220,.20), transparent 60%),
-        radial-gradient(34% 24% at 55% 46%, rgba(62,208,123,.07), transparent 65%);
-      filter: blur(50px) saturate(115%);
-      opacity: .8;
-      mix-blend-mode: screen;
-      animation: auroraDrift 22s ease-in-out infinite alternate;
-    }
-
-    .stars {
-      position: absolute;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: .55;
-      background-image:
-        radial-gradient(1.4px 1.4px at 12% 22%, rgba(255,255,255,.85), transparent 60%),
-        radial-gradient(1.1px 1.1px at 27% 8%, rgba(255,255,255,.6), transparent 60%),
-        radial-gradient(1.6px 1.6px at 41% 34%, rgba(255,255,255,.7), transparent 60%),
-        radial-gradient(1.1px 1.1px at 58% 12%, rgba(255,255,255,.55), transparent 60%),
-        radial-gradient(1.4px 1.4px at 68% 27%, rgba(255,255,255,.75), transparent 60%),
-        radial-gradient(1.1px 1.1px at 77% 6%, rgba(255,255,255,.5), transparent 60%),
-        radial-gradient(1.6px 1.6px at 85% 32%, rgba(255,255,255,.8), transparent 60%),
-        radial-gradient(1.1px 1.1px at 93% 15%, rgba(255,255,255,.55), transparent 60%),
-        radial-gradient(1.3px 1.3px at 6% 40%, rgba(255,255,255,.6), transparent 60%),
-        radial-gradient(1.2px 1.2px at 49% 22%, rgba(255,255,255,.55), transparent 60%);
-      background-repeat: no-repeat;
-      background-size: 100% 60vh;
-      mask-image: linear-gradient(to bottom, black, transparent 78%);
-      animation: twinkle 5s ease-in-out infinite alternate;
-    }
-
-    .beam,
-    .orb,
-    .ghost-shape,
-    .haze {
-      position: absolute;
-      will-change: transform;
-    }
-
-    .beam {
-      top: -15%;
-      width: 70px;
-      height: 88%;
-      border-radius: 999px;
-      transform: rotate(8deg);
-      filter: blur(14px);
-      background: linear-gradient(180deg, rgba(185,221,255,.30), rgba(91,137,181,.07), transparent);
-      animation: beamGlow 7s ease-in-out infinite;
-    }
-
-    .beam.one { left: 18%; }
-    .beam.two { left: 43%; width: 42px; opacity: .55; animation-delay: -2.3s; }
-    .beam.three { right: 18%; width: 118px; opacity: .27; animation-delay: -4.6s; }
-    .beam.four {
-      left: 65%;
-      width: 30px;
-      opacity: .32;
-      animation-delay: -1.2s;
-      background: linear-gradient(180deg, rgba(120,220,235,.28), rgba(56,207,224,.06), transparent);
-    }
-
-    .orb {
-      width: 500px;
-      height: 318px;
-      right: 4%;
-      top: 2%;
-      border-radius: 52% 48% 55% 45%;
-      border: 2px solid rgba(128,168,211,.10);
-      box-shadow: inset 0 0 86px rgba(126,170,219,.08);
-      transform: rotate(-17deg);
-      filter: blur(9px);
-      animation: orbFloat 16s ease-in-out infinite;
-    }
-
-    .ghost-shape {
-      width: 650px;
-      height: 270px;
-      left: 24%;
-      top: 31%;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 41% 44%, rgba(147,172,201,.16), transparent 24%),
-        linear-gradient(150deg, rgba(38,63,90,.20), rgba(7,13,21,.02));
-      transform: rotate(-5deg);
-      filter: blur(24px);
-      animation: ghostFloat 20s ease-in-out infinite;
-    }
-
-    .haze {
-      width: 700px;
-      height: 300px;
-      right: -11%;
-      top: 39%;
-      border-radius: 50%;
-      background: rgba(34,55,80,.13);
-      filter: blur(65px);
-      transform: rotate(-12deg);
-      animation: hazeFloat 18s ease-in-out infinite;
-    }
-
-    @keyframes auroraDrift {
-      0% { transform: translate3d(-2%, -2%, 0) rotate(0deg); }
-      50% { transform: translate3d(2%, 3%, 0) rotate(3deg); }
-      100% { transform: translate3d(-3%, 1%, 0) rotate(-2deg); }
-    }
-
-    @keyframes twinkle {
-      0% { opacity: .38; }
-      100% { opacity: .68; }
-    }
-
-    @keyframes beamGlow {
-      0%, 100% { opacity: .85; }
-      50% { opacity: .45; }
-    }
-
-    @keyframes orbFloat {
-      0%, 100% { transform: rotate(-17deg) translate3d(0, 0, 0); }
-      50% { transform: rotate(-14deg) translate3d(-14px, 16px, 0); }
-    }
-
-    @keyframes ghostFloat {
-      0%, 100% { transform: rotate(-5deg) translate3d(0, 0, 0); }
-      50% { transform: rotate(-8deg) translate3d(18px, -12px, 0); }
-    }
-
-    @keyframes hazeFloat {
-      0%, 100% { transform: rotate(-12deg) translate3d(0, 0, 0); }
-      50% { transform: rotate(-9deg) translate3d(-20px, 10px, 0); }
+        linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.24) 48%, rgba(0,0,0,.56)),
+        linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.22) 55%, #050505 97%);
     }
 
     .grain {
@@ -248,8 +107,8 @@
       inset: 0;
       z-index: 50;
       pointer-events: none;
-      opacity: .09;
-      background-image: radial-gradient(rgba(255,255,255,.22) .45px, transparent .45px);
+      opacity: .07;
+      background-image: radial-gradient(rgba(255,255,255,.2) .45px, transparent .45px);
       background-size: 4px 4px;
       mask-image: linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.2));
     }
@@ -257,15 +116,15 @@
     .cursor-glow {
       position: fixed;
       z-index: -1;
-      width: 340px;
-      height: 340px;
+      width: 320px;
+      height: 320px;
       left: 0;
       top: 0;
       border-radius: 50%;
       pointer-events: none;
-      opacity: .22;
-      filter: blur(44px);
-      background: radial-gradient(circle, rgba(75,138,196,.28), transparent 66%);
+      opacity: .10;
+      filter: blur(46px);
+      background: radial-gradient(circle, rgba(255,255,255,.14), transparent 66%);
       transform: translate(-50%, -50%);
       transition: opacity .25s ease;
     }
@@ -288,7 +147,7 @@
       display: flex;
       align-items: center;
       gap: 11px;
-      color: #bbc1ca;
+      color: #bdbdbd;
       font: 700 11px/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       letter-spacing: .34em;
       text-transform: lowercase;
@@ -298,8 +157,8 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 14px rgba(56,207,224,.55);
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(255,255,255,.35);
     }
 
     nav {
@@ -310,7 +169,7 @@
 
     nav a {
       position: relative;
-      color: #747e8b;
+      color: #767676;
       font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .16em;
       text-transform: lowercase;
@@ -324,12 +183,12 @@
       right: 100%;
       bottom: -7px;
       height: 1px;
-      background: #a9b2bd;
+      background: #adadad;
       transition: right .2s ease;
     }
 
     nav a:hover {
-      color: #d3d8df;
+      color: #d6d6d6;
     }
 
     nav a:hover::after {
@@ -356,7 +215,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #727c8b;
+      color: #757575;
       font: 700 9px/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       letter-spacing: .34em;
       text-transform: uppercase;
@@ -371,7 +230,7 @@
       content: "";
       width: 30px;
       height: 1px;
-      background: #596270;
+      background: #5c5c5c;
       opacity: .7;
     }
 
@@ -394,10 +253,10 @@
       height: 84px;
       padding: 3px;
       border-radius: 50%;
-      background: linear-gradient(145deg, #31d4e8, #1e8ebf 70%, #315d86);
+      background: linear-gradient(145deg, #4a4a4a, #2a2a2a 70%, #1a1a1a);
       box-shadow:
         0 0 0 1px rgba(255,255,255,.08),
-        0 12px 34px rgba(0,0,0,.28);
+        0 12px 34px rgba(0,0,0,.35);
     }
 
     .avatar {
@@ -406,8 +265,8 @@
       display: block;
       object-fit: cover;
       border-radius: 50%;
-      background: #121821;
-      border: 2px solid rgba(3,8,14,.72);
+      background: #121212;
+      border: 2px solid rgba(0,0,0,.72);
     }
 
     .avatar-decoration {
@@ -439,7 +298,7 @@
     .bio {
       max-width: 660px;
       margin: 28px 0 21px;
-      color: #a3abb5;
+      color: #a6a6a6;
       font-size: 17px;
       font-weight: 510;
       line-height: 1.75;
@@ -451,7 +310,7 @@
       flex-wrap: wrap;
       gap: 10px 20px;
       margin-bottom: 25px;
-      color: #66717e;
+      color: #6a6a6a;
       font: 650 10px/1.4 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .045em;
     }
@@ -466,7 +325,7 @@
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: #535d69;
+      background: #565656;
     }
 
     .stack {
@@ -483,14 +342,15 @@
       height: 24px;
       display: grid;
       place-items: center;
-      opacity: .9;
+      opacity: .82;
+      filter: grayscale(1);
       transition: transform .18s ease, opacity .18s ease, filter .18s ease;
     }
 
     .stack-icon:hover {
       transform: translateY(-3px);
       opacity: 1;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,.28));
+      filter: grayscale(0);
     }
 
     .stack-icon img {
@@ -507,10 +367,10 @@
       transform: translateX(-50%) translateY(4px);
       padding: 6px 8px;
       border-radius: 5px;
-      color: #dde3ec;
-      background: rgba(15,18,24,.94);
+      color: #e0e0e0;
+      background: rgba(12,12,12,.94);
       border: 1px solid rgba(255,255,255,.11);
-      box-shadow: 0 8px 24px rgba(0,0,0,.26);
+      box-shadow: 0 8px 24px rgba(0,0,0,.32);
       font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
       white-space: nowrap;
       opacity: 0;
@@ -532,7 +392,7 @@
       align-items: center;
       gap: 7px;
       min-height: 22px;
-      color: #7f8996;
+      color: #838383;
       font: 700 10px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .15em;
       text-transform: lowercase;
@@ -558,14 +418,14 @@
     }
 
     .presence.offline .presence-dot {
-      background: #626b77;
+      background: #656565;
       box-shadow: none;
     }
 
     .custom-status {
       min-height: 20px;
       margin: 0 0 8px 14px;
-      color: #565f6c;
+      color: #595959;
       font: 600 10px/1.45 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .035em;
     }
@@ -580,7 +440,7 @@
       grid-template-columns: 22px 98px 14px 1fr;
       align-items: center;
       gap: 5px;
-      color: #717b89;
+      color: #757575;
       border-bottom: 1px solid var(--line);
       transition: color .18s ease, transform .18s ease, border-color .18s ease;
     }
@@ -596,10 +456,11 @@
   object-fit: cover;
   border-radius: 4px;
   display: block;
+  filter: grayscale(.3);
 }
 
     .social:hover {
-      color: #dfe4eb;
+      color: #e2e2e2;
       transform: translateX(4px);
       border-color: rgba(255,255,255,.17);
     }
@@ -611,20 +472,20 @@
     }
 
     .social .label {
-      color: #9aa2ad;
+      color: #9d9d9d;
       font: 650 12px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .08em;
     }
 
     .social .slash {
-      color: #444d59;
+      color: #484848;
       font: 17px/1 monospace;
     }
 
     .social .value {
       min-width: 0;
       overflow: hidden;
-      color: #747d89;
+      color: #787878;
       font-size: 14px;
       letter-spacing: -.01em;
       text-overflow: ellipsis;
@@ -633,7 +494,7 @@
     }
 
     .social:hover .value {
-      color: #d1d6de;
+      color: #d4d4d4;
     }
 
     .activity {
@@ -651,7 +512,7 @@
 
     .activity-label {
       margin-bottom: 9px;
-      color: #66717e;
+      color: #6a6a6a;
       font: 700 9px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .19em;
       text-transform: uppercase;
@@ -664,13 +525,13 @@
       border-radius: 6px;
       float: left;
       margin-right: 11px;
-      background: #11161f;
-      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+      background: #131313;
+      box-shadow: 0 8px 20px rgba(0,0,0,.3);
     }
 
     .activity-name {
       overflow: hidden;
-      color: #c1c7d0;
+      color: #c4c4c4;
       font-size: 13px;
       font-weight: 650;
       line-height: 1.45;
@@ -681,7 +542,7 @@
     .activity-detail {
       overflow: hidden;
       margin-top: 2px;
-      color: #747f8d;
+      color: #787878;
       font-size: 12px;
       line-height: 1.45;
       text-overflow: ellipsis;
@@ -717,7 +578,7 @@
       flex-direction: column;
       align-items: center;
       gap: 9px;
-      color: #4f5967;
+      color: #525252;
       font: 700 8px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .17em;
       text-transform: uppercase;
@@ -726,7 +587,7 @@
     .scroll-hint span {
       width: 1px;
       height: 28px;
-      background: linear-gradient(to bottom, #5b6674, transparent);
+      background: linear-gradient(to bottom, #5e5e5e, transparent);
       animation: scrollPulse 1.8s ease-in-out infinite;
     }
 
@@ -735,9 +596,7 @@
       z-index: 2;
       padding: 108px 0;
       border-top: 1px solid rgba(255,255,255,.045);
-      background:
-        radial-gradient(circle at 85% 20%, rgba(47,79,109,.06), transparent 28%),
-        #070a10;
+      background: #050505;
     }
 
     .section + .section {
@@ -754,7 +613,7 @@
 
     .section-title {
       margin: 16px 0 0;
-      color: #e5e8ec;
+      color: #e8e8e8;
       font-size: clamp(30px, 4vw, 43px);
       line-height: 1;
       letter-spacing: -.045em;
@@ -763,7 +622,7 @@
 
     .section-note {
       max-width: 360px;
-      color: #626c79;
+      color: #656565;
       font: 600 11px/1.65 "SFMono-Regular", Consolas, monospace;
       text-align: right;
     }
@@ -803,13 +662,13 @@
     }
 
     .project-num {
-      color: #4f5965;
+      color: #525252;
       font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .08em;
     }
 
     .project-name {
-      color: #cbd0d7;
+      color: #cfcfcf;
       font-size: 17px;
       font-weight: 650;
       letter-spacing: -.025em;
@@ -817,19 +676,19 @@
 
     .project-desc {
       max-width: 520px;
-      color: #707a87;
+      color: #737373;
       font-size: 13px;
       line-height: 1.65;
     }
 
     .project-tech {
-      color: #56616f;
+      color: #595959;
       font: 650 10px/1.5 "SFMono-Regular", Consolas, monospace;
       text-align: right;
     }
 
     .project-arrow {
-      color: #606b79;
+      color: #636363;
       font-size: 16px;
       text-align: right;
       transition: transform .2s ease, color .2s ease;
@@ -837,7 +696,7 @@
 
     .project:hover .project-arrow {
       transform: translate(3px, -3px);
-      color: #d3d8df;
+      color: #d6d6d6;
     }
 
     .stack-grid {
@@ -856,7 +715,7 @@
 
     .stack-group h3 {
       margin: 0 0 20px;
-      color: #919ba8;
+      color: #949494;
       font: 700 10px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .16em;
       text-transform: uppercase;
@@ -864,13 +723,13 @@
 
     .stack-group p {
       margin: 0;
-      color: #6b7582;
+      color: #6e6e6e;
       font-size: 13px;
       line-height: 2;
     }
 
     .stack-group strong {
-      color: #c0c6ce;
+      color: #c3c3c3;
       font-weight: 570;
     }
 
@@ -882,14 +741,14 @@
     }
 
     .now-copy {
-      color: #838d9a;
+      color: #868686;
       font-size: 16px;
       line-height: 1.8;
       letter-spacing: -.015em;
     }
 
     .now-copy strong {
-      color: #d7dbe1;
+      color: #dadada;
       font-weight: 620;
     }
 
@@ -906,14 +765,14 @@
     }
 
     .live-row .key {
-      color: #626c79;
+      color: #656565;
       font: 650 10px/1 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .08em;
     }
 
     .live-row .val {
       overflow: hidden;
-      color: #a5adb8;
+      color: #a8a8a8;
       font-size: 13px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -922,7 +781,7 @@
     footer {
       padding: 45px 0 55px;
       border-top: 1px solid rgba(255,255,255,.05);
-      background: #06090e;
+      background: #030303;
     }
 
     .footer-row {
@@ -930,18 +789,18 @@
       justify-content: space-between;
       gap: 30px;
       align-items: center;
-      color: #4f5966;
+      color: #525252;
       font: 650 9px/1.6 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .08em;
     }
 
     .footer-row a {
-      color: #687381;
+      color: #6b6b6b;
       transition: color .2s ease;
     }
 
     .footer-row a:hover {
-      color: #b7bec7;
+      color: #bababa;
     }
 
     .tiny {
@@ -949,7 +808,7 @@
       right: 20px;
       bottom: 14px;
       z-index: 20;
-      color: #48515e;
+      color: #4b4b4b;
       font: 9px/1.2 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .07em;
       opacity: .6;
@@ -1304,15 +1163,6 @@
       .cursor-glow {
         display: none;
       }
-
-      .aurora,
-      .stars,
-      .beam,
-      .orb,
-      .ghost-shape,
-      .haze {
-        animation: none !important;
-      }
     }
   </style>
 </head>
@@ -1322,17 +1172,7 @@
   <div class="grain" aria-hidden="true"></div>
 
   <main class="page">
-    <div class="background" id="background" aria-hidden="true">
-      <div class="stars"></div>
-      <div class="aurora"></div>
-      <div class="beam one" data-depth="10"></div>
-      <div class="beam two" data-depth="16"></div>
-      <div class="beam three" data-depth="7"></div>
-      <div class="beam four" data-depth="12"></div>
-      <div class="orb" data-depth="14"></div>
-      <div class="ghost-shape" data-depth="9"></div>
-      <div class="haze" data-depth="5"></div>
-    </div>
+    <div class="background" id="background" aria-hidden="true"></div>
 
     <div class="shell">
       <header class="topbar">
@@ -1392,7 +1232,7 @@
               </span>
 
               <span class="stack-icon" data-tip="APIs">
-                <img alt="APIs" src="https://api.iconify.design/mdi:api.svg?color=%23f4c542">
+                <img alt="APIs" src="https://api.iconify.design/mdi:api.svg?color=%23d8d8d8">
               </span>
 
               <span class="stack-icon" data-tip="Python">
@@ -1440,7 +1280,7 @@
               </span>
 
               <span class="stack-icon" data-tip="REST APIs">
-                <img alt="REST APIs" src="https://api.iconify.design/mdi:api.svg?color=%236fd3ff">
+                <img alt="REST APIs" src="https://api.iconify.design/mdi:api.svg?color=%23d8d8d8">
               </span>
             </div>
           </section>
@@ -1725,7 +1565,6 @@
     const presence = $("presence");
     const presenceText = $("presenceText");
     const customStatus = $("customStatus");
-    // const nameplate = $("nameplate"); --- Use Later:
 
     const activity = $("activity");
     const activityLabel = $("activityLabel");
@@ -1988,8 +1827,6 @@
     reveals.forEach(el => observer.observe(el));
 
     const glow = $("cursorGlow");
-    const bg = $("background");
-    const depthEls = [...document.querySelectorAll("[data-depth]")];
 
     window.addEventListener("mousemove", e => {
       const x = e.clientX;
@@ -2003,28 +1840,16 @@
 
       document.documentElement.style.setProperty("--mx", `${xp * 100}%`);
       document.documentElement.style.setProperty("--my", `${yp * 100}%`);
-
-      depthEls.forEach(el => {
-        const depth = Number(el.dataset.depth || 0);
-        const dx = (xp - .5) * depth;
-        const dy = (yp - .5) * depth;
-        el.style.translate = `${dx}px ${dy}px`;
-      });
     });
 
     document.addEventListener("mouseleave", () => {
-      glow.style.opacity = ".06";
+      glow.style.opacity = ".03";
     });
 
     document.addEventListener("mouseenter", () => {
-      glow.style.opacity = ".22";
+      glow.style.opacity = ".10";
     });
 
-    // ---------------------------------------------------------------
-    // Real stats tracking — reports to /api/hit once on load, then
-    // pings /api/heartbeat every 15s so this session shows up as
-    // "online now" on /stats while the tab is open.
-    // ---------------------------------------------------------------
     (function trackVisit() {
       const sessionId = (() => {
         const existing = sessionStorage.getItem("izzy_session_id");
@@ -2048,7 +1873,7 @@
         }
       })();
 
-      const currentPath = "about"; // homepage default section
+      const currentPath = "about";
 
       fetch("/api/hit", {
         method: "POST",
