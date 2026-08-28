@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>izzy</title>
+
   <meta
     name="description"
     content="izzy — developer, discord, web, and projects."
@@ -44,7 +45,7 @@
       text-decoration: none;
     }
 
-    /* background */
+    /* video */
 
     .video-bg {
       position: fixed;
@@ -62,7 +63,7 @@
       filter:
         brightness(.72)
         contrast(1.04)
-        saturate(.90);
+        saturate(.9);
     }
 
     .video-overlay {
@@ -74,9 +75,9 @@
       background:
         linear-gradient(
           to bottom,
-          rgba(0, 0, 0, .16),
-          rgba(0, 0, 0, .25) 60%,
-          rgba(5, 5, 5, .82) 100%
+          rgba(0, 0, 0, .12),
+          rgba(0, 0, 0, .24) 60%,
+          rgba(5, 5, 5, .88) 100%
         );
     }
 
@@ -90,6 +91,7 @@
 
     .hero {
       position: relative;
+
       min-height: 100vh;
 
       display: flex;
@@ -106,6 +108,7 @@
     .profile {
       display: flex;
       align-items: center;
+
       gap: 18px;
 
       margin-bottom: 20px;
@@ -118,7 +121,9 @@
       object-fit: cover;
 
       border-radius: 18px;
-      border: 1px solid rgba(255, 255, 255, .18);
+
+      border:
+        1px solid rgba(255, 255, 255, .18);
     }
 
     .name {
@@ -135,6 +140,7 @@
       margin: 0;
 
       color: #b8b8b8;
+
       font-size: 14px;
     }
 
@@ -143,21 +149,27 @@
     .links {
       display: flex;
       flex-wrap: wrap;
+
       gap: 9px;
     }
 
     .link {
+      height: 42px;
+
       display: inline-flex;
       align-items: center;
+
       gap: 9px;
 
-      height: 42px;
       padding: 0 14px;
 
-      border: 1px solid rgba(255, 255, 255, .17);
+      border:
+        1px solid rgba(255, 255, 255, .17);
+
       border-radius: 9px;
 
       background: rgba(8, 8, 8, .58);
+
       backdrop-filter: blur(8px);
 
       color: #e5e5e5;
@@ -175,11 +187,14 @@
       transform: translateY(-1px);
 
       background: rgba(20, 20, 20, .72);
-      border-color: rgba(255, 255, 255, .28);
+
+      border-color:
+        rgba(255, 255, 255, .28);
     }
 
     .link i {
       width: 15px;
+
       text-align: center;
     }
 
@@ -187,6 +202,7 @@
 
     .scroll-down {
       position: absolute;
+
       left: 50%;
       bottom: 28px;
 
@@ -195,6 +211,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+
       gap: 7px;
 
       color: #9b9b9b;
@@ -203,11 +220,65 @@
       font-weight: 500;
 
       letter-spacing: .12em;
+
       text-transform: uppercase;
     }
 
     .scroll-down:hover {
       color: #fff;
+    }
+
+    /* sound */
+
+    .sound {
+      position: fixed;
+
+      right: 20px;
+      bottom: 20px;
+
+      z-index: 10;
+
+      height: 38px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+
+      padding: 0 12px;
+
+      border:
+        1px solid rgba(255, 255, 255, .16);
+
+      border-radius: 8px;
+
+      background: rgba(8, 8, 8, .68);
+
+      backdrop-filter: blur(8px);
+
+      color: #d8d8d8;
+
+      font: inherit;
+      font-size: 12px;
+
+      cursor: pointer;
+
+      transition:
+        background .15s ease,
+        border-color .15s ease;
+    }
+
+    .sound:hover {
+      background: rgba(22, 22, 22, .8);
+
+      border-color:
+        rgba(255, 255, 255, .28);
+    }
+
+    .sound i {
+      width: 14px;
+
+      text-align: center;
     }
 
     /* skills */
@@ -231,14 +302,18 @@
 
     .skills {
       width: min(1000px, 100%);
+
       margin: 0 auto;
 
       padding: 28px;
 
-      border: 1px solid rgba(255, 255, 255, .12);
+      border:
+        1px solid rgba(255, 255, 255, .12);
+
       border-radius: 14px;
 
       background: rgba(12, 12, 12, .68);
+
       backdrop-filter: blur(12px);
     }
 
@@ -263,20 +338,25 @@
     .stack {
       display: flex;
       flex-wrap: wrap;
+
       gap: 8px;
     }
 
     .tech {
       display: inline-flex;
       align-items: center;
+
       gap: 8px;
 
       padding: 8px 11px;
 
-      border: 1px solid rgba(255, 255, 255, .13);
+      border:
+        1px solid rgba(255, 255, 255, .13);
+
       border-radius: 8px;
 
-      background: rgba(255, 255, 255, .045);
+      background:
+        rgba(255, 255, 255, .045);
 
       color: #d5d5d5;
 
@@ -286,6 +366,7 @@
 
     .tech i {
       width: 15px;
+
       text-align: center;
 
       color: #eeeeee;
@@ -325,6 +406,7 @@
 
       .name {
         font-size: 38px;
+
         letter-spacing: -1.8px;
       }
 
@@ -334,6 +416,7 @@
 
       .links {
         display: grid;
+
         grid-template-columns: 1fr;
 
         width: 100%;
@@ -355,6 +438,11 @@
       .scroll-down {
         bottom: 20px;
       }
+
+      .sound {
+        right: 14px;
+        bottom: 14px;
+      }
     }
   </style>
 </head>
@@ -362,21 +450,43 @@
 <body>
 
   <div class="video-bg">
+
     <video
+      id="bgVideo"
       autoplay
       muted
       loop
       playsinline
-      preload="metadata"
+      preload="auto"
     >
+
       <source
-        src="background.mp4"
+        src="background-audio.mp4"
         type="video/mp4"
       >
+
     </video>
+
   </div>
 
   <div class="video-overlay"></div>
+
+  <button
+    class="sound"
+    id="soundButton"
+    type="button"
+  >
+
+    <i
+      id="soundIcon"
+      class="fa-solid fa-volume-xmark"
+    ></i>
+
+    <span id="soundText">
+      sound off
+    </span>
+
+  </button>
 
   <main>
 
@@ -393,11 +503,15 @@
           >
 
           <div>
-            <h1 class="name">izzy</h1>
+
+            <h1 class="name">
+              izzy
+            </h1>
 
             <p class="bio">
               developer / discord / web
             </p>
+
           </div>
 
         </div>
@@ -410,8 +524,11 @@
             target="_blank"
             rel="noopener noreferrer"
           >
+
             <i class="fa-brands fa-discord"></i>
+
             Discord
+
           </a>
 
           <a
@@ -420,8 +537,11 @@
             target="_blank"
             rel="noopener noreferrer"
           >
+
             <i class="fa-brands fa-github"></i>
+
             GitHub
+
           </a>
 
           <a
@@ -430,8 +550,11 @@
             target="_blank"
             rel="noopener noreferrer"
           >
+
             <i class="fa-solid fa-vr-cardboard"></i>
+
             Meta Quest / izzyiswizzy
+
           </a>
 
         </div>
@@ -442,8 +565,13 @@
         class="scroll-down"
         href="#skills"
       >
-        <span>scroll down</span>
+
+        <span>
+          scroll down
+        </span>
+
         <i class="fa-solid fa-chevron-down"></i>
+
       </a>
 
     </section>
@@ -455,10 +583,13 @@
 
       <div class="skills">
 
-        <h2>Skills & Stack</h2>
+        <h2>
+          Skills & Stack
+        </h2>
 
         <p>
-          i've built discord bots, websites, tools, and other systems.
+          i've built discord bots, websites,
+          tools, and other systems.
           most of my projects can be found on github.
         </p>
 
@@ -535,6 +666,48 @@
   <footer>
     izzy / 2026
   </footer>
+
+  <script>
+    const video =
+      document.getElementById("bgVideo");
+
+    const button =
+      document.getElementById("soundButton");
+
+    const icon =
+      document.getElementById("soundIcon");
+
+    const text =
+      document.getElementById("soundText");
+
+    video.volume = 0.65;
+
+    button.addEventListener("click", async () => {
+      video.muted = !video.muted;
+
+      if (!video.muted) {
+        try {
+          await video.play();
+        } catch (error) {
+          video.muted = true;
+        }
+      }
+
+      if (video.muted) {
+        icon.className =
+          "fa-solid fa-volume-xmark";
+
+        text.textContent =
+          "sound off";
+      } else {
+        icon.className =
+          "fa-solid fa-volume-high";
+
+        text.textContent =
+          "sound on";
+      }
+    });
+  </script>
 
 </body>
 </html>
