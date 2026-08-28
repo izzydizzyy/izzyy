@@ -5,14 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>izzy</title>
-  <meta name="description" content="izzy — developer, projects, and links.">
+  <meta
+    name="description"
+    content="izzy — developer, discord, web, and projects."
+  >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  >
 
   <style>
     * {
@@ -25,8 +34,8 @@
 
     body {
       margin: 0;
-      color: #f2f2f2;
       background: #050505;
+      color: #f3f3f3;
       font-family: Inter, Arial, sans-serif;
     }
 
@@ -35,106 +44,127 @@
       text-decoration: none;
     }
 
-    .background {
+    /* background */
+
+    .video-bg {
       position: fixed;
       inset: 0;
-      z-index: -3;
+      z-index: 0;
       overflow: hidden;
       background: #050505;
     }
 
-   .background video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(75%) contrast(105%);
-}
+    .video-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
 
-    .shade {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, .15),
-      rgba(0, 0, 0, .25) 65%,
-      rgba(5, 5, 5, .80) 100%
-    );
-}
-
-    .grain {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      opacity: .045;
-      pointer-events: none;
-      background-image:
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+      filter:
+        brightness(.72)
+        contrast(1.04)
+        saturate(.90);
     }
 
+    .video-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, .16),
+          rgba(0, 0, 0, .25) 60%,
+          rgba(5, 5, 5, .82) 100%
+        );
+    }
+
+    main,
+    footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* hero */
+
     .hero {
+      position: relative;
       min-height: 100vh;
+
       display: flex;
       align-items: center;
-      padding: 48px 24px;
+
+      padding: 40px 28px;
     }
 
     .hero-inner {
-      width: min(920px, 100%);
-      margin: auto;
+      width: min(960px, 100%);
+      margin: 0 auto;
     }
 
     .profile {
       display: flex;
       align-items: center;
       gap: 18px;
-      margin-bottom: 22px;
+
+      margin-bottom: 20px;
     }
 
     .avatar {
-      width: 82px;
-      height: 82px;
-      border-radius: 22px;
+      width: 84px;
+      height: 84px;
+
       object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, .16);
-      box-shadow: 0 12px 34px rgba(0, 0, 0, .35);
+
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, .18);
     }
 
     .name {
-      margin: 0 0 6px;
-      font-size: clamp(32px, 5vw, 52px);
-      line-height: 1;
-      letter-spacing: -2px;
+      margin: 0 0 7px;
+
+      font-size: clamp(38px, 5vw, 56px);
       font-weight: 600;
+      line-height: .95;
+
+      letter-spacing: -2.4px;
     }
 
-    .sub {
+    .bio {
       margin: 0;
-      color: #b9b9b9;
-      font-size: 15px;
+
+      color: #b8b8b8;
+      font-size: 14px;
     }
+
+    /* links */
 
     .links {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 9px;
     }
 
     .link {
-      min-height: 42px;
       display: inline-flex;
       align-items: center;
       gap: 9px;
+
+      height: 42px;
       padding: 0 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(12, 12, 12, .58);
-      backdrop-filter: blur(10px);
-      color: #e7e7e7;
+
+      border: 1px solid rgba(255, 255, 255, .17);
+      border-radius: 9px;
+
+      background: rgba(8, 8, 8, .58);
+      backdrop-filter: blur(8px);
+
+      color: #e5e5e5;
+
       font-size: 13px;
       font-weight: 500;
+
       transition:
         background .15s ease,
         border-color .15s ease,
@@ -143,63 +173,89 @@
 
     .link:hover {
       transform: translateY(-1px);
-      background: rgba(26, 26, 26, .72);
-      border-color: rgba(255, 255, 255, .25);
+
+      background: rgba(20, 20, 20, .72);
+      border-color: rgba(255, 255, 255, .28);
     }
 
-    .scroll {
+    .link i {
+      width: 15px;
+      text-align: center;
+    }
+
+    /* scroll */
+
+    .scroll-down {
       position: absolute;
       left: 50%;
       bottom: 28px;
+
       transform: translateX(-50%);
+
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 7px;
-      color: #a5a5a5;
-      font-size: 11px;
-      letter-spacing: .08em;
+
+      color: #9b9b9b;
+
+      font-size: 10px;
+      font-weight: 500;
+
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
-    .scroll i {
-      font-size: 13px;
+    .scroll-down:hover {
+      color: #fff;
     }
+
+    /* skills */
 
     .skills-section {
       min-height: 72vh;
+
       display: flex;
       align-items: center;
-      padding: 70px 24px 110px;
+
+      padding: 100px 28px;
+
       background:
         linear-gradient(
           to bottom,
-          rgba(5, 5, 5, .12),
-          rgba(5, 5, 5, .76) 16%,
+          rgba(5, 5, 5, .15),
+          rgba(5, 5, 5, .86) 25%,
           #050505 100%
         );
     }
 
     .skills {
-      width: min(980px, 100%);
-      margin: auto;
+      width: min(1000px, 100%);
+      margin: 0 auto;
+
       padding: 28px;
-      border: 1px solid #202020;
-      border-radius: 18px;
-      background: rgba(10, 10, 10, .72);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, .30);
-      backdrop-filter: blur(14px);
+
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 14px;
+
+      background: rgba(12, 12, 12, .68);
+      backdrop-filter: blur(12px);
     }
 
     .skills h2 {
-      margin: 0 0 8px;
-      font-size: 20px;
-      letter-spacing: -.5px;
+      margin: 0 0 7px;
+
+      font-size: 19px;
+      font-weight: 600;
+
+      letter-spacing: -.4px;
     }
 
     .skills p {
-      margin: 0 0 22px;
-      color: #989898;
+      margin: 0 0 21px;
+
+      color: #9c9c9c;
+
       font-size: 14px;
       line-height: 1.6;
     }
@@ -207,18 +263,23 @@
     .stack {
       display: flex;
       flex-wrap: wrap;
-      gap: 9px;
+      gap: 8px;
     }
 
     .tech {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 11px;
-      border: 1px solid #292929;
-      border-radius: 9px;
-      background: #111;
-      color: #d7d7d7;
+
+      padding: 8px 11px;
+
+      border: 1px solid rgba(255, 255, 255, .13);
+      border-radius: 8px;
+
+      background: rgba(255, 255, 255, .045);
+
+      color: #d5d5d5;
+
       font-size: 13px;
       font-weight: 500;
     }
@@ -226,40 +287,57 @@
     .tech i {
       width: 15px;
       text-align: center;
-      color: #f0f0f0;
+
+      color: #eeeeee;
     }
 
-    .footer {
-      padding: 26px 24px 34px;
+    /* footer */
+
+    footer {
+      padding: 30px;
+
       background: #050505;
-      color: #666;
+
+      color: #5f5f5f;
+
       text-align: center;
-      font-size: 12px;
+
+      font-size: 11px;
     }
 
-    @media (max-width: 600px) {
+    /* mobile */
+
+    @media (max-width: 620px) {
       .hero {
-        padding-inline: 20px;
+        padding: 32px 20px;
       }
 
       .profile {
-        align-items: flex-start;
+        gap: 14px;
       }
 
       .avatar {
         width: 68px;
         height: 68px;
-        border-radius: 18px;
+
+        border-radius: 15px;
       }
 
       .name {
-        font-size: 36px;
-        letter-spacing: -1.5px;
+        font-size: 38px;
+        letter-spacing: -1.8px;
+      }
+
+      .bio {
+        font-size: 13px;
       }
 
       .links {
         display: grid;
         grid-template-columns: 1fr;
+
+        width: 100%;
+        max-width: 330px;
       }
 
       .link {
@@ -267,49 +345,70 @@
       }
 
       .skills-section {
-        padding-inline: 18px;
+        padding: 80px 18px;
       }
 
       .skills {
-        padding: 22px 18px;
-        border-radius: 14px;
+        padding: 21px 18px;
+      }
+
+      .scroll-down {
+        bottom: 20px;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="background">
-    <video autoplay muted loop playsinline>
-      <source src="background.webm" type="video/webm">
+
+  <div class="video-bg">
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    >
+      <source
+        src="background.mp4"
+        type="video/mp4"
+      >
     </video>
   </div>
 
-  <div class="shade"></div>
-  <div class="grain"></div>
+  <div class="video-overlay"></div>
 
   <main>
-    <section class="hero" id="top">
+
+    <section class="hero">
+
       <div class="hero-inner">
+
         <div class="profile">
+
           <img
             class="avatar"
             src="https://cdn.discordapp.com/avatars/1313630076809510975/56fcd1ee64d351250257bc14dce99791.webp?size=1024"
-            alt="izzy profile picture"
+            alt="izzy"
           >
 
           <div>
             <h1 class="name">izzy</h1>
-            <p class="sub">developer / discord / web</p>
+
+            <p class="bio">
+              developer / discord / web
+            </p>
           </div>
+
         </div>
 
         <div class="links">
+
           <a
             class="link"
             href="https://discord.com/users/1313630076809510975"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             <i class="fa-brands fa-discord"></i>
             Discord
@@ -319,7 +418,7 @@
             class="link"
             href="https://github.com/izzydizzyy"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             <i class="fa-brands fa-github"></i>
             GitHub
@@ -329,47 +428,113 @@
             class="link"
             href="https://www.meta.com/profiles/izzyiswizzy/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             <i class="fa-solid fa-vr-cardboard"></i>
             Meta Quest / izzyiswizzy
           </a>
+
         </div>
+
       </div>
 
-      <a class="scroll" href="#skills">
-        scroll down
+      <a
+        class="scroll-down"
+        href="#skills"
+      >
+        <span>scroll down</span>
         <i class="fa-solid fa-chevron-down"></i>
       </a>
+
     </section>
 
-    <section class="skills-section" id="skills">
+    <section
+      class="skills-section"
+      id="skills"
+    >
+
       <div class="skills">
+
         <h2>Skills & Stack</h2>
+
         <p>
-          tools and languages i use for websites, bots, systems, and random projects.
+          i've built discord bots, websites, tools, and other systems.
+          most of my projects can be found on github.
         </p>
 
         <div class="stack">
-          <span class="tech"><i class="fa-brands fa-python"></i>Python</span>
-          <span class="tech"><i class="fa-brands fa-js"></i>JavaScript</span>
-          <span class="tech"><i class="fa-brands fa-node-js"></i>Node.js</span>
-          <span class="tech"><i class="fa-brands fa-html5"></i>HTML</span>
-          <span class="tech"><i class="fa-brands fa-css3-alt"></i>CSS</span>
-          <span class="tech"><i class="fa-brands fa-discord"></i>Discord</span>
-          <span class="tech"><i class="fa-solid fa-database"></i>SQLite</span>
-          <span class="tech"><i class="fa-solid fa-code"></i>APIs</span>
-          <span class="tech"><i class="fa-brands fa-git-alt"></i>Git</span>
-          <span class="tech"><i class="fa-brands fa-github"></i>GitHub</span>
-          <span class="tech"><i class="fa-brands fa-cloudflare"></i>Cloudflare</span>
-          <span class="tech"><i class="fa-solid fa-terminal"></i>Bash</span>
+
+          <span class="tech">
+            <i class="fa-brands fa-python"></i>
+            Python
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-js"></i>
+            JavaScript
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-node-js"></i>
+            Node.js
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-html5"></i>
+            HTML
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-css3-alt"></i>
+            CSS
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-discord"></i>
+            Discord
+          </span>
+
+          <span class="tech">
+            <i class="fa-solid fa-database"></i>
+            SQLite
+          </span>
+
+          <span class="tech">
+            <i class="fa-solid fa-code"></i>
+            APIs
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-git-alt"></i>
+            Git
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-github"></i>
+            GitHub
+          </span>
+
+          <span class="tech">
+            <i class="fa-brands fa-cloudflare"></i>
+            Cloudflare
+          </span>
+
+          <span class="tech">
+            <i class="fa-solid fa-terminal"></i>
+            Bash
+          </span>
+
         </div>
+
       </div>
+
     </section>
+
   </main>
 
-  <footer class="footer">
+  <footer>
     izzy / 2026
   </footer>
+
 </body>
 </html>
