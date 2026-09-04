@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Hire Izzy for Discord bots, websites, APIs and custom development."
+    >
+
+    <title>hire — izzy.</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+
+            --panel:
+                rgba(255, 255, 255, 0.035);
+
+            --panel-hover:
+                rgba(255, 255, 255, 0.06);
+
+            --border:
+                rgba(255, 255, 255, 0.09);
+
+            --border-hover:
+                rgba(255, 255, 255, 0.18);
+
+            --text: #f5f5f5;
+            --muted: #8d8d8d;
+            --faint: #5d5d5d;
+
+            --container: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+
+            scrollbar-width: thin;
+            scrollbar-color: #704dff #070707;
+        }
+
+        body {
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            background: var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+            -webkit-font-smoothing:
+                antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        ::selection {
+            background: white;
+            color: black;
+        }
+
+        /* scrollbar */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070707;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border:
+                2px solid
+                #070707;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #7653ff,
+                    #b84fff,
+                    #4a8cff
+                );
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:
+                linear-gradient(
+                    180deg,
+                    #8b72ff,
+                    #ce65ff,
+                    #68a0ff
+                );
+        }
+
+        /* background */
+
+        .background {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -10;
+
+            overflow: hidden;
+
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+        }
+
+        .glow-one {
+            top: -350px;
+            left: 50%;
+
+            width: 1000px;
+            height: 700px;
+
+            transform:
+                translateX(-50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(117, 75, 255, 0.16),
+                    transparent 66%
+                );
+        }
+
+        .glow-two {
+            top: 80vh;
+            left: -350px;
+
+            width: 700px;
+            height: 700px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(54, 135, 255, 0.075),
+                    transparent 66%
+                );
+        }
+
+        .glow-three {
+            top: 140vh;
+            right: -350px;
+
+            width: 700px;
+            height: 700px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(221, 65, 255, 0.07),
+                    transparent 66%
+                );
+        }
+
+        .grid-background {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -9;
+
+            opacity: 0.11;
+
+            pointer-events: none;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.022) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.022) 1px,
+                    transparent 1px
+                );
+
+            background-size:
+                55px
+                55px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 75%
+                );
+
+            -webkit-mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 75%
+                );
+        }
+
+        .grain {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -8;
+
+            opacity: 0.015;
+
+            pointer-events: none;
+
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            width:
+                min(
+                    calc(100% - 40px),
+                    var(--container)
+                );
+
+            margin-inline: auto;
+        }
+
+        /* nav */
+
+        .nav-wrap {
+            position: fixed;
+
+            top: 20px;
+            left: 0;
+            right: 0;
+
+            z-index: 100;
+
+            pointer-events: none;
+        }
+
+        nav {
+            display: flex;
+
+            width:
+                min(
+                    calc(100% - 40px),
+                    760px
+                );
+
+            height: 62px;
+
+            margin: auto;
+
+            padding:
+                0
+                12px
+                0
+                21px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.09);
+
+            border-radius: 999px;
+
+            background:
+                rgba(8, 8, 8, 0.66);
+
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            box-shadow:
+                0 18px 50px
+                rgba(0, 0, 0, 0.32);
+
+            pointer-events: auto;
+        }
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            font-size: 17px;
+            font-weight: 800;
+
+            letter-spacing: -0.05em;
+        }
+
+        .logo iconify-icon {
+            color: #b8a7ff;
+
+            font-size: 21px;
+        }
+
+        .nav-links {
+            display: flex;
+
+            align-items: center;
+
+            gap: 4px;
+        }
+
+        .nav-links a {
+            padding:
+                10px
+                14px;
+
+            border-radius: 999px;
+
+            color: #929292;
+
+            font-size: 13px;
+
+            transition:
+                color 180ms ease,
+                background 180ms ease;
+        }
+
+        .nav-links a:hover {
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+        }
+
+        .home-button {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                11px
+                16px;
+
+            border-radius: 999px;
+
+            background: white;
+
+            color: #080808;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            transition:
+                transform 180ms ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-1px);
+        }
+
+        /* hero */
+
+        .hero {
+            min-height: 78vh;
+
+            display: flex;
+
+            align-items: center;
+
+            padding:
+                150px
+                0
+                80px;
+
+            text-align: center;
+        }
+
+        .hero-content {
+            width: 100%;
+
+            max-width: 900px;
+
+            margin: auto;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 23px;
+
+            padding:
+                8px
+                13px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 999px;
+
+            color: #b0b0b0;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            backdrop-filter:
+                blur(15px);
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing:
+                0.04em;
+        }
+
+        .hero-tag span {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #75eb98;
+
+            box-shadow:
+                0 0 13px
+                rgba(117, 235, 152, 0.68);
+        }
+
+        h1 {
+            font-size:
+                clamp(
+                    65px,
+                    11vw,
+                    130px
+                );
+
+            line-height: 0.88;
+
+            letter-spacing:
+                -0.08em;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff 15%,
+                    #d8d8d8 63%,
+                    #747474 115%
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero-description {
+            max-width: 610px;
+
+            margin:
+                33px
+                auto
+                0;
+
+            color: #929292;
+
+            font-size:
+                clamp(
+                    15px,
+                    2vw,
+                    18px
+                );
+
+            line-height: 1.7;
+
+            letter-spacing:
+                -0.02em;
+        }
+
+        .hero-description strong {
+            color: #e1e1e1;
+
+            font-weight: 500;
+        }
+
+        .hero-actions {
+            display: flex;
+
+            margin-top: 32px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+        }
+
+        .button {
+            display: inline-flex;
+
+            height: 49px;
+
+            padding:
+                0
+                19px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 999px;
+
+            color: #b3b3b3;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition:
+                transform 180ms ease,
+                background 180ms ease,
+                border-color 180ms ease,
+                color 180ms ease;
+        }
+
+        .button:hover {
+            transform:
+                translateY(-2px);
+
+            color: white;
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                rgba(255, 255, 255, 0.065);
+        }
+
+        .button.primary {
+            border-color: white;
+
+            color: #080808;
+
+            background: white;
+        }
+
+        .button.primary:hover {
+            color: #080808;
+
+            background: #eaeaea;
+        }
+
+        /* section */
+
+        .content-section {
+            padding:
+                75px
+                0;
+        }
+
+        .section-head {
+            display: flex;
+
+            margin-bottom: 29px;
+
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 30px;
+        }
+
+        .section-label {
+            margin-bottom: 10px;
+
+            color: #686868;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing:
+                0.1em;
+
+            text-transform:
+                uppercase;
+        }
+
+        .section-title {
+            font-size:
+                clamp(
+                    32px,
+                    5vw,
+                    52px
+                );
+
+            line-height: 1;
+
+            letter-spacing:
+                -0.055em;
+        }
+
+        .section-description {
+            max-width: 360px;
+
+            color: #727272;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        /* pricing */
+
+        .services {
+            display: grid;
+
+            grid-template-columns:
+                repeat(12, 1fr);
+
+            gap: 13px;
+        }
+
+        .service {
+            position: relative;
+
+            overflow: hidden;
+
+            min-height: 290px;
+
+            padding: 25px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 23px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.045),
+                    rgba(255, 255, 255, 0.015)
+                );
+
+            transition:
+                transform 250ms ease,
+                border-color 250ms ease,
+                background 250ms ease;
+        }
+
+        .service:hover {
+            transform:
+                translateY(-5px);
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.065),
+                    rgba(255, 255, 255, 0.02)
+                );
+        }
+
+        .service::before {
+            content: "";
+
+            position: absolute;
+
+            top: -150px;
+            right: -140px;
+
+            width: 330px;
+            height: 330px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--glow),
+                    transparent 68%
+                );
+
+            opacity: 0.16;
+
+            transition:
+                transform 500ms ease,
+                opacity 300ms ease;
+        }
+
+        .service:hover::before {
+            transform:
+                scale(1.15);
+
+            opacity: 0.27;
+        }
+
+        .service:nth-child(1) {
+            grid-column: span 6;
+
+            --glow:
+                #7654ff;
+        }
+
+        .service:nth-child(2) {
+            grid-column: span 6;
+
+            --glow:
+                #445eff;
+        }
+
+        .service:nth-child(3) {
+            grid-column: span 4;
+
+            --glow:
+                #3b9dff;
+        }
+
+        .service:nth-child(4) {
+            grid-column: span 4;
+
+            --glow:
+                #a649ff;
+        }
+
+        .service:nth-child(5) {
+            grid-column: span 4;
+
+            --glow:
+                #df4aff;
+        }
+
+        .service-top {
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+        .service-icon {
+            display: grid;
+
+            width: 47px;
+            height: 47px;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            border-radius: 15px;
+
+            color: #c7c7c7;
+
+            background:
+                rgba(255, 255, 255, 0.04);
+
+            font-size: 23px;
+        }
+
+        .cashapp-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding:
+                7px
+                10px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.07);
+
+            border-radius: 999px;
+
+            color: #858585;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .cashapp-badge iconify-icon {
+            color: #00d632;
+
+            font-size: 14px;
+        }
+
+        .service-content {
+            position: absolute;
+
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+
+            z-index: 2;
+        }
+
+        .service-name {
+            max-width: 360px;
+
+            font-size:
+                clamp(
+                    19px,
+                    2vw,
+                    25px
+                );
+
+            line-height: 1.2;
+
+            letter-spacing:
+                -0.04em;
+        }
+
+        .service-description {
+            max-width: 380px;
+
+            min-height: 38px;
+
+            margin-top: 10px;
+
+            color: #747474;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        .service-bottom {
+            display: flex;
+
+            margin-top: 22px;
+
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .price {
+            font-size: 32px;
+            font-weight: 700;
+
+            letter-spacing:
+                -0.055em;
+        }
+
+        .price-note {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #5c5c5c;
+
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .order-link {
+            display: grid;
+
+            width: 42px;
+            height: 42px;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.1);
+
+            border-radius: 50%;
+
+            color: #aeaeae;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            transition:
+                transform 180ms ease,
+                background 180ms ease,
+                color 180ms ease;
+        }
+
+        .order-link:hover {
+            transform:
+                rotate(-8deg)
+                scale(1.05);
+
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+        /* process */
+
+        .process-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+        }
+
+        .process-card {
+            padding: 24px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 21px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+        }
+
+        .process-number {
+            display: grid;
+
+            width: 34px;
+            height: 34px;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            border-radius: 11px;
+
+            color: #898989;
+
+            background:
+                rgba(255, 255, 255, 0.03);
+
+            font-family: monospace;
+
+            font-size: 11px;
+        }
+
+        .process-title {
+            margin-top: 28px;
+
+            font-size: 17px;
+            font-weight: 600;
+
+            letter-spacing:
+                -0.03em;
+        }
+
+        .process-copy {
+            margin-top: 9px;
+
+            color: #6f6f6f;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+        /* contact */
+
+        .contact-card {
+            position: relative;
+
+            overflow: hidden;
+
+            padding:
+                clamp(
+                    30px,
+                    6vw,
+                    65px
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.015)
+                );
+        }
+
+        .contact-card::before {
+            content: "";
+
+            position: absolute;
+
+            right: -240px;
+            bottom: -300px;
+
+            width: 650px;
+            height: 650px;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(
+                    #6849ff,
+                    #437dff,
+                    #42dfff,
+                    #6eeaa2,
+                    #ffcb59,
+                    #ff5d87,
+                    #c64fff,
+                    #6849ff
+                );
+
+            opacity: 0.08;
+
+            filter: blur(80px);
+        }
+
+        .contact-content {
+            position: relative;
+
+            z-index: 2;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr)
+                minmax(320px, 0.7fr);
+
+            align-items: center;
+
+            gap: 55px;
+        }
+
+        .contact-title {
+            max-width: 600px;
+
+            font-size:
+                clamp(
+                    36px,
+                    6vw,
+                    68px
+                );
+
+            line-height: 0.98;
+
+            letter-spacing:
+                -0.06em;
+        }
+
+        .contact-copy {
+            max-width: 520px;
+
+            margin-top: 18px;
+
+            color: #7d7d7d;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+        }
+
+        .contact-links {
+            display: grid;
+
+            gap: 10px;
+        }
+
+        .contact-link {
+            display: flex;
+
+            min-height: 72px;
+
+            padding:
+                14px
+                16px;
+
+            align-items: center;
+
+            gap: 13px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 18px;
+
+            background:
+                rgba(255, 255, 255, 0.03);
+
+            transition:
+                transform 180ms ease,
+                border-color 180ms ease,
+                background 180ms ease;
+        }
+
+        .contact-link:hover {
+            transform:
+                translateX(4px);
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                rgba(255, 255, 255, 0.055);
+        }
+
+        .contact-icon {
+            display: grid;
+
+            width: 42px;
+            height: 42px;
+
+            flex:
+                0
+                0
+                auto;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.07);
+
+            border-radius: 13px;
+
+            background:
+                rgba(255, 255, 255, 0.03);
+
+            font-size: 20px;
+        }
+
+        .discord-icon {
+            color: #7585ff;
+        }
+
+        .email-icon {
+            color: #d3d3d3;
+        }
+
+        .contact-label {
+            color: #636363;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            letter-spacing:
+                0.08em;
+
+            text-transform:
+                uppercase;
+        }
+
+        .contact-value {
+            overflow: hidden;
+
+            max-width: 100%;
+
+            margin-top: 4px;
+
+            color: #cacaca;
+
+            font-size: 12px;
+            font-weight: 500;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .contact-arrow {
+            margin-left: auto;
+
+            color: #666;
+
+            font-size: 17px;
+        }
+
+        /* notice */
+
+        .notice {
+            display: flex;
+
+            margin-top: 13px;
+
+            padding:
+                18px
+                20px;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 18px;
+
+            color: #747474;
+
+            background:
+                rgba(255, 255, 255, 0.02);
+
+            font-size: 11px;
+
+            line-height: 1.65;
+        }
+
+        .notice iconify-icon {
+            flex:
+                0
+                0
+                auto;
+
+            margin-top: 1px;
+
+            color: #8c8c8c;
+
+            font-size: 17px;
+        }
+
+        /* reveal */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(20px);
+
+            transition:
+                opacity 650ms ease,
+                transform 650ms ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform: none;
+        }
+
+        /* footer */
+
+        footer {
+            padding:
+                70px
+                0
+                35px;
+        }
+
+        .footer-inner {
+            display: flex;
+
+            padding-top: 24px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.07);
+
+            color: #555;
+
+            font-size: 11px;
+        }
+
+        /* mobile */
+
+        @media (max-width: 850px) {
+            .service:nth-child(n) {
+                grid-column: span 6;
+            }
+
+            .service:last-child {
+                grid-column: span 12;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width:
+                    calc(
+                        100% - 26px
+                    );
+            }
+
+            .nav-wrap {
+                top: 12px;
+            }
+
+            nav {
+                width:
+                    calc(
+                        100% - 24px
+                    );
+
+                height: 57px;
+
+                padding-left: 17px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                min-height: 72vh;
+
+                padding-top: 125px;
+            }
+
+            .hero-actions {
+                width: 100%;
+
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .section-head {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .service:nth-child(n) {
+                grid-column: span 12;
+
+                min-height: 270px;
+            }
+
+            .content-section {
+                padding:
+                    55px
+                    0;
+            }
+
+            .contact-content {
+                gap: 35px;
+            }
+
+            .contact-value {
+                max-width: 210px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background">
+        <div class="glow glow-one"></div>
+        <div class="glow glow-two"></div>
+        <div class="glow glow-three"></div>
+    </div>
+
+    <div class="grid-background"></div>
+    <div class="grain"></div>
+
+    <!-- NAV -->
+
+    <div class="nav-wrap">
+
+        <nav>
+
+            <a
+                href="/hire/"
+                class="logo"
+            >
+                <iconify-icon
+                    icon="lucide:briefcase-business"
+                ></iconify-icon>
+
+                hire.
+            </a>
+
+            <div class="nav-links">
+
+                <a href="#services">
+                    Services
+                </a>
+
+                <a href="#process">
+                    Process
+                </a>
+
+                <a href="#contact">
+                    Contact
+                </a>
+
+            </div>
+
+            <a
+                href="/"
+                class="home-button"
+            >
+                izzy.
+                ↗
+            </a>
+
+        </nav>
+
+    </div>
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="container">
+
+                <div class="hero-content reveal">
+
+                    <div class="hero-tag">
+
+                        <span></span>
+
+                        available for projects
+
+                    </div>
+
+                    <h1>
+                        hire me.
+                    </h1>
+
+                    <p class="hero-description">
+                        Need a
+                        <strong>Discord bot</strong>,
+                        website, API, or something
+                        custom? Tell me what you're
+                        trying to build and I'll see
+                        what I can do.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="#services"
+                            class="button primary"
+                        >
+                            View pricing
+
+                            <iconify-icon
+                                icon="lucide:arrow-down"
+                            ></iconify-icon>
+                        </a>
+
+                        <a
+                            href="#contact"
+                            class="button"
+                        >
+                            Contact me
+
+                            <iconify-icon
+                                icon="lucide:message-circle"
+                            ></iconify-icon>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SERVICES -->
+
+        <section
+            id="services"
+            class="content-section"
+        >
+
+            <div class="container">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Pricing
+                        </div>
+
+                        <h2 class="section-title">
+                            What I can build.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Simple pricing for development
+                        work. Payment is currently
+                        accepted through Cash App.
+                    </p>
+
+                </div>
+
+                <div class="services">
+
+                    <!-- LOCAL BOT -->
+
+                    <article class="service reveal">
+
+                        <div class="service-top">
+
+                            <div class="service-icon">
+
+                                <iconify-icon
+                                    icon="ic:baseline-discord"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="cashapp-badge">
+
+                                <iconify-icon
+                                    icon="simple-icons:cashapp"
+                                ></iconify-icon>
+
+                                Cash App
+
+                            </div>
+
+                        </div>
+
+                        <div class="service-content">
+
+                            <h3 class="service-name">
+                                Discord Bot
+                            </h3>
+
+                            <p class="service-description">
+                                A custom Discord bot that
+                                runs from your own PC or
+                                local machine.
+                            </p>
+
+                            <div class="service-bottom">
+
+                                <div>
+
+                                    <div class="price">
+                                        $5
+                                    </div>
+
+                                    <span class="price-note">
+                                        local hosting
+                                    </span>
+
+                                </div>
+
+                                <a
+                                    href="#contact"
+                                    class="order-link"
+                                    aria-label="Order Discord Bot"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <!-- HOSTED BOT -->
+
+                    <article class="service reveal">
+
+                        <div class="service-top">
+
+                            <div class="service-icon">
+
+                                <iconify-icon
+                                    icon="lucide:cloud-cog"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="cashapp-badge">
+
+                                <iconify-icon
+                                    icon="simple-icons:cashapp"
+                                ></iconify-icon>
+
+                                Cash App
+
+                            </div>
+
+                        </div>
+
+                        <div class="service-content">
+
+                            <h3 class="service-name">
+                                Discord Bot + Hosting
+                            </h3>
+
+                            <p class="service-description">
+                                A custom Discord bot with
+                                hosting so it can stay
+                                online 24/7.
+                            </p>
+
+                            <div class="service-bottom">
+
+                                <div>
+
+                                    <div class="price">
+                                        $10
+                                    </div>
+
+                                    <span class="price-note">
+                                        hosted 24/7
+                                    </span>
+
+                                </div>
+
+                                <a
+                                    href="#contact"
+                                    class="order-link"
+                                    aria-label="Order Hosted Discord Bot"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <!-- WEBSITE -->
+
+                    <article class="service reveal">
+
+                        <div class="service-top">
+
+                            <div class="service-icon">
+
+                                <iconify-icon
+                                    icon="lucide:panel-top"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="cashapp-badge">
+
+                                <iconify-icon
+                                    icon="simple-icons:cashapp"
+                                ></iconify-icon>
+
+                                Cash App
+
+                            </div>
+
+                        </div>
+
+                        <div class="service-content">
+
+                            <h3 class="service-name">
+                                Website
+                            </h3>
+
+                            <p class="service-description">
+                                A custom responsive
+                                website built around
+                                what you need.
+                            </p>
+
+                            <div class="service-bottom">
+
+                                <div>
+
+                                    <div class="price">
+                                        $10
+                                    </div>
+
+                                    <span class="price-note">
+                                        website only
+                                    </span>
+
+                                </div>
+
+                                <a
+                                    href="#contact"
+                                    class="order-link"
+                                    aria-label="Order Website"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <!-- WEBSITE + DOMAIN -->
+
+                    <article class="service reveal">
+
+                        <div class="service-top">
+
+                            <div class="service-icon">
+
+                                <iconify-icon
+                                    icon="lucide:globe-2"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="cashapp-badge">
+
+                                <iconify-icon
+                                    icon="simple-icons:cashapp"
+                                ></iconify-icon>
+
+                                Cash App
+
+                            </div>
+
+                        </div>
+
+                        <div class="service-content">
+
+                            <h3 class="service-name">
+                                Website + Domain
+                            </h3>
+
+                            <p class="service-description">
+                                A custom website with
+                                domain setup included.
+                            </p>
+
+                            <div class="service-bottom">
+
+                                <div>
+
+                                    <div class="price">
+                                        $20
+                                    </div>
+
+                                    <span class="price-note">
+                                        site + domain
+                                    </span>
+
+                                </div>
+
+                                <a
+                                    href="#contact"
+                                    class="order-link"
+                                    aria-label="Order Website and Domain"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <!-- API -->
+
+                    <article class="service reveal">
+
+                        <div class="service-top">
+
+                            <div class="service-icon">
+
+                                <iconify-icon
+                                    icon="lucide:braces"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="cashapp-badge">
+
+                                <iconify-icon
+                                    icon="simple-icons:cashapp"
+                                ></iconify-icon>
+
+                                Cash App
+
+                            </div>
+
+                        </div>
+
+                        <div class="service-content">
+
+                            <h3 class="service-name">
+                                API
+                            </h3>
+
+                            <p class="service-description">
+                                Custom endpoints and
+                                backend APIs for your
+                                projects or services.
+                            </p>
+
+                            <div class="service-bottom">
+
+                                <div>
+
+                                    <div class="price">
+                                        $6
+                                    </div>
+
+                                    <span class="price-note">
+                                        custom API
+                                    </span>
+
+                                </div>
+
+                                <a
+                                    href="#contact"
+                                    class="order-link"
+                                    aria-label="Order API"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+                <div class="notice reveal">
+
+                    <iconify-icon
+                        icon="lucide:info"
+                    ></iconify-icon>
+
+                    <span>
+                        Tell me what you need before
+                        paying so we can make sure the
+                        project is something I can build
+                        and that we agree on what should
+                        be included.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PROCESS -->
+
+        <section
+            id="process"
+            class="content-section"
+        >
+
+            <div class="container">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            How it works
+                        </div>
+
+                        <h2 class="section-title">
+                            Pretty simple.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        No giant forms or complicated
+                        commission system. Just contact
+                        me and tell me what you need.
+                    </p>
+
+                </div>
+
+                <div class="process-grid">
+
+                    <div class="process-card reveal">
+
+                        <div class="process-number">
+                            01
+                        </div>
+
+                        <div class="process-title">
+                            Message me
+                        </div>
+
+                        <p class="process-copy">
+                            Contact me through Discord
+                            or email and describe what
+                            you're trying to make.
+                        </p>
+
+                    </div>
+
+                    <div class="process-card reveal">
+
+                        <div class="process-number">
+                            02
+                        </div>
+
+                        <div class="process-title">
+                            Plan it
+                        </div>
+
+                        <p class="process-copy">
+                            We'll figure out the
+                            features, design and what
+                            the finished project should
+                            actually do.
+                        </p>
+
+                    </div>
+
+                    <div class="process-card reveal">
+
+                        <div class="process-number">
+                            03
+                        </div>
+
+                        <div class="process-title">
+                            Build it
+                        </div>
+
+                        <p class="process-copy">
+                            Once everything is clear,
+                            I can start building the
+                            project.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CONTACT -->
+
+        <section
+            id="contact"
+            class="content-section"
+        >
+
+            <div class="container">
+
+                <div class="contact-card reveal">
+
+                    <div class="contact-content">
+
+                        <div>
+
+                            <div class="section-label">
+                                Contact
+                            </div>
+
+                            <h2 class="contact-title">
+                                got something in mind?
+                            </h2>
+
+                            <p class="contact-copy">
+                                Send me what you want
+                                built, the features you
+                                need, and any examples
+                                or design ideas you
+                                already have.
+                            </p>
+
+                        </div>
+
+                        <div class="contact-links">
+
+                            <a
+                                href="https://discord.com/users/1313630076809510975"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="contact-link"
+                            >
+
+                                <div class="contact-icon discord-icon">
+
+                                    <iconify-icon
+                                        icon="ic:baseline-discord"
+                                    ></iconify-icon>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="contact-label">
+                                        Discord
+                                    </div>
+
+                                    <div class="contact-value">
+                                        1313630076809510975
+                                    </div>
+
+                                </div>
+
+                                <span class="contact-arrow">
+                                    ↗
+                                </span>
+
+                            </a>
+
+                            <a
+                                href="mailto:itsizzydudee@gmail.com"
+                                class="contact-link"
+                            >
+
+                                <div class="contact-icon email-icon">
+
+                                    <iconify-icon
+                                        icon="lucide:mail"
+                                    ></iconify-icon>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="contact-label">
+                                        Email
+                                    </div>
+
+                                    <div class="contact-value">
+                                        itsizzydudee@gmail.com
+                                    </div>
+
+                                </div>
+
+                                <span class="contact-arrow">
+                                    ↗
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <span>
+                development by izzy.
+            </span>
+
+            <span>
+                payment via Cash App.
+            </span>
+
+        </div>
+
+    </footer>
+
+    <script>
+        const observer =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target
+                                .classList
+                                .add(
+                                    "visible"
+                                );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    });
+
+                },
+
+                {
+                    threshold: 0.08
+                }
+            );
+
+        document
+            .querySelectorAll(
+                ".reveal"
+            )
+            .forEach(
+                element =>
+                    observer.observe(
+                        element
+                    )
+            );
+
+
+        /*
+            subtle mouse movement on pricing cards
+        */
+
+        if (
+            window.matchMedia(
+                "(pointer: fine)"
+            ).matches
+        ) {
+
+            document
+                .querySelectorAll(
+                    ".service"
+                )
+                .forEach(card => {
+
+                    card.addEventListener(
+                        "mousemove",
+                        event => {
+
+                            const rect =
+                                card
+                                    .getBoundingClientRect();
+
+                            const x =
+                                event.clientX -
+                                rect.left;
+
+                            const y =
+                                event.clientY -
+                                rect.top;
+
+                            const rotateX =
+                                (
+                                    (
+                                        y /
+                                        rect.height
+                                    )
+                                    -
+                                    0.5
+                                )
+                                *
+                                -1.5;
+
+                            const rotateY =
+                                (
+                                    (
+                                        x /
+                                        rect.width
+                                    )
+                                    -
+                                    0.5
+                                )
+                                *
+                                1.5;
+
+                            card.style.transform =
+                                `
+                                perspective(900px)
+                                translateY(-5px)
+                                rotateX(${rotateX}deg)
+                                rotateY(${rotateY}deg)
+                                `;
+
+                        }
+                    );
+
+                    card.addEventListener(
+                        "mouseleave",
+                        () => {
+
+                            card.style.transform =
+                                "";
+
+                        }
+                    );
+
+                });
+
+        }
+    </script>
+
+</body>
+</html>
