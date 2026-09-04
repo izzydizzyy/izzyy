@@ -1,0 +1,3812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Izzy's live Discord presence."
+    >
+
+    <title>discord — izzy.</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+
+            --panel:
+                rgba(255, 255, 255, 0.035);
+
+            --panel-hover:
+                rgba(255, 255, 255, 0.055);
+
+            --border:
+                rgba(255, 255, 255, 0.09);
+
+            --border-strong:
+                rgba(255, 255, 255, 0.16);
+
+            --text: #f5f5f5;
+            --muted: #8d8d8d;
+            --faint: #5f5f5f;
+
+            --container: 1180px;
+
+            --status-color: #747474;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+
+            scrollbar-width: thin;
+            scrollbar-color: #6849d8 #070707;
+        }
+
+        body {
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            background: var(--bg);
+            color: var(--text);
+
+            font-family: "Inter", sans-serif;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        ::selection {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* scrollbar */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070707;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border: 2px solid #070707;
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #7654ff,
+                    #ba4dff,
+                    #4487ff
+                );
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:
+                linear-gradient(
+                    180deg,
+                    #8a70ff,
+                    #d066ff,
+                    #64a0ff
+                );
+        }
+
+        /* background */
+
+        .background {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -10;
+
+            overflow: hidden;
+
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+
+            transition:
+                background 700ms ease,
+                opacity 700ms ease;
+        }
+
+        .glow.main {
+            top: -310px;
+            left: 50%;
+
+            width: 950px;
+            height: 650px;
+
+            transform: translateX(-50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(113, 73, 255, 0.15),
+                    transparent 66%
+                );
+        }
+
+        .glow.left {
+            top: 60vh;
+            left: -330px;
+
+            width: 680px;
+            height: 680px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(42, 133, 255, 0.08),
+                    transparent 65%
+                );
+        }
+
+        .glow.right {
+            top: 115vh;
+            right: -330px;
+
+            width: 720px;
+            height: 720px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(208, 63, 255, 0.07),
+                    transparent 65%
+                );
+        }
+
+        .grid-background {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -9;
+
+            opacity: 0.12;
+
+            pointer-events: none;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.022) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.022) 1px,
+                    transparent 1px
+                );
+
+            background-size: 55px 55px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 75%
+                );
+
+            -webkit-mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 75%
+                );
+        }
+
+        .grain {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -8;
+
+            opacity: 0.016;
+
+            pointer-events: none;
+
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            width:
+                min(
+                    calc(100% - 40px),
+                    var(--container)
+                );
+
+            margin-inline: auto;
+        }
+
+        /* nav */
+
+        .nav-wrap {
+            position: fixed;
+
+            top: 20px;
+            left: 0;
+            right: 0;
+
+            z-index: 100;
+
+            pointer-events: none;
+        }
+
+        nav {
+            display: flex;
+
+            width:
+                min(
+                    calc(100% - 40px),
+                    770px
+                );
+
+            height: 62px;
+
+            margin: auto;
+
+            padding:
+                0
+                12px
+                0
+                21px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.09);
+
+            border-radius: 999px;
+
+            background:
+                rgba(8, 8, 8, 0.66);
+
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            box-shadow:
+                0 18px 50px
+                rgba(0, 0, 0, 0.32);
+
+            pointer-events: auto;
+        }
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            font-size: 17px;
+            font-weight: 800;
+
+            letter-spacing: -0.05em;
+        }
+
+        .logo iconify-icon {
+            color: #b8a7ff;
+
+            font-size: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+        }
+
+        .nav-links a {
+            padding:
+                10px
+                14px;
+
+            border-radius: 999px;
+
+            color: #929292;
+
+            font-size: 13px;
+
+            transition:
+                color 180ms ease,
+                background 180ms ease;
+        }
+
+        .nav-links a:hover {
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+        }
+
+        .home-button {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                11px
+                16px;
+
+            border-radius: 999px;
+
+            background: white;
+
+            color: #080808;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            transition: transform 180ms ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-1px);
+        }
+
+        /* hero */
+
+        .hero {
+            padding:
+                155px
+                0
+                70px;
+        }
+
+        .hero-card {
+            position: relative;
+
+            overflow: hidden;
+
+            padding:
+                clamp(
+                    25px,
+                    5vw,
+                    48px
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.018)
+                );
+
+            box-shadow:
+                0 30px 90px
+                rgba(0, 0, 0, 0.24);
+        }
+
+        .hero-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: -250px;
+            right: -180px;
+
+            width: 600px;
+            height: 600px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    color-mix(
+                        in srgb,
+                        var(--status-color) 30%,
+                        transparent
+                    ),
+                    transparent 65%
+                );
+
+            filter: blur(25px);
+
+            opacity: 0.45;
+
+            transition:
+                background 500ms ease;
+        }
+
+        .hero-main {
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 30px;
+        }
+
+        .avatar-wrap {
+            position: relative;
+
+            flex:
+                0
+                0
+                auto;
+
+            width: 125px;
+            height: 125px;
+        }
+
+        .avatar {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.15);
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            background: #101010;
+
+            box-shadow:
+                0 18px 55px
+                rgba(0, 0, 0, 0.35);
+        }
+
+        .avatar-ring {
+            position: absolute;
+
+            inset: -6px;
+
+            z-index: -1;
+
+            border-radius: 50%;
+
+            border:
+                2px solid
+                var(--status-color);
+
+            opacity: 0.55;
+
+            box-shadow:
+                0 0 35px
+                color-mix(
+                    in srgb,
+                    var(--status-color) 50%,
+                    transparent
+                );
+
+            transition:
+                border-color 400ms ease,
+                box-shadow 400ms ease;
+        }
+
+        .avatar-status {
+            position: absolute;
+
+            right: 4px;
+            bottom: 4px;
+
+            width: 27px;
+            height: 27px;
+
+            border:
+                6px solid
+                #0c0c0c;
+
+            border-radius: 50%;
+
+            background:
+                var(--status-color);
+
+            transition:
+                background 400ms ease;
+        }
+
+        .profile-label {
+            display: flex;
+
+            margin-bottom: 10px;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #777;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.09em;
+
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                var(--status-color);
+
+            box-shadow:
+                0 0 15px
+                var(--status-color);
+
+            transition:
+                background 400ms ease,
+                box-shadow 400ms ease;
+        }
+
+        .profile-name {
+            font-size:
+                clamp(
+                    40px,
+                    7vw,
+                    75px
+                );
+
+            line-height: 0.96;
+
+            letter-spacing: -0.065em;
+        }
+
+        .username {
+            display: inline-block;
+
+            margin-top: 10px;
+
+            color: #777;
+
+            font-size: 15px;
+        }
+
+        .custom-status {
+            display: flex;
+
+            min-height: 24px;
+
+            margin-top: 19px;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #a2a2a2;
+
+            font-size: 14px;
+        }
+
+        .custom-status-emoji {
+            font-size: 17px;
+        }
+
+        .hero-actions {
+            display: flex;
+
+            margin-top: 27px;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .button {
+            display: inline-flex;
+
+            height: 44px;
+
+            padding:
+                0
+                16px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 999px;
+
+            color: #aaa;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                transform 180ms ease,
+                background 180ms ease,
+                color 180ms ease,
+                border-color 180ms ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+
+            color: #fff;
+
+            border-color:
+                var(--border-strong);
+
+            background:
+                rgba(255, 255, 255, 0.065);
+        }
+
+        .button.primary {
+            color: #080808;
+            background: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .button.primary:hover {
+            color: #080808;
+            background: #ebebeb;
+        }
+
+        /* quick status stats */
+
+        .quick-grid {
+            display: grid;
+
+            margin-top: 14px;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .quick-card {
+            min-height: 122px;
+
+            padding: 20px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 21px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            transition:
+                transform 200ms ease,
+                border-color 200ms ease,
+                background 200ms ease;
+        }
+
+        .quick-card:hover {
+            transform:
+                translateY(-3px);
+
+            border-color:
+                var(--border-strong);
+
+            background:
+                rgba(255, 255, 255, 0.045);
+        }
+
+        .quick-label {
+            color: #646464;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            letter-spacing: 0.08em;
+
+            text-transform: uppercase;
+        }
+
+        .quick-value {
+            display: flex;
+
+            margin-top: 27px;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #d7d7d7;
+
+            font-size: 18px;
+            font-weight: 600;
+
+            letter-spacing: -0.03em;
+        }
+
+        .quick-value iconify-icon {
+            color: #797979;
+
+            font-size: 20px;
+        }
+
+        /* sections */
+
+        section.content-section {
+            padding:
+                65px
+                0;
+        }
+
+        .section-head {
+            display: flex;
+
+            margin-bottom: 27px;
+
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 25px;
+        }
+
+        .section-label {
+            margin-bottom: 9px;
+
+            color: #686868;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 0.1em;
+
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            font-size:
+                clamp(
+                    30px,
+                    4vw,
+                    46px
+                );
+
+            letter-spacing: -0.055em;
+        }
+
+        .section-description {
+            max-width: 360px;
+
+            color: #737373;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        /* activity */
+
+        .activity-layout {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.4fr)
+                minmax(300px, 0.6fr);
+
+            gap: 13px;
+        }
+
+        .activities {
+            display: grid;
+
+            gap: 12px;
+        }
+
+        .activity-card {
+            position: relative;
+
+            overflow: hidden;
+
+            min-height: 225px;
+
+            padding: 24px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 23px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.045),
+                    rgba(255, 255, 255, 0.016)
+                );
+
+            transition:
+                transform 220ms ease,
+                border-color 220ms ease;
+        }
+
+        .activity-card:hover {
+            transform:
+                translateY(-3px);
+
+            border-color:
+                var(--border-strong);
+        }
+
+        .activity-card::after {
+            content: "";
+
+            position: absolute;
+
+            top: -160px;
+            right: -150px;
+
+            width: 370px;
+            height: 370px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(118, 78, 255, 0.11),
+                    transparent 65%
+                );
+
+            pointer-events: none;
+        }
+
+        .activity-type {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #717171;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 0.07em;
+
+            text-transform: uppercase;
+        }
+
+        .activity-content {
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            margin-top: 26px;
+
+            align-items: center;
+
+            gap: 20px;
+        }
+
+        .activity-art {
+            display: grid;
+
+            flex:
+                0
+                0
+                auto;
+
+            width: 84px;
+            height: 84px;
+
+            place-items: center;
+
+            overflow: hidden;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.10);
+
+            border-radius: 18px;
+
+            background:
+                rgba(255, 255, 255, 0.04);
+        }
+
+        .activity-art img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .activity-art iconify-icon {
+            color: #8f8f8f;
+
+            font-size: 34px;
+        }
+
+        .activity-info {
+            min-width: 0;
+        }
+
+        .activity-name {
+            overflow: hidden;
+
+            color: #eeeeee;
+
+            font-size: 20px;
+            font-weight: 650;
+
+            letter-spacing: -0.04em;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .activity-details {
+            overflow: hidden;
+
+            margin-top: 7px;
+
+            color: #9a9a9a;
+
+            font-size: 13px;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .activity-state {
+            overflow: hidden;
+
+            margin-top: 6px;
+
+            color: #6f6f6f;
+
+            font-size: 12px;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .elapsed {
+            display: inline-flex;
+
+            margin-top: 14px;
+
+            padding:
+                6px
+                9px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.07);
+
+            border-radius: 999px;
+
+            color: #727272;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            font-family: monospace;
+
+            font-size: 10px;
+        }
+
+        .empty-activity {
+            display: flex;
+
+            min-height: 225px;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 23px;
+
+            color: #5f5f5f;
+
+            background:
+                rgba(255, 255, 255, 0.02);
+
+            text-align: center;
+        }
+
+        .empty-activity iconify-icon {
+            font-size: 30px;
+        }
+
+        /* spotify */
+
+        .spotify-card {
+            position: relative;
+
+            overflow: hidden;
+
+            min-height: 100%;
+
+            padding: 22px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 23px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+        }
+
+        .spotify-card::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 0;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(5, 5, 5, 0.14),
+                    rgba(5, 5, 5, 0.86)
+                );
+
+            pointer-events: none;
+        }
+
+        .spotify-bg {
+            position: absolute;
+
+            inset: -25px;
+
+            z-index: -1;
+
+            opacity: 0.25;
+
+            background-position: center;
+            background-size: cover;
+
+            filter:
+                blur(35px)
+                saturate(1.3);
+
+            transform: scale(1.15);
+        }
+
+        .spotify-inner {
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .spotify-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .spotify-label {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #9e9e9e;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 0.07em;
+
+            text-transform: uppercase;
+        }
+
+        .spotify-label iconify-icon {
+            color: #1ed760;
+
+            font-size: 19px;
+        }
+
+        .album-art {
+            display: block;
+
+            width: 100%;
+
+            max-width: 250px;
+
+            aspect-ratio: 1;
+
+            margin:
+                30px
+                auto
+                22px;
+
+            border-radius: 20px;
+
+            object-fit: cover;
+
+            box-shadow:
+                0 25px 65px
+                rgba(0, 0, 0, 0.38);
+        }
+
+        .song-name {
+            overflow: hidden;
+
+            font-size: 19px;
+            font-weight: 650;
+
+            letter-spacing: -0.035em;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .artist {
+            overflow: hidden;
+
+            margin-top: 6px;
+
+            color: #8d8d8d;
+
+            font-size: 12px;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .progress {
+            width: 100%;
+            height: 4px;
+
+            margin-top: 21px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+
+            border-radius: 999px;
+
+            background: #ffffff;
+
+            transition:
+                width 500ms linear;
+        }
+
+        .progress-time {
+            display: flex;
+
+            margin-top: 7px;
+
+            justify-content: space-between;
+
+            color: #676767;
+
+            font-family: monospace;
+
+            font-size: 9px;
+        }
+
+        .spotify-empty {
+            display: flex;
+
+            min-height: 430px;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            color: #5e5e5e;
+
+            text-align: center;
+        }
+
+        .spotify-empty iconify-icon {
+            font-size: 35px;
+        }
+
+        /* devices */
+
+        .device-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+        }
+
+        .device {
+            display: flex;
+
+            min-height: 130px;
+
+            padding: 20px;
+
+            align-items: center;
+
+            gap: 16px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 21px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            transition:
+                transform 200ms ease,
+                border-color 200ms ease;
+        }
+
+        .device:hover {
+            transform:
+                translateY(-3px);
+
+            border-color:
+                var(--border-strong);
+        }
+
+        .device-icon {
+            display: grid;
+
+            width: 49px;
+            height: 49px;
+
+            flex:
+                0
+                0
+                auto;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            border-radius: 15px;
+
+            color: #777;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            font-size: 23px;
+        }
+
+        .device.active .device-icon {
+            color: #e4e4e4;
+
+            border-color:
+                color-mix(
+                    in srgb,
+                    var(--status-color) 40%,
+                    rgba(255, 255, 255, 0.08)
+                );
+
+            box-shadow:
+                0 0 25px
+                color-mix(
+                    in srgb,
+                    var(--status-color) 14%,
+                    transparent
+                );
+        }
+
+        .device-name {
+            color: #bfbfbf;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .device-status {
+            margin-top: 5px;
+
+            color: #666;
+
+            font-size: 11px;
+        }
+
+        .device.active .device-status {
+            color:
+                var(--status-color);
+        }
+
+        /* timeline */
+
+        .timeline-card {
+            padding: 24px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 23px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+        }
+
+        .timeline-note {
+            margin-bottom: 23px;
+
+            color: #656565;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+        .timeline {
+            display: grid;
+
+            gap: 0;
+        }
+
+        .timeline-item {
+            position: relative;
+
+            display: grid;
+
+            grid-template-columns:
+                19px
+                1fr
+                auto;
+
+            gap: 12px;
+
+            min-height: 49px;
+
+            color: #898989;
+
+            font-size: 12px;
+        }
+
+        .timeline-dot {
+            position: relative;
+
+            width: 8px;
+            height: 8px;
+
+            margin-top: 4px;
+            margin-left: 4px;
+
+            border-radius: 50%;
+
+            background: #616161;
+        }
+
+        .timeline-item:first-child
+        .timeline-dot {
+            background:
+                var(--status-color);
+
+            box-shadow:
+                0 0 12px
+                var(--status-color);
+        }
+
+        .timeline-dot::after {
+            content: "";
+
+            position: absolute;
+
+            top: 10px;
+            left: 3px;
+
+            width: 1px;
+            height: 35px;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+        }
+
+        .timeline-item:last-child
+        .timeline-dot::after {
+            display: none;
+        }
+
+        .timeline-time {
+            color: #545454;
+
+            font-family: monospace;
+
+            font-size: 10px;
+        }
+
+        /* connection pill */
+
+        .socket-indicator {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+
+            z-index: 60;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                9px
+                12px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            border-radius: 999px;
+
+            color: #686868;
+
+            background:
+                rgba(7, 7, 7, 0.72);
+
+            backdrop-filter: blur(20px);
+
+            font-size: 9px;
+
+            letter-spacing: 0.06em;
+
+            text-transform: uppercase;
+        }
+
+        .socket-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #777;
+        }
+
+        .socket-indicator.connected
+        .socket-dot {
+            background: #70e891;
+
+            box-shadow:
+                0 0 10px
+                rgba(112, 232, 145, 0.65);
+        }
+
+        /* error */
+
+        .error-box {
+            display: none;
+
+            margin-top: 14px;
+
+            padding: 18px;
+
+            border:
+                1px solid
+                rgba(255, 100, 100, 0.18);
+
+            border-radius: 18px;
+
+            color: #c98989;
+
+            background:
+                rgba(255, 80, 80, 0.035);
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        /* reveal */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(20px);
+
+            transition:
+                opacity 650ms ease,
+                transform 650ms ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform: none;
+        }
+
+        footer {
+            padding:
+                70px
+                0
+                35px;
+        }
+
+        .footer-inner {
+            display: flex;
+
+            padding-top: 24px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.07);
+
+            color: #555;
+
+            font-size: 11px;
+        }
+
+        /* mobile */
+
+        @media (max-width: 900px) {
+            .activity-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .spotify-empty {
+                min-height: 230px;
+            }
+
+            .album-art {
+                max-width: 220px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .quick-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .device-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width:
+                    calc(
+                        100% - 26px
+                    );
+            }
+
+            .nav-wrap {
+                top: 12px;
+            }
+
+            nav {
+                width:
+                    calc(
+                        100% - 24px
+                    );
+
+                height: 57px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 125px;
+            }
+
+            .hero-main {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .avatar-wrap {
+                width: 105px;
+                height: 105px;
+            }
+
+            .profile-name {
+                font-size:
+                    clamp(
+                        44px,
+                        15vw,
+                        68px
+                    );
+            }
+
+            .quick-card {
+                min-height: 105px;
+            }
+
+            .quick-value {
+                margin-top: 19px;
+
+                font-size: 15px;
+            }
+
+            section.content-section {
+                padding:
+                    50px
+                    0;
+            }
+
+            .activity-content {
+                align-items: flex-start;
+            }
+
+            .activity-art {
+                width: 68px;
+                height: 68px;
+            }
+
+            .activity-name {
+                font-size: 17px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .socket-indicator {
+                right: 12px;
+                bottom: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background">
+        <div class="glow main"></div>
+        <div class="glow left"></div>
+        <div class="glow right"></div>
+    </div>
+
+    <div class="grid-background"></div>
+    <div class="grain"></div>
+
+    <!-- NAV -->
+
+    <div class="nav-wrap">
+
+        <nav>
+
+            <a
+                href="/discord/"
+                class="logo"
+            >
+                <iconify-icon
+                    icon="ic:baseline-discord"
+                ></iconify-icon>
+
+                discord.
+            </a>
+
+            <div class="nav-links">
+
+                <a href="#activity">
+                    Activity
+                </a>
+
+                <a href="#devices">
+                    Devices
+                </a>
+
+                <a href="#timeline">
+                    Live
+                </a>
+
+            </div>
+
+            <a
+                href="/"
+                class="home-button"
+            >
+                izzy.
+                ↗
+            </a>
+
+        </nav>
+
+    </div>
+
+    <main>
+
+        <div class="container">
+
+            <!-- HERO -->
+
+            <section class="hero">
+
+                <div class="hero-card reveal">
+
+                    <div class="hero-main">
+
+                        <div class="avatar-wrap">
+
+                            <div class="avatar-ring"></div>
+
+                            <img
+                                id="avatar"
+                                class="avatar"
+                                alt="Discord avatar"
+                            >
+
+                            <div
+                                class="avatar-status"
+                            ></div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="profile-label">
+
+                                <span class="live-dot"></span>
+
+                                <span id="status-text">
+                                    connecting...
+                                </span>
+
+                            </div>
+
+                            <h1
+                                id="display-name"
+                                class="profile-name"
+                            >
+                                izzy.
+                            </h1>
+
+                            <div
+                                id="username"
+                                class="username"
+                            >
+                                loading...
+                            </div>
+
+                            <div
+                                id="custom-status"
+                                class="custom-status"
+                            >
+                            </div>
+
+                            <div class="hero-actions">
+
+                                <a
+                                    id="discord-profile"
+                                    class="button primary"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <iconify-icon
+                                        icon="ic:baseline-discord"
+                                    ></iconify-icon>
+
+                                    Discord profile
+                                </a>
+
+                                <button
+                                    id="copy-id"
+                                    class="button"
+                                >
+                                    <iconify-icon
+                                        icon="lucide:copy"
+                                    ></iconify-icon>
+
+                                    Copy ID
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="lanyard-error"
+                    class="error-box"
+                ></div>
+
+                <!-- QUICK CARDS -->
+
+                <div class="quick-grid reveal">
+
+                    <div class="quick-card">
+
+                        <div class="quick-label">
+                            Status
+                        </div>
+
+                        <div class="quick-value">
+
+                            <iconify-icon
+                                icon="lucide:circle"
+                            ></iconify-icon>
+
+                            <span id="quick-status">
+                                —
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="quick-card">
+
+                        <div class="quick-label">
+                            Activities
+                        </div>
+
+                        <div class="quick-value">
+
+                            <iconify-icon
+                                icon="lucide:gamepad-2"
+                            ></iconify-icon>
+
+                            <span id="activity-count">
+                                0
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="quick-card">
+
+                        <div class="quick-label">
+                            Spotify
+                        </div>
+
+                        <div class="quick-value">
+
+                            <iconify-icon
+                                icon="simple-icons:spotify"
+                            ></iconify-icon>
+
+                            <span id="spotify-state">
+                                Offline
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="quick-card">
+
+                        <div class="quick-label">
+                            Live data
+                        </div>
+
+                        <div class="quick-value">
+
+                            <iconify-icon
+                                icon="lucide:radio"
+                            ></iconify-icon>
+
+                            Lanyard
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ACTIVITY -->
+
+            <section
+                id="activity"
+                class="content-section"
+            >
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Right now
+                        </div>
+
+                        <h2 class="section-title">
+                            What I'm doing.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Games, apps and music update
+                        here automatically from my
+                        Discord presence.
+                    </p>
+
+                </div>
+
+                <div class="activity-layout">
+
+                    <div
+                        id="activities"
+                        class="activities reveal"
+                    >
+                    </div>
+
+                    <div
+                        id="spotify"
+                        class="spotify-card reveal"
+                    >
+
+                        <div class="spotify-inner">
+
+                            <div class="spotify-header">
+
+                                <div class="spotify-label">
+
+                                    <iconify-icon
+                                        icon="simple-icons:spotify"
+                                    ></iconify-icon>
+
+                                    Spotify
+
+                                </div>
+
+                            </div>
+
+                            <div class="spotify-empty">
+
+                                <iconify-icon
+                                    icon="lucide:music-2"
+                                ></iconify-icon>
+
+                                <span>
+                                    not listening right now.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- DEVICES -->
+
+            <section
+                id="devices"
+                class="content-section"
+            >
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Presence
+                        </div>
+
+                        <h2 class="section-title">
+                            Connected devices.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Shows where Discord currently
+                        sees me as active.
+                    </p>
+
+                </div>
+
+                <div class="device-grid reveal">
+
+                    <div
+                        id="device-desktop"
+                        class="device"
+                    >
+
+                        <div class="device-icon">
+
+                            <iconify-icon
+                                icon="lucide:monitor"
+                            ></iconify-icon>
+
+                        </div>
+
+                        <div>
+
+                            <div class="device-name">
+                                Desktop
+                            </div>
+
+                            <div
+                                class="device-status"
+                            >
+                                inactive
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="device-mobile"
+                        class="device"
+                    >
+
+                        <div class="device-icon">
+
+                            <iconify-icon
+                                icon="lucide:smartphone"
+                            ></iconify-icon>
+
+                        </div>
+
+                        <div>
+
+                            <div class="device-name">
+                                Mobile
+                            </div>
+
+                            <div
+                                class="device-status"
+                            >
+                                inactive
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="device-web"
+                        class="device"
+                    >
+
+                        <div class="device-icon">
+
+                            <iconify-icon
+                                icon="lucide:globe"
+                            ></iconify-icon>
+
+                        </div>
+
+                        <div>
+
+                            <div class="device-name">
+                                Web
+                            </div>
+
+                            <div
+                                class="device-status"
+                            >
+                                inactive
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- LIVE TIMELINE -->
+
+            <section
+                id="timeline"
+                class="content-section"
+            >
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Session
+                        </div>
+
+                        <h2 class="section-title">
+                            Live updates.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Presence changes recorded while
+                        you have this page open.
+                    </p>
+
+                </div>
+
+                <div class="timeline-card reveal">
+
+                    <p class="timeline-note">
+                        This isn't stored anywhere.
+                        The timeline starts fresh when
+                        the page loads.
+                    </p>
+
+                    <div
+                        id="timeline-list"
+                        class="timeline"
+                    >
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <span>
+                live presence powered by Lanyard.
+            </span>
+
+            <span>
+                izzy.
+            </span>
+
+        </div>
+
+    </footer>
+
+    <div
+        id="socket-indicator"
+        class="socket-indicator"
+    >
+        <span class="socket-dot"></span>
+
+        <span id="socket-text">
+            connecting
+        </span>
+    </div>
+
+    <script>
+        /* -----------------------------------------
+           CONFIG
+        ----------------------------------------- */
+
+        const DISCORD_ID =
+            "1313630076809510975";
+
+        const LANYARD_REST =
+            `https://api.lanyard.rest/v1/users/${DISCORD_ID}`;
+
+        const LANYARD_SOCKET =
+            "wss://api.lanyard.rest/socket";
+
+        /* -----------------------------------------
+           STATE
+        ----------------------------------------- */
+
+        let presence = null;
+
+        let socket = null;
+
+        let heartbeat = null;
+
+        let reconnectTimer = null;
+
+        let previousSummary = null;
+
+        let spotifyTimer = null;
+
+        /* -----------------------------------------
+           HELPERS
+        ----------------------------------------- */
+
+        function escapeHTML(value) {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.textContent =
+                value ?? "";
+
+            return element.innerHTML;
+
+        }
+
+        function formatTime(ms) {
+
+            if (!ms || ms < 0) {
+                return "0:00";
+            }
+
+            const total =
+                Math.floor(
+                    ms / 1000
+                );
+
+            const hours =
+                Math.floor(
+                    total / 3600
+                );
+
+            const minutes =
+                Math.floor(
+                    (total % 3600) /
+                    60
+                );
+
+            const seconds =
+                total % 60;
+
+            if (hours > 0) {
+
+                return (
+                    `${hours}:` +
+                    `${String(minutes).padStart(2, "0")}:` +
+                    `${String(seconds).padStart(2, "0")}`
+                );
+
+            }
+
+            return (
+                `${minutes}:` +
+                `${String(seconds).padStart(2, "0")}`
+            );
+
+        }
+
+        function elapsedText(timestamp) {
+
+            if (!timestamp) {
+                return "";
+            }
+
+            const difference =
+                Date.now() -
+                timestamp;
+
+            if (difference < 0) {
+                return "";
+            }
+
+            const seconds =
+                Math.floor(
+                    difference / 1000
+                );
+
+            const hours =
+                Math.floor(
+                    seconds / 3600
+                );
+
+            const minutes =
+                Math.floor(
+                    (seconds % 3600) /
+                    60
+                );
+
+            if (hours > 0) {
+                return `${hours}h ${minutes}m elapsed`;
+            }
+
+            if (minutes > 0) {
+                return `${minutes}m elapsed`;
+            }
+
+            return `${seconds}s elapsed`;
+
+        }
+
+        /* -----------------------------------------
+           STATUS
+        ----------------------------------------- */
+
+        const statusInfo = {
+
+            online: {
+                name: "Online",
+                color: "#78e69a"
+            },
+
+            idle: {
+                name: "Idle",
+                color: "#f1c65b"
+            },
+
+            dnd: {
+                name: "Do Not Disturb",
+                color: "#ee6262"
+            },
+
+            offline: {
+                name: "Offline",
+                color: "#777777"
+            }
+
+        };
+
+        function setStatus(status) {
+
+            const info =
+                statusInfo[status] ||
+                statusInfo.offline;
+
+            document
+                .documentElement
+                .style
+                .setProperty(
+                    "--status-color",
+                    info.color
+                );
+
+            document
+                .getElementById(
+                    "status-text"
+                )
+                .textContent =
+                info.name;
+
+            document
+                .getElementById(
+                    "quick-status"
+                )
+                .textContent =
+                info.name;
+
+        }
+
+        /* -----------------------------------------
+           AVATAR
+        ----------------------------------------- */
+
+        function getAvatarURL(user) {
+
+            /*
+                Lanyard provides a convenient
+                avatar quicklink.
+            */
+
+            return (
+                `https://api.lanyard.rest/` +
+                `${DISCORD_ID}.webp`
+            );
+
+        }
+
+        /* -----------------------------------------
+           CUSTOM STATUS
+        ----------------------------------------- */
+
+        function renderCustomStatus(data) {
+
+            const container =
+                document.getElementById(
+                    "custom-status"
+                );
+
+            const custom =
+                data.activities
+                    ?.find(
+                        activity =>
+                            activity.type === 4
+                    );
+
+            if (!custom) {
+
+                container.innerHTML =
+                    `
+                    <span style="color:#5f5f5f">
+                        no custom status.
+                    </span>
+                    `;
+
+                return;
+
+            }
+
+            let emoji = "";
+
+            if (custom.emoji) {
+
+                if (
+                    custom.emoji.id
+                ) {
+
+                    const extension =
+                        custom.emoji.animated
+                            ? "gif"
+                            : "webp";
+
+                    emoji =
+                        `
+                        <img
+                            src="
+                            https://cdn.discordapp.com/emojis/
+                            ${custom.emoji.id}.${extension}
+                            "
+                            style="
+                                width:18px;
+                                height:18px;
+                                object-fit:contain;
+                            "
+                            alt=""
+                        >
+                        `;
+
+                } else if (
+                    custom.emoji.name
+                ) {
+
+                    emoji =
+                        `
+                        <span class="custom-status-emoji">
+                            ${escapeHTML(custom.emoji.name)}
+                        </span>
+                        `;
+
+                }
+
+            }
+
+            container.innerHTML =
+                `
+                ${emoji}
+
+                <span>
+                    ${escapeHTML(
+                        custom.state ||
+                        ""
+                    )}
+                </span>
+                `;
+
+        }
+
+        /* -----------------------------------------
+           ACTIVITY IMAGES
+        ----------------------------------------- */
+
+        function activityImage(activity) {
+
+            const image =
+                activity.assets
+                    ?.large_image;
+
+            if (!image) {
+                return null;
+            }
+
+            if (
+                image.startsWith(
+                    "spotify:"
+                )
+            ) {
+
+                return (
+                    "https://i.scdn.co/image/" +
+                    image.replace(
+                        "spotify:",
+                        ""
+                    )
+                );
+
+            }
+
+            if (
+                image.startsWith(
+                    "http://"
+                ) ||
+                image.startsWith(
+                    "https://"
+                )
+            ) {
+
+                return image;
+
+            }
+
+            if (
+                activity.application_id
+            ) {
+
+                return (
+                    `https://cdn.discordapp.com/app-assets/` +
+                    `${activity.application_id}/` +
+                    `${image}.png`
+                );
+
+            }
+
+            return null;
+
+        }
+
+        /* -----------------------------------------
+           ACTIVITIES
+        ----------------------------------------- */
+
+        function renderActivities(data) {
+
+            const container =
+                document.getElementById(
+                    "activities"
+                );
+
+            const activities =
+                (data.activities || [])
+                    .filter(
+                        activity =>
+                            activity.type !== 4 &&
+                            activity.name !== "Spotify"
+                    );
+
+            document
+                .getElementById(
+                    "activity-count"
+                )
+                .textContent =
+                activities.length;
+
+            if (!activities.length) {
+
+                container.innerHTML =
+                    `
+                    <div class="empty-activity">
+
+                        <iconify-icon
+                            icon="lucide:moon"
+                        ></iconify-icon>
+
+                        <span>
+                            nothing showing right now.
+                        </span>
+
+                    </div>
+                    `;
+
+                return;
+
+            }
+
+            container.innerHTML =
+                activities
+                    .map(activity => {
+
+                        const image =
+                            activityImage(
+                                activity
+                            );
+
+                        let type =
+                            "Activity";
+
+                        let icon =
+                            "lucide:activity";
+
+                        if (
+                            activity.type === 0
+                        ) {
+                            type = "Playing";
+                            icon = "lucide:gamepad-2";
+                        }
+
+                        else if (
+                            activity.type === 1
+                        ) {
+                            type = "Streaming";
+                            icon = "lucide:radio";
+                        }
+
+                        else if (
+                            activity.type === 2
+                        ) {
+                            type = "Listening";
+                            icon = "lucide:headphones";
+                        }
+
+                        else if (
+                            activity.type === 3
+                        ) {
+                            type = "Watching";
+                            icon = "lucide:monitor-play";
+                        }
+
+                        else if (
+                            activity.type === 5
+                        ) {
+                            type = "Competing";
+                            icon = "lucide:trophy";
+                        }
+
+                        const timestamp =
+                            activity.timestamps
+                                ?.start;
+
+                        return `
+                            <article
+                                class="activity-card"
+                            >
+
+                                <div class="activity-type">
+
+                                    <iconify-icon
+                                        icon="${icon}"
+                                    ></iconify-icon>
+
+                                    ${type}
+
+                                </div>
+
+                                <div class="activity-content">
+
+                                    <div class="activity-art">
+
+                                        ${
+                                            image
+                                                ?
+                                                `
+                                                <img
+                                                    src="${image}"
+                                                    alt=""
+                                                    onerror="
+                                                        this.style.display='none';
+                                                        this.nextElementSibling.style.display='block';
+                                                    "
+                                                >
+
+                                                <iconify-icon
+                                                    icon="${icon}"
+                                                    style="display:none"
+                                                ></iconify-icon>
+                                                `
+                                                :
+                                                `
+                                                <iconify-icon
+                                                    icon="${icon}"
+                                                ></iconify-icon>
+                                                `
+                                        }
+
+                                    </div>
+
+                                    <div class="activity-info">
+
+                                        <div class="activity-name">
+                                            ${escapeHTML(
+                                                activity.name ||
+                                                "Unknown activity"
+                                            )}
+                                        </div>
+
+                                        ${
+                                            activity.details
+                                                ?
+                                                `
+                                                <div class="activity-details">
+                                                    ${escapeHTML(
+                                                        activity.details
+                                                    )}
+                                                </div>
+                                                `
+                                                :
+                                                ""
+                                        }
+
+                                        ${
+                                            activity.state
+                                                ?
+                                                `
+                                                <div class="activity-state">
+                                                    ${escapeHTML(
+                                                        activity.state
+                                                    )}
+                                                </div>
+                                                `
+                                                :
+                                                ""
+                                        }
+
+                                        ${
+                                            timestamp
+                                                ?
+                                                `
+                                                <span
+                                                    class="elapsed"
+                                                    data-start="${timestamp}"
+                                                >
+                                                    ${elapsedText(timestamp)}
+                                                </span>
+                                                `
+                                                :
+                                                ""
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+                        `;
+
+                    })
+                    .join("");
+
+        }
+
+        /* -----------------------------------------
+           SPOTIFY
+        ----------------------------------------- */
+
+        function renderSpotify(data) {
+
+            const wrapper =
+                document.getElementById(
+                    "spotify"
+                );
+
+            clearInterval(
+                spotifyTimer
+            );
+
+            if (
+                !data.listening_to_spotify ||
+                !data.spotify
+            ) {
+
+                document
+                    .getElementById(
+                        "spotify-state"
+                    )
+                    .textContent =
+                    "Offline";
+
+                wrapper.innerHTML =
+                    `
+                    <div class="spotify-inner">
+
+                        <div class="spotify-header">
+
+                            <div class="spotify-label">
+
+                                <iconify-icon
+                                    icon="simple-icons:spotify"
+                                ></iconify-icon>
+
+                                Spotify
+
+                            </div>
+
+                        </div>
+
+                        <div class="spotify-empty">
+
+                            <iconify-icon
+                                icon="lucide:music-2"
+                            ></iconify-icon>
+
+                            <span>
+                                not listening right now.
+                            </span>
+
+                        </div>
+
+                    </div>
+                    `;
+
+                return;
+
+            }
+
+            const spotify =
+                data.spotify;
+
+            document
+                .getElementById(
+                    "spotify-state"
+                )
+                .textContent =
+                "Listening";
+
+            wrapper.innerHTML =
+                `
+                <div
+                    class="spotify-bg"
+                    style="
+                        background-image:
+                        url('${spotify.album_art_url}');
+                    "
+                ></div>
+
+                <div class="spotify-inner">
+
+                    <div class="spotify-header">
+
+                        <div class="spotify-label">
+
+                            <iconify-icon
+                                icon="simple-icons:spotify"
+                            ></iconify-icon>
+
+                            Listening now
+
+                        </div>
+
+                    </div>
+
+                    <img
+                        src="${spotify.album_art_url}"
+                        class="album-art"
+                        alt=""
+                    >
+
+                    <div class="song-name">
+                        ${escapeHTML(
+                            spotify.song
+                        )}
+                    </div>
+
+                    <div class="artist">
+                        ${escapeHTML(
+                            spotify.artist
+                        )}
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            id="spotify-progress"
+                            class="progress-bar"
+                        ></div>
+
+                    </div>
+
+                    <div class="progress-time">
+
+                        <span id="spotify-current">
+                            0:00
+                        </span>
+
+                        <span id="spotify-total">
+                            0:00
+                        </span>
+
+                    </div>
+
+                </div>
+                `;
+
+            function updateProgress() {
+
+                const start =
+                    spotify.timestamps.start;
+
+                const end =
+                    spotify.timestamps.end;
+
+                const duration =
+                    end - start;
+
+                const current =
+                    Math.max(
+                        0,
+                        Math.min(
+                            duration,
+                            Date.now() - start
+                        )
+                    );
+
+                const percent =
+                    (
+                        current /
+                        duration
+                    ) *
+                    100;
+
+                const progress =
+                    document.getElementById(
+                        "spotify-progress"
+                    );
+
+                const currentText =
+                    document.getElementById(
+                        "spotify-current"
+                    );
+
+                const totalText =
+                    document.getElementById(
+                        "spotify-total"
+                    );
+
+                if (progress) {
+                    progress.style.width =
+                        `${percent}%`;
+                }
+
+                if (currentText) {
+                    currentText.textContent =
+                        formatTime(current);
+                }
+
+                if (totalText) {
+                    totalText.textContent =
+                        formatTime(duration);
+                }
+
+            }
+
+            updateProgress();
+
+            spotifyTimer =
+                setInterval(
+                    updateProgress,
+                    1000
+                );
+
+        }
+
+        /* -----------------------------------------
+           DEVICES
+        ----------------------------------------- */
+
+        function renderDevice(
+            id,
+            active
+        ) {
+
+            const device =
+                document.getElementById(
+                    id
+                );
+
+            const text =
+                device.querySelector(
+                    ".device-status"
+                );
+
+            device.classList.toggle(
+                "active",
+                Boolean(active)
+            );
+
+            text.textContent =
+                active
+                    ? "active now"
+                    : "inactive";
+
+        }
+
+        function renderDevices(data) {
+
+            renderDevice(
+                "device-desktop",
+                data.active_on_discord_desktop
+            );
+
+            renderDevice(
+                "device-mobile",
+                data.active_on_discord_mobile
+            );
+
+            renderDevice(
+                "device-web",
+                data.active_on_discord_web
+            );
+
+        }
+
+        /* -----------------------------------------
+           PROFILE
+        ----------------------------------------- */
+
+        function renderProfile(data) {
+
+            const user =
+                data.discord_user;
+
+            if (!user) {
+                return;
+            }
+
+            const displayName =
+                user.display_name ||
+                user.global_name ||
+                user.username ||
+                "izzy.";
+
+            document
+                .getElementById(
+                    "avatar"
+                )
+                .src =
+                getAvatarURL(user);
+
+            document
+                .getElementById(
+                    "display-name"
+                )
+                .textContent =
+                displayName;
+
+            document
+                .getElementById(
+                    "username"
+                )
+                .textContent =
+                `@${user.username}`;
+
+            document
+                .getElementById(
+                    "discord-profile"
+                )
+                .href =
+                `https://discord.com/users/${DISCORD_ID}`;
+
+            setStatus(
+                data.discord_status ||
+                "offline"
+            );
+
+            renderCustomStatus(
+                data
+            );
+
+        }
+
+        /* -----------------------------------------
+           TIMELINE
+        ----------------------------------------- */
+
+        const timelineEvents = [];
+
+        function getPresenceSummary(data) {
+
+            const activity =
+                (data.activities || [])
+                    .find(
+                        item =>
+                            item.type !== 4 &&
+                            item.name !== "Spotify"
+                    );
+
+            return {
+                status:
+                    data.discord_status,
+
+                activity:
+                    activity?.name ||
+                    null,
+
+                spotify:
+                    data.spotify?.song ||
+                    null
+            };
+
+        }
+
+        function addTimelineEvent(text) {
+
+            timelineEvents.unshift({
+
+                text,
+
+                time:
+                    new Date()
+                        .toLocaleTimeString(
+                            [],
+                            {
+                                hour:
+                                    "numeric",
+
+                                minute:
+                                    "2-digit"
+                            }
+                        )
+
+            });
+
+            if (
+                timelineEvents.length >
+                8
+            ) {
+                timelineEvents.pop();
+            }
+
+            renderTimeline();
+
+        }
+
+        function updateTimeline(data) {
+
+            const next =
+                getPresenceSummary(
+                    data
+                );
+
+            if (!previousSummary) {
+
+                addTimelineEvent(
+                    `presence loaded — ${next.status || "offline"}`
+                );
+
+                previousSummary =
+                    next;
+
+                return;
+
+            }
+
+            if (
+                next.status !==
+                previousSummary.status
+            ) {
+
+                addTimelineEvent(
+                    `status changed to ${next.status}`
+                );
+
+            }
+
+            if (
+                next.activity !==
+                previousSummary.activity
+            ) {
+
+                if (next.activity) {
+
+                    addTimelineEvent(
+                        `started ${next.activity}`
+                    );
+
+                } else if (
+                    previousSummary.activity
+                ) {
+
+                    addTimelineEvent(
+                        `stopped ${previousSummary.activity}`
+                    );
+
+                }
+
+            }
+
+            if (
+                next.spotify !==
+                previousSummary.spotify
+            ) {
+
+                if (next.spotify) {
+
+                    addTimelineEvent(
+                        `listening to ${next.spotify}`
+                    );
+
+                } else if (
+                    previousSummary.spotify
+                ) {
+
+                    addTimelineEvent(
+                        "stopped listening to Spotify"
+                    );
+
+                }
+
+            }
+
+            previousSummary =
+                next;
+
+        }
+
+        function renderTimeline() {
+
+            const list =
+                document.getElementById(
+                    "timeline-list"
+                );
+
+            if (!timelineEvents.length) {
+
+                list.innerHTML =
+                    `
+                    <div style="color:#5f5f5f;font-size:12px">
+                        waiting for presence...
+                    </div>
+                    `;
+
+                return;
+
+            }
+
+            list.innerHTML =
+                timelineEvents
+                    .map(event => {
+
+                        return `
+                            <div class="timeline-item">
+
+                                <span class="timeline-dot"></span>
+
+                                <span>
+                                    ${escapeHTML(event.text)}
+                                </span>
+
+                                <span class="timeline-time">
+                                    ${event.time}
+                                </span>
+
+                            </div>
+                        `;
+
+                    })
+                    .join("");
+
+        }
+
+        /* -----------------------------------------
+           RENDER EVERYTHING
+        ----------------------------------------- */
+
+        function renderPresence(data) {
+
+            if (!data) {
+                return;
+            }
+
+            presence =
+                data;
+
+            renderProfile(
+                data
+            );
+
+            renderActivities(
+                data
+            );
+
+            renderSpotify(
+                data
+            );
+
+            renderDevices(
+                data
+            );
+
+            updateTimeline(
+                data
+            );
+
+        }
+
+        /* -----------------------------------------
+           ELAPSED ACTIVITY TIMERS
+        ----------------------------------------- */
+
+        setInterval(
+            () => {
+
+                document
+                    .querySelectorAll(
+                        "[data-start]"
+                    )
+                    .forEach(element => {
+
+                        const start =
+                            Number(
+                                element.dataset.start
+                            );
+
+                        element.textContent =
+                            elapsedText(start);
+
+                    });
+
+            },
+            1000
+        );
+
+        /* -----------------------------------------
+           REST FALLBACK
+        ----------------------------------------- */
+
+        async function loadREST() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        LANYARD_REST
+                    );
+
+                if (!response.ok) {
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+                }
+
+                const result =
+                    await response.json();
+
+                if (
+                    !result.success ||
+                    !result.data
+                ) {
+
+                    throw new Error(
+                        "Lanyard returned no presence"
+                    );
+
+                }
+
+                renderPresence(
+                    result.data
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Lanyard REST:",
+                    error
+                );
+
+                showError();
+
+            }
+
+        }
+
+        /* -----------------------------------------
+           WEBSOCKET
+        ----------------------------------------- */
+
+        function setSocketState(
+            connected
+        ) {
+
+            const indicator =
+                document.getElementById(
+                    "socket-indicator"
+                );
+
+            const text =
+                document.getElementById(
+                    "socket-text"
+                );
+
+            indicator.classList.toggle(
+                "connected",
+                connected
+            );
+
+            text.textContent =
+                connected
+                    ? "live"
+                    : "reconnecting";
+
+        }
+
+        function connectSocket() {
+
+            clearTimeout(
+                reconnectTimer
+            );
+
+            if (
+                socket &&
+                (
+                    socket.readyState ===
+                    WebSocket.CONNECTING
+                    ||
+                    socket.readyState ===
+                    WebSocket.OPEN
+                )
+            ) {
+                return;
+            }
+
+            socket =
+                new WebSocket(
+                    LANYARD_SOCKET
+                );
+
+            socket.addEventListener(
+                "open",
+                () => {
+
+                    setSocketState(
+                        true
+                    );
+
+                }
+            );
+
+            socket.addEventListener(
+                "message",
+                event => {
+
+                    let message;
+
+                    try {
+
+                        message =
+                            JSON.parse(
+                                event.data
+                            );
+
+                    } catch (_) {
+
+                        return;
+
+                    }
+
+                    /*
+                        Opcode 1:
+                        hello / heartbeat interval
+                    */
+
+                    if (
+                        message.op === 1
+                    ) {
+
+                        clearInterval(
+                            heartbeat
+                        );
+
+                        heartbeat =
+                            setInterval(
+                                () => {
+
+                                    if (
+                                        socket.readyState ===
+                                        WebSocket.OPEN
+                                    ) {
+
+                                        socket.send(
+                                            JSON.stringify({
+                                                op: 3
+                                            })
+                                        );
+
+                                    }
+
+                                },
+                                message.d
+                                    .heartbeat_interval
+                            );
+
+                        /*
+                            Subscribe to only Izzy.
+                        */
+
+                        socket.send(
+                            JSON.stringify({
+
+                                op: 2,
+
+                                d: {
+                                    subscribe_to_id:
+                                        DISCORD_ID
+                                }
+
+                            })
+                        );
+
+                        return;
+
+                    }
+
+                    /*
+                        Opcode 0:
+                        Lanyard event
+                    */
+
+                    if (
+                        message.op === 0
+                        &&
+                        (
+                            message.t ===
+                            "INIT_STATE"
+
+                            ||
+
+                            message.t ===
+                            "PRESENCE_UPDATE"
+                        )
+                    ) {
+
+                        renderPresence(
+                            message.d
+                        );
+
+                    }
+
+                }
+            );
+
+            socket.addEventListener(
+                "close",
+                () => {
+
+                    setSocketState(
+                        false
+                    );
+
+                    clearInterval(
+                        heartbeat
+                    );
+
+                    reconnectTimer =
+                        setTimeout(
+                            connectSocket,
+                            4000
+                        );
+
+                }
+            );
+
+            socket.addEventListener(
+                "error",
+                () => {
+
+                    socket.close();
+
+                }
+            );
+
+        }
+
+        /* -----------------------------------------
+           ERROR
+        ----------------------------------------- */
+
+        function showError() {
+
+            const box =
+                document.getElementById(
+                    "lanyard-error"
+                );
+
+            box.style.display =
+                "block";
+
+            box.innerHTML =
+                `
+                I couldn't load this Discord presence
+                from Lanyard yet. Make sure this account
+                is registered with Lanyard, then refresh.
+                `;
+
+        }
+
+        /* -----------------------------------------
+           COPY ID
+        ----------------------------------------- */
+
+        document
+            .getElementById(
+                "copy-id"
+            )
+            .addEventListener(
+                "click",
+                async event => {
+
+                    const button =
+                        event.currentTarget;
+
+                    try {
+
+                        await navigator
+                            .clipboard
+                            .writeText(
+                                DISCORD_ID
+                            );
+
+                        button.innerHTML =
+                            `
+                            <iconify-icon
+                                icon="lucide:check"
+                            ></iconify-icon>
+
+                            Copied
+                            `;
+
+                        setTimeout(
+                            () => {
+
+                                button.innerHTML =
+                                    `
+                                    <iconify-icon
+                                        icon="lucide:copy"
+                                    ></iconify-icon>
+
+                                    Copy ID
+                                    `;
+
+                            },
+                            1600
+                        );
+
+                    } catch (_) {}
+
+                }
+            );
+
+        /* -----------------------------------------
+           REVEALS
+        ----------------------------------------- */
+
+        const observer =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(
+                        entry => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry
+                                    .target
+                                    .classList
+                                    .add(
+                                        "visible"
+                                    );
+
+                                observer
+                                    .unobserve(
+                                        entry.target
+                                    );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.08
+                }
+            );
+
+        document
+            .querySelectorAll(
+                ".reveal"
+            )
+            .forEach(
+                element =>
+                    observer.observe(
+                        element
+                    )
+            );
+
+        /* -----------------------------------------
+           START
+        ----------------------------------------- */
+
+        renderTimeline();
+
+        loadREST();
+
+        connectSocket();
+    </script>
+
+</body>
+</html>
