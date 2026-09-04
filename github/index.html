@@ -1,0 +1,2861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Izzy's GitHub projects, statistics and development activity."
+    >
+
+    <title>github — izzy.</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+
+            --card:
+                rgba(255, 255, 255, 0.035);
+
+            --card-hover:
+                rgba(255, 255, 255, 0.055);
+
+            --border:
+                rgba(255, 255, 255, 0.09);
+
+            --border-hover:
+                rgba(255, 255, 255, 0.17);
+
+            --text: #f5f5f5;
+
+            --muted: #969696;
+
+            --muted-dark: #626262;
+
+            --container: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+
+            scrollbar-width: thin;
+
+            scrollbar-color:
+                #6a4bd8
+                #070707;
+        }
+
+        body {
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            background:
+                var(--bg);
+
+            color:
+                var(--text);
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+            -webkit-font-smoothing:
+                antialiased;
+        }
+
+        a {
+            color: inherit;
+
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        ::selection {
+            background: #fff;
+            color: #000;
+        }
+
+        /* -------------------------------------------
+           scrollbar
+        ------------------------------------------- */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070707;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border:
+                2px solid
+                #070707;
+
+            border-radius:
+                999px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #6e50ff,
+                    #ad47ff,
+                    #4589ff
+                );
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:
+                linear-gradient(
+                    180deg,
+                    #836aff,
+                    #c65dff,
+                    #63a0ff
+                );
+        }
+
+        /* -------------------------------------------
+           background
+        ------------------------------------------- */
+
+        .background {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -5;
+
+            overflow: hidden;
+
+            pointer-events: none;
+        }
+
+        .glow-one {
+            position: absolute;
+
+            top: -300px;
+            left: 50%;
+
+            width: 950px;
+            height: 650px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(
+                        111,
+                        73,
+                        255,
+                        0.14
+                    ),
+                    transparent 64%
+                );
+
+            filter:
+                blur(55px);
+        }
+
+        .glow-two {
+            position: absolute;
+
+            top: 42vh;
+            left: -300px;
+
+            width: 650px;
+            height: 650px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(
+                        41,
+                        145,
+                        255,
+                        0.07
+                    ),
+                    transparent 65%
+                );
+
+            filter:
+                blur(70px);
+        }
+
+        .glow-three {
+            position: absolute;
+
+            top: 95vh;
+            right: -300px;
+
+            width: 700px;
+            height: 700px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(
+                        218,
+                        63,
+                        255,
+                        0.07
+                    ),
+                    transparent 65%
+                );
+
+            filter:
+                blur(80px);
+        }
+
+        .grain {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -4;
+
+            opacity: 0.018;
+
+            pointer-events: none;
+
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            width:
+                min(
+                    calc(100% - 40px),
+                    var(--container)
+                );
+
+            margin-inline: auto;
+        }
+
+        /* -------------------------------------------
+           nav
+        ------------------------------------------- */
+
+        .nav-wrap {
+            position: fixed;
+
+            top: 20px;
+            left: 0;
+            right: 0;
+
+            z-index: 100;
+
+            pointer-events: none;
+        }
+
+        nav {
+            display: flex;
+
+            width:
+                min(
+                    calc(100% - 40px),
+                    760px
+                );
+
+            height: 62px;
+
+            margin: auto;
+
+            padding:
+                0
+                12px
+                0
+                22px;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.09
+                );
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(
+                    8,
+                    8,
+                    8,
+                    0.65
+                );
+
+            backdrop-filter:
+                blur(24px);
+
+            -webkit-backdrop-filter:
+                blur(24px);
+
+            box-shadow:
+                0 18px 45px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.30
+                );
+
+            pointer-events:
+                auto;
+        }
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+            letter-spacing:
+                -0.05em;
+        }
+
+        .logo iconify-icon {
+            font-size: 21px;
+        }
+
+        .nav-links {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+        }
+
+        .nav-links a {
+            padding:
+                10px
+                14px;
+
+            border-radius:
+                999px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            transition:
+                180ms ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.06
+                );
+        }
+
+        .back-button {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                11px
+                16px;
+
+            border-radius:
+                999px;
+
+            background: #fff;
+
+            color: #080808;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            transition:
+                transform
+                180ms ease;
+        }
+
+        .back-button:hover {
+            transform:
+                translateY(-1px);
+        }
+
+        /* -------------------------------------------
+           hero
+        ------------------------------------------- */
+
+        .hero {
+            padding:
+                155px
+                0
+                70px;
+        }
+
+        .hero-top {
+            display: grid;
+
+            grid-template-columns:
+                auto
+                1fr;
+
+            align-items: center;
+
+            gap: 30px;
+        }
+
+        .avatar-wrap {
+            position: relative;
+
+            width: 110px;
+            height: 110px;
+        }
+
+        .avatar-wrap::after {
+            content: "";
+
+            position: absolute;
+
+            inset: -5px;
+
+            z-index: -1;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #714cff,
+                    #e24aff,
+                    #4e9cff
+                );
+
+            opacity: 0.6;
+
+            filter:
+                blur(14px);
+        }
+
+        .avatar {
+            display: block;
+
+            width: 110px;
+            height: 110px;
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.16
+                );
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            background: #111;
+        }
+
+        .hero-label {
+            display: flex;
+
+            margin-bottom: 10px;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #878787;
+
+            font-size: 12px;
+        }
+
+        .hero-label span {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #75ed9a;
+
+            box-shadow:
+                0 0 12px
+                rgba(
+                    117,
+                    237,
+                    154,
+                    0.7
+                );
+        }
+
+        h1 {
+            font-size:
+                clamp(
+                    45px,
+                    7vw,
+                    78px
+                );
+
+            line-height: 0.95;
+
+            letter-spacing:
+                -0.065em;
+        }
+
+        .username {
+            display: inline-block;
+
+            margin-top: 10px;
+
+            color: #777;
+
+            font-size: 15px;
+        }
+
+        .bio {
+            max-width: 620px;
+
+            margin-top: 22px;
+
+            color: #929292;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+        }
+
+        /* -------------------------------------------
+           stats
+        ------------------------------------------- */
+
+        .stats {
+            display: grid;
+
+            margin-top: 52px;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .stat {
+            min-height: 120px;
+
+            padding: 20px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 20px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.025
+                );
+
+            transition:
+                transform
+                220ms ease,
+                border-color
+                220ms ease,
+                background
+                220ms ease;
+        }
+
+        .stat:hover {
+            transform:
+                translateY(-3px);
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.045
+                );
+        }
+
+        .stat-label {
+            color: #696969;
+
+            font-size: 11px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.08em;
+        }
+
+        .stat-value {
+            display: block;
+
+            margin-top: 28px;
+
+            font-size: 28px;
+
+            font-weight: 650;
+
+            letter-spacing:
+                -0.05em;
+        }
+
+        /* -------------------------------------------
+           sections
+        ------------------------------------------- */
+
+        section {
+            padding:
+                65px
+                0;
+        }
+
+        .section-head {
+            display: flex;
+
+            margin-bottom: 28px;
+
+            align-items: flex-end;
+
+            justify-content:
+                space-between;
+
+            gap: 25px;
+        }
+
+        .section-label {
+            margin-bottom: 9px;
+
+            color: #6b6b6b;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing:
+                0.1em;
+
+            text-transform:
+                uppercase;
+        }
+
+        .section-title {
+            font-size:
+                clamp(
+                    30px,
+                    4vw,
+                    45px
+                );
+
+            letter-spacing:
+                -0.05em;
+        }
+
+        .section-description {
+            max-width: 360px;
+
+            color: #717171;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        /* -------------------------------------------
+           contribution graph
+        ------------------------------------------- */
+
+        .activity-card {
+            overflow: hidden;
+
+            padding: 26px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 24px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.025
+                );
+        }
+
+        .activity-top {
+            display: flex;
+
+            margin-bottom: 25px;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 20px;
+        }
+
+        .activity-total {
+            color: #bdbdbd;
+
+            font-size: 13px;
+        }
+
+        .activity-total strong {
+            color: #fff;
+        }
+
+        .legend {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            color: #666;
+
+            font-size: 10px;
+        }
+
+        .legend-box {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 3px;
+        }
+
+        .level-0 {
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.04
+                );
+        }
+
+        .level-1 {
+            background: #33256b;
+        }
+
+        .level-2 {
+            background: #50349d;
+        }
+
+        .level-3 {
+            background: #7149d4;
+        }
+
+        .level-4 {
+            background: #a065ff;
+        }
+
+        .graph-scroll {
+            overflow-x: auto;
+
+            padding-bottom: 6px;
+        }
+
+        .graph-scroll::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .graph {
+            display: grid;
+
+            width: max-content;
+
+            grid-template-rows:
+                repeat(7, 11px);
+
+            grid-auto-flow: column;
+
+            grid-auto-columns: 11px;
+
+            gap: 4px;
+        }
+
+        .day {
+            width: 11px;
+            height: 11px;
+
+            border-radius: 3px;
+
+            transition:
+                transform
+                100ms ease,
+                filter
+                100ms ease;
+        }
+
+        .day:hover {
+            transform:
+                scale(1.5);
+
+            filter:
+                brightness(1.25);
+        }
+
+        /* -------------------------------------------
+           repositories
+        ------------------------------------------- */
+
+        .repo-controls {
+            display: flex;
+
+            margin-bottom: 18px;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .search-box {
+            display: flex;
+
+            flex: 1;
+
+            height: 46px;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding:
+                0
+                15px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 15px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.025
+                );
+        }
+
+        .search-box iconify-icon {
+            color: #666;
+
+            font-size: 18px;
+        }
+
+        .search-box input {
+            width: 100%;
+
+            border: none;
+
+            outline: none;
+
+            background:
+                transparent;
+
+            color: #fff;
+
+            font-size: 13px;
+        }
+
+        .search-box input::placeholder {
+            color: #626262;
+        }
+
+        .sort-select {
+            height: 46px;
+
+            padding:
+                0
+                14px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 15px;
+
+            outline: none;
+
+            background: #0a0a0a;
+
+            color: #aaa;
+
+            font-size: 12px;
+
+            cursor: pointer;
+        }
+
+        .repo-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 13px;
+        }
+
+        .repo {
+            position: relative;
+
+            min-height: 215px;
+
+            overflow: hidden;
+
+            padding: 23px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.04
+                    ),
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.015
+                    )
+                );
+
+            transition:
+                transform
+                230ms ease,
+                border-color
+                230ms ease,
+                background
+                230ms ease;
+        }
+
+        .repo::after {
+            content: "";
+
+            position: absolute;
+
+            top: -120px;
+            right: -120px;
+
+            width: 250px;
+            height: 250px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(
+                        116,
+                        75,
+                        255,
+                        0.10
+                    ),
+                    transparent 67%
+                );
+
+            transition:
+                transform
+                400ms ease,
+                opacity
+                400ms ease;
+        }
+
+        .repo:hover {
+            transform:
+                translateY(-4px);
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.06
+                    ),
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.02
+                    )
+                );
+        }
+
+        .repo:hover::after {
+            transform:
+                scale(1.2);
+
+            opacity: 1.4;
+        }
+
+        .repo-top {
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+        }
+
+        .repo-name {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            letter-spacing:
+                -0.025em;
+        }
+
+        .repo-name iconify-icon {
+            color: #777;
+        }
+
+        .repo-link {
+            display: grid;
+
+            width: 35px;
+            height: 35px;
+
+            flex:
+                0
+                0
+                auto;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
+
+            border-radius: 50%;
+
+            color: #888;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.025
+                );
+        }
+
+        .repo-description {
+            position: relative;
+
+            z-index: 2;
+
+            min-height: 42px;
+
+            margin-top: 19px;
+
+            color: #777;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .repo-meta {
+            position: absolute;
+
+            left: 23px;
+            right: 23px;
+            bottom: 21px;
+
+            z-index: 2;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 17px;
+
+            color: #6d6d6d;
+
+            font-size: 11px;
+        }
+
+        .repo-meta-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+        }
+
+        .language-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #895cff;
+        }
+
+        /* -------------------------------------------
+           languages
+        ------------------------------------------- */
+
+        .language-card {
+            padding: 27px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 24px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.025
+                );
+        }
+
+        .language-bar {
+            display: flex;
+
+            width: 100%;
+            height: 12px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.04
+                );
+        }
+
+        .language-piece {
+            height: 100%;
+        }
+
+        .language-list {
+            display: flex;
+
+            margin-top: 25px;
+
+            flex-wrap: wrap;
+
+            gap:
+                12px
+                20px;
+        }
+
+        .language-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #898989;
+
+            font-size: 12px;
+        }
+
+        .language-color {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+        }
+
+        /* -------------------------------------------
+           states
+        ------------------------------------------- */
+
+        .loading {
+            padding: 70px;
+
+            text-align: center;
+
+            color: #666;
+
+            font-size: 13px;
+        }
+
+        .empty {
+            grid-column:
+                1 /
+                -1;
+
+            padding: 50px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            color: #666;
+        }
+
+        /* -------------------------------------------
+           footer
+        ------------------------------------------- */
+
+        footer {
+            padding:
+                80px
+                0
+                35px;
+        }
+
+        .footer-inner {
+            display: flex;
+
+            padding-top: 25px;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            border-top:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.07
+                );
+
+            color: #575757;
+
+            font-size: 11px;
+        }
+
+        /* -------------------------------------------
+           animations
+        ------------------------------------------- */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(20px);
+
+            transition:
+                opacity
+                650ms
+                ease,
+
+                transform
+                650ms
+                ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform: none;
+        }
+
+        /* -------------------------------------------
+           mobile
+        ------------------------------------------- */
+
+        @media (
+            max-width: 800px
+        ) {
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .repo-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .section-head {
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+        }
+
+        @media (
+            max-width: 600px
+        ) {
+            .container {
+                width:
+                    calc(
+                        100% - 26px
+                    );
+            }
+
+            .nav-wrap {
+                top: 12px;
+            }
+
+            nav {
+                width:
+                    calc(
+                        100% - 24px
+                    );
+
+                height: 57px;
+
+                padding-left:
+                    17px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding-top:
+                    125px;
+            }
+
+            .hero-top {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .avatar-wrap,
+            .avatar {
+                width: 90px;
+                height: 90px;
+            }
+
+            h1 {
+                font-size:
+                    clamp(
+                        48px,
+                        15vw,
+                        68px
+                    );
+            }
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .stat {
+                min-height: 105px;
+            }
+
+            .stat-value {
+                margin-top: 20px;
+            }
+
+            .repo-controls {
+                align-items:
+                    stretch;
+
+                flex-direction:
+                    column;
+            }
+
+            .activity-card {
+                padding: 19px;
+            }
+
+            .activity-top {
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+
+            .repo {
+                min-height: 230px;
+            }
+
+            .footer-inner {
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background">
+        <div class="glow-one"></div>
+        <div class="glow-two"></div>
+        <div class="glow-three"></div>
+    </div>
+
+    <div class="grain"></div>
+
+    <div class="nav-wrap">
+
+        <nav>
+
+            <a
+                href="/github/"
+                class="logo"
+            >
+                <iconify-icon
+                    icon="mdi:github"
+                ></iconify-icon>
+
+                github.
+            </a>
+
+            <div class="nav-links">
+
+                <a href="#activity">
+                    Activity
+                </a>
+
+                <a href="#repos">
+                    Repositories
+                </a>
+
+                <a href="#languages">
+                    Languages
+                </a>
+
+            </div>
+
+            <a
+                href="/"
+                class="back-button"
+            >
+                izzy.me
+                ↗
+            </a>
+
+        </nav>
+
+    </div>
+
+    <main>
+
+        <div class="container">
+
+            <section class="hero">
+
+                <div class="hero-top reveal">
+
+                    <div class="avatar-wrap">
+
+                        <img
+                            id="avatar"
+                            class="avatar"
+                            alt="GitHub avatar"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <div class="hero-label">
+                            <span></span>
+                            live from github
+                        </div>
+
+                        <h1 id="profile-name">
+                            izzy.
+                        </h1>
+
+                        <a
+                            id="username"
+                            class="username"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            @izzydizzyy
+                        </a>
+
+                        <p
+                            id="bio"
+                            class="bio"
+                        >
+                            Loading GitHub profile...
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="stats reveal">
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            repositories
+                        </span>
+
+                        <span
+                            id="repo-count"
+                            class="stat-value"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            followers
+                        </span>
+
+                        <span
+                            id="followers"
+                            class="stat-value"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            total stars
+                        </span>
+
+                        <span
+                            id="stars"
+                            class="stat-value"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            public activity
+                        </span>
+
+                        <span
+                            id="event-count"
+                            class="stat-value"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ACTIVITY -->
+
+            <section id="activity">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Activity
+                        </div>
+
+                        <h2 class="section-title">
+                            Recent contributions.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Built from my recent public
+                        GitHub activity.
+                    </p>
+
+                </div>
+
+                <div class="activity-card reveal">
+
+                    <div class="activity-top">
+
+                        <div class="activity-total">
+
+                            <strong id="activity-total">
+                                0
+                            </strong>
+
+                            public events loaded
+
+                        </div>
+
+                        <div class="legend">
+
+                            Less
+
+                            <span
+                                class="legend-box level-0"
+                            ></span>
+
+                            <span
+                                class="legend-box level-1"
+                            ></span>
+
+                            <span
+                                class="legend-box level-2"
+                            ></span>
+
+                            <span
+                                class="legend-box level-3"
+                            ></span>
+
+                            <span
+                                class="legend-box level-4"
+                            ></span>
+
+                            More
+
+                        </div>
+
+                    </div>
+
+                    <div class="graph-scroll">
+
+                        <div
+                            id="activity-graph"
+                            class="graph"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- REPOSITORIES -->
+
+            <section id="repos">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Repositories
+                        </div>
+
+                        <h2 class="section-title">
+                            Things I've built.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Public repositories pulled
+                        directly from my GitHub account.
+                    </p>
+
+                </div>
+
+                <div class="repo-controls reveal">
+
+                    <label class="search-box">
+
+                        <iconify-icon
+                            icon="lucide:search"
+                        ></iconify-icon>
+
+                        <input
+                            id="repo-search"
+                            type="text"
+                            placeholder="Search repositories..."
+                        >
+
+                    </label>
+
+                    <select
+                        id="repo-sort"
+                        class="sort-select"
+                    >
+
+                        <option value="updated">
+                            Recently updated
+                        </option>
+
+                        <option value="stars">
+                            Most stars
+                        </option>
+
+                        <option value="name">
+                            Name
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div
+                    id="repo-grid"
+                    class="repo-grid"
+                >
+
+                    <div class="loading">
+                        Loading repositories...
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- LANGUAGES -->
+
+            <section id="languages">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-label">
+                            Languages
+                        </div>
+
+                        <h2 class="section-title">
+                            What I use.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-description">
+                        Based on the primary language
+                        detected across my public repos.
+                    </p>
+
+                </div>
+
+                <div class="language-card reveal">
+
+                    <div
+                        id="language-bar"
+                        class="language-bar"
+                    ></div>
+
+                    <div
+                        id="language-list"
+                        class="language-list"
+                    ></div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <span>
+                github data updates automatically.
+            </span>
+
+            <span>
+                izzy.
+            </span>
+
+        </div>
+
+    </footer>
+
+    <script>
+        /* -------------------------------------------
+           config
+        ------------------------------------------- */
+
+        const USERNAME =
+            "izzydizzyy";
+
+        const API =
+            "https://api.github.com";
+
+        let allRepos = [];
+
+        /* -------------------------------------------
+           helpers
+        ------------------------------------------- */
+
+        const formatNumber = value => {
+
+            return new Intl
+                .NumberFormat(
+                    "en-US",
+                    {
+                        notation:
+                            value >= 1000
+                                ? "compact"
+                                : "standard",
+
+                        maximumFractionDigits:
+                            1
+                    }
+                )
+                .format(value);
+
+        };
+
+        const escapeHTML = value => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.textContent =
+                value ?? "";
+
+            return div.innerHTML;
+
+        };
+
+        /* -------------------------------------------
+           api
+        ------------------------------------------- */
+
+        async function githubFetch(path) {
+
+            const response =
+                await fetch(
+                    `${API}${path}`,
+                    {
+                        headers: {
+                            "Accept":
+                                "application/vnd.github+json"
+                        }
+                    }
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    `GitHub API ${response.status}`
+                );
+
+            }
+
+            return response.json();
+
+        }
+
+        /* -------------------------------------------
+           profile
+        ------------------------------------------- */
+
+        async function loadProfile() {
+
+            const profile =
+                await githubFetch(
+                    `/users/${USERNAME}`
+                );
+
+            document
+                .getElementById(
+                    "avatar"
+                )
+                .src =
+                profile.avatar_url;
+
+            document
+                .getElementById(
+                    "profile-name"
+                )
+                .textContent =
+                profile.name ||
+                "izzy.";
+
+            const username =
+                document.getElementById(
+                    "username"
+                );
+
+            username.textContent =
+                `@${profile.login}`;
+
+            username.href =
+                profile.html_url;
+
+            document
+                .getElementById(
+                    "bio"
+                )
+                .textContent =
+                profile.bio ||
+                "Programmer, web developer and builder.";
+
+            document
+                .getElementById(
+                    "repo-count"
+                )
+                .textContent =
+                formatNumber(
+                    profile.public_repos
+                );
+
+            document
+                .getElementById(
+                    "followers"
+                )
+                .textContent =
+                formatNumber(
+                    profile.followers
+                );
+
+        }
+
+        /* -------------------------------------------
+           repos
+        ------------------------------------------- */
+
+        async function loadRepos() {
+
+            /*
+                Up to 100 public repositories.
+
+                For most personal accounts this
+                gets everything in one request.
+            */
+
+            allRepos =
+                await githubFetch(
+                    `/users/${USERNAME}/repos?per_page=100&sort=updated`
+                );
+
+            /*
+                Ignore forks for language/stars totals
+                so your own work is represented better.
+            */
+
+            const ownedRepos =
+                allRepos.filter(
+                    repo => !repo.fork
+                );
+
+            const stars =
+                ownedRepos.reduce(
+                    (
+                        total,
+                        repo
+                    ) =>
+                        total +
+                        repo.stargazers_count,
+
+                    0
+                );
+
+            document
+                .getElementById(
+                    "stars"
+                )
+                .textContent =
+                formatNumber(stars);
+
+            renderRepos();
+
+            renderLanguages(
+                ownedRepos
+            );
+
+        }
+
+        /* -------------------------------------------
+           repo cards
+        ------------------------------------------- */
+
+        function renderRepos() {
+
+            const search =
+                document
+                    .getElementById(
+                        "repo-search"
+                    )
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const sort =
+                document
+                    .getElementById(
+                        "repo-sort"
+                    )
+                    .value;
+
+            let repos =
+                allRepos.filter(
+                    repo => {
+
+                        const haystack =
+                            `
+                            ${repo.name}
+                            ${repo.description || ""}
+                            ${repo.language || ""}
+                            `
+                            .toLowerCase();
+
+                        return haystack
+                            .includes(search);
+
+                    }
+                );
+
+            if (
+                sort ===
+                "stars"
+            ) {
+
+                repos.sort(
+                    (a, b) =>
+                        b.stargazers_count -
+                        a.stargazers_count
+                );
+
+            }
+
+            if (
+                sort ===
+                "name"
+            ) {
+
+                repos.sort(
+                    (a, b) =>
+                        a.name.localeCompare(
+                            b.name
+                        )
+                );
+
+            }
+
+            if (
+                sort ===
+                "updated"
+            ) {
+
+                repos.sort(
+                    (a, b) =>
+                        new Date(
+                            b.updated_at
+                        )
+                        -
+                        new Date(
+                            a.updated_at
+                        )
+                );
+
+            }
+
+            const grid =
+                document.getElementById(
+                    "repo-grid"
+                );
+
+            if (!repos.length) {
+
+                grid.innerHTML =
+                    `
+                    <div class="empty">
+                        no repositories found.
+                    </div>
+                    `;
+
+                return;
+
+            }
+
+            grid.innerHTML =
+                repos
+                    .map(repo => {
+
+                        const language =
+                            repo.language ||
+                            "Other";
+
+                        return `
+                            <article class="repo">
+
+                                <div class="repo-top">
+
+                                    <div class="repo-name">
+
+                                        <iconify-icon
+                                            icon="lucide:folder-git-2"
+                                        ></iconify-icon>
+
+                                        ${escapeHTML(repo.name)}
+
+                                    </div>
+
+                                    <a
+                                        href="${repo.html_url}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="repo-link"
+                                        aria-label="Open repository"
+                                    >
+                                        ↗
+                                    </a>
+
+                                </div>
+
+                                <p class="repo-description">
+
+                                    ${
+                                        escapeHTML(
+                                            repo.description ||
+                                            "No description."
+                                        )
+                                    }
+
+                                </p>
+
+                                <div class="repo-meta">
+
+                                    <span class="repo-meta-item">
+
+                                        <span
+                                            class="language-dot"
+                                        ></span>
+
+                                        ${escapeHTML(language)}
+
+                                    </span>
+
+                                    <span class="repo-meta-item">
+
+                                        <iconify-icon
+                                            icon="lucide:star"
+                                        ></iconify-icon>
+
+                                        ${
+                                            formatNumber(
+                                                repo.stargazers_count
+                                            )
+                                        }
+
+                                    </span>
+
+                                    <span class="repo-meta-item">
+
+                                        <iconify-icon
+                                            icon="lucide:git-fork"
+                                        ></iconify-icon>
+
+                                        ${
+                                            formatNumber(
+                                                repo.forks_count
+                                            )
+                                        }
+
+                                    </span>
+
+                                </div>
+
+                            </article>
+                        `;
+
+                    })
+                    .join("");
+
+        }
+
+        /* -------------------------------------------
+           languages
+        ------------------------------------------- */
+
+        const languageColors = {
+
+            Python:
+                "#3776ab",
+
+            JavaScript:
+                "#f1e05a",
+
+            TypeScript:
+                "#3178c6",
+
+            HTML:
+                "#e34c26",
+
+            CSS:
+                "#563d7c",
+
+            Rust:
+                "#dea584",
+
+            Shell:
+                "#89e051",
+
+            Java:
+                "#b07219",
+
+            C:
+                "#555555",
+
+            "C++":
+                "#f34b7d",
+
+            Go:
+                "#00add8",
+
+            Vue:
+                "#41b883",
+
+            Svelte:
+                "#ff3e00",
+
+            PHP:
+                "#4f5d95",
+
+            Other:
+                "#777777"
+
+        };
+
+        function renderLanguages(
+            repos
+        ) {
+
+            const counts = {};
+
+            repos.forEach(repo => {
+
+                const language =
+                    repo.language ||
+                    "Other";
+
+                counts[language] =
+                    (
+                        counts[language] ||
+                        0
+                    )
+                    +
+                    1;
+
+            });
+
+            const entries =
+                Object
+                    .entries(counts)
+                    .sort(
+                        (a, b) =>
+                            b[1] -
+                            a[1]
+                    );
+
+            const total =
+                entries.reduce(
+                    (
+                        sum,
+                        entry
+                    ) =>
+                        sum +
+                        entry[1],
+
+                    0
+                );
+
+            const bar =
+                document.getElementById(
+                    "language-bar"
+                );
+
+            const list =
+                document.getElementById(
+                    "language-list"
+                );
+
+            bar.innerHTML =
+                entries
+                    .map(
+                        (
+                            [
+                                language,
+                                count
+                            ]
+                        ) => {
+
+                            const percent =
+                                (
+                                    count /
+                                    total
+                                )
+                                *
+                                100;
+
+                            const color =
+                                languageColors[
+                                    language
+                                ]
+                                ||
+                                "#777";
+
+                            return `
+                                <span
+                                    class="language-piece"
+                                    style="
+                                        width:
+                                        ${percent}%;
+
+                                        background:
+                                        ${color};
+                                    "
+                                ></span>
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+            list.innerHTML =
+                entries
+                    .map(
+                        (
+                            [
+                                language,
+                                count
+                            ]
+                        ) => {
+
+                            const percent =
+                                (
+                                    (
+                                        count /
+                                        total
+                                    )
+                                    *
+                                    100
+                                )
+                                .toFixed(1);
+
+                            const color =
+                                languageColors[
+                                    language
+                                ]
+                                ||
+                                "#777";
+
+                            return `
+                                <div class="language-item">
+
+                                    <span
+                                        class="language-color"
+                                        style="
+                                            background:
+                                            ${color};
+                                        "
+                                    ></span>
+
+                                    ${escapeHTML(language)}
+
+                                    <span>
+                                        ${percent}%
+                                    </span>
+
+                                </div>
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+        }
+
+        /* -------------------------------------------
+           public activity
+        ------------------------------------------- */
+
+        async function loadActivity() {
+
+            /*
+                GitHub's REST API does not expose
+                the exact profile contribution
+                calendar publicly.
+
+                Public events are available, so
+                this builds our own contribution-
+                style activity calendar.
+            */
+
+            let events = [];
+
+            try {
+
+                for (
+                    let page = 1;
+                    page <= 3;
+                    page++
+                ) {
+
+                    const pageEvents =
+                        await githubFetch(
+                            `/users/${USERNAME}/events/public?per_page=100&page=${page}`
+                        );
+
+                    events =
+                        events.concat(
+                            pageEvents
+                        );
+
+                    if (
+                        pageEvents.length <
+                        100
+                    ) {
+                        break;
+                    }
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Activity loading failed:",
+                    error
+                );
+
+            }
+
+            document
+                .getElementById(
+                    "event-count"
+                )
+                .textContent =
+                formatNumber(
+                    events.length
+                );
+
+            document
+                .getElementById(
+                    "activity-total"
+                )
+                .textContent =
+                formatNumber(
+                    events.length
+                );
+
+            renderActivityGraph(
+                events
+            );
+
+        }
+
+        function renderActivityGraph(
+            events
+        ) {
+
+            const activity = {};
+
+            events.forEach(event => {
+
+                const date =
+                    event
+                        .created_at
+                        .slice(
+                            0,
+                            10
+                        );
+
+                /*
+                    Different event types get
+                    slightly different weights.
+
+                    Pushes count more because
+                    they're closer to actual code
+                    contributions.
+                */
+
+                let amount = 1;
+
+                if (
+                    event.type ===
+                    "PushEvent"
+                ) {
+
+                    amount =
+                        Math.max(
+                            1,
+                            event
+                                .payload
+                                ?.commits
+                                ?.length
+                            ||
+                            1
+                        );
+
+                }
+
+                activity[date] =
+                    (
+                        activity[date] ||
+                        0
+                    )
+                    +
+                    amount;
+
+            });
+
+            const graph =
+                document.getElementById(
+                    "activity-graph"
+                );
+
+            graph.innerHTML = "";
+
+            /*
+                26 weeks looks nice and still
+                fits well on smaller screens.
+            */
+
+            const days = 26 * 7;
+
+            const today =
+                new Date();
+
+            const start =
+                new Date(today);
+
+            start.setDate(
+                start.getDate() -
+                (
+                    days -
+                    1
+                )
+            );
+
+            /*
+                Start at Sunday so the layout
+                feels like GitHub's calendar.
+            */
+
+            start.setDate(
+                start.getDate() -
+                start.getDay()
+            );
+
+            const values =
+                Object.values(
+                    activity
+                );
+
+            const max =
+                Math.max(
+                    ...values,
+                    1
+                );
+
+            for (
+                let i = 0;
+                i < days;
+                i++
+            ) {
+
+                const date =
+                    new Date(start);
+
+                date.setDate(
+                    start.getDate() +
+                    i
+                );
+
+                const dateString =
+                    date
+                        .toISOString()
+                        .slice(
+                            0,
+                            10
+                        );
+
+                const amount =
+                    activity[
+                        dateString
+                    ]
+                    ||
+                    0;
+
+                let level = 0;
+
+                if (
+                    amount > 0
+                ) {
+
+                    const normalized =
+                        amount /
+                        max;
+
+                    if (
+                        normalized <= 0.25
+                    ) {
+                        level = 1;
+                    }
+
+                    else if (
+                        normalized <= 0.50
+                    ) {
+                        level = 2;
+                    }
+
+                    else if (
+                        normalized <= 0.75
+                    ) {
+                        level = 3;
+                    }
+
+                    else {
+                        level = 4;
+                    }
+
+                }
+
+                const day =
+                    document.createElement(
+                        "div"
+                    );
+
+                day.className =
+                    `day level-${level}`;
+
+                day.title =
+                    `${amount} activity — ${dateString}`;
+
+                graph.appendChild(
+                    day
+                );
+
+            }
+
+        }
+
+        /* -------------------------------------------
+           controls
+        ------------------------------------------- */
+
+        document
+            .getElementById(
+                "repo-search"
+            )
+            .addEventListener(
+                "input",
+                renderRepos
+            );
+
+        document
+            .getElementById(
+                "repo-sort"
+            )
+            .addEventListener(
+                "change",
+                renderRepos
+            );
+
+        /* -------------------------------------------
+           reveal
+        ------------------------------------------- */
+
+        const revealObserver =
+            new IntersectionObserver(
+
+                entries => {
+
+                    entries.forEach(
+                        entry => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry
+                                    .target
+                                    .classList
+                                    .add(
+                                        "visible"
+                                    );
+
+                                revealObserver
+                                    .unobserve(
+                                        entry.target
+                                    );
+
+                            }
+
+                        }
+                    );
+
+                },
+
+                {
+                    threshold:
+                        0.08
+                }
+
+            );
+
+        document
+            .querySelectorAll(
+                ".reveal"
+            )
+            .forEach(
+                element =>
+                    revealObserver
+                        .observe(
+                            element
+                        )
+            );
+
+        /* -------------------------------------------
+           start
+        ------------------------------------------- */
+
+        async function start() {
+
+            try {
+
+                await Promise.all([
+                    loadProfile(),
+                    loadRepos(),
+                    loadActivity()
+                ]);
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                document
+                    .getElementById(
+                        "bio"
+                    )
+                    .textContent =
+                    "GitHub data couldn't be loaded right now.";
+
+            }
+
+        }
+
+        start();
+    </script>
+
+</body>
+</html>
