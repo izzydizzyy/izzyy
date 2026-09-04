@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>izzy.</title>
+
+    <meta
+        name="description"
+        content="Izzy — developer, community manager, moderator and VR enthusiast."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --background: #050505;
+
+            --border:
+                rgba(255, 255, 255, 0.10);
+
+            --border-hover:
+                rgba(255, 255, 255, 0.20);
+
+            --text: #f7f7f7;
+
+            --muted: #919191;
+
+            --container: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+
+            scrollbar-width: thin;
+            scrollbar-color: #6148c9 #070707;
+        }
+
+        body {
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            background: var(--background);
+
+            color: var(--text);
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+            -webkit-font-smoothing:
+                antialiased;
+        }
+
+        ::selection {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            color: inherit;
+            font: inherit;
+        }
+
+        /* scrollbar */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070707;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border: 2px solid #070707;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #684aff,
+                    #b747ff,
+                    #397cff
+                );
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:
+                linear-gradient(
+                    180deg,
+                    #8068ff,
+                    #cc61ff,
+                    #5992ff
+                );
+        }
+
+        /* background */
+
+        #audio-wave {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -5;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+        }
+
+        .background-fade {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -4;
+
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(5, 5, 5, 0.08),
+                    rgba(5, 5, 5, 0.28) 45%,
+                    rgba(5, 5, 5, 0.80) 88%,
+                    #050505 100%
+                );
+        }
+
+        .top-glow {
+            position: fixed;
+
+            top: -300px;
+            left: 50%;
+
+            z-index: -3;
+
+            width: 900px;
+            height: 500px;
+
+            transform: translateX(-50%);
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(110, 74, 255, 0.10),
+                    transparent 65%
+                );
+
+            filter: blur(80px);
+
+            pointer-events: none;
+        }
+
+        .grain {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -2;
+
+            opacity: 0.018;
+
+            pointer-events: none;
+
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            width:
+                min(
+                    calc(100% - 40px),
+                    var(--container)
+                );
+
+            margin-inline: auto;
+        }
+
+        /* navigation */
+
+        .nav-wrap {
+            position: fixed;
+
+            top: 20px;
+            left: 0;
+            right: 0;
+
+            z-index: 100;
+
+            pointer-events: none;
+        }
+
+        nav {
+            display: flex;
+
+            width:
+                min(
+                    calc(100% - 40px),
+                    900px
+                );
+
+            height: 62px;
+
+            margin: auto;
+
+            padding:
+                0
+                12px
+                0
+                22px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.09);
+
+            border-radius: 999px;
+
+            background:
+                rgba(8, 8, 8, 0.62);
+
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            box-shadow:
+                0 18px 45px
+                rgba(0, 0, 0, 0.30);
+
+            pointer-events: auto;
+        }
+
+        .logo {
+            font-size: 18px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.06em;
+        }
+
+        .nav-links {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+        }
+
+        .nav-links a {
+            padding:
+                10px
+                14px;
+
+            border-radius: 999px;
+
+            color: #9d9d9d;
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            transition:
+                color 180ms ease,
+                background 180ms ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-button {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                11px
+                17px;
+
+            border-radius: 999px;
+
+            background: #ffffff;
+
+            color: #080808;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            transition:
+                transform 180ms ease,
+                background 180ms ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-1px);
+
+            background: #e7e7e7;
+        }
+
+        /* hero */
+
+        .hero {
+            position: relative;
+
+            display: flex;
+
+            min-height: 100svh;
+
+            align-items: center;
+            justify-content: center;
+
+            padding:
+                140px
+                20px
+                90px;
+
+            text-align: center;
+        }
+
+        .hero-content {
+            width: 100%;
+
+            max-width: 970px;
+
+            margin: auto;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            margin-bottom: 25px;
+
+            padding:
+                8px
+                13px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.11);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            backdrop-filter: blur(12px);
+
+            color: #c4c4c4;
+
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #78f09b;
+
+            box-shadow:
+                0 0 14px
+                rgba(120, 240, 155, 0.65);
+        }
+
+        h1 {
+            font-size:
+                clamp(
+                    76px,
+                    13vw,
+                    165px
+                );
+
+            line-height: 0.82;
+
+            letter-spacing: -0.085em;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff 20%,
+                    #dadada 62%,
+                    #747474 115%
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero-description {
+            max-width: 600px;
+
+            margin:
+                35px
+                auto
+                0;
+
+            color: #a1a1a1;
+
+            font-size:
+                clamp(
+                    16px,
+                    2vw,
+                    19px
+                );
+
+            line-height: 1.65;
+
+            letter-spacing: -0.025em;
+        }
+
+        .hero-description strong {
+            color: #eeeeee;
+
+            font-weight: 500;
+        }
+
+        .hero-actions {
+            display: flex;
+
+            margin-top: 34px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+
+            height: 50px;
+
+            padding:
+                0
+                20px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.10);
+
+            border-radius: 999px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                transform 180ms ease,
+                border-color 180ms ease,
+                background 180ms ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button.primary {
+            border-color: #ffffff;
+
+            background: #ffffff;
+
+            color: #090909;
+        }
+
+        .button.primary:hover {
+            background: #e9e9e9;
+        }
+
+        .button.secondary {
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            backdrop-filter: blur(15px);
+        }
+
+        .button.secondary:hover {
+            border-color:
+                rgba(255, 255, 255, 0.20);
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .scroll-note {
+            position: absolute;
+
+            bottom: 31px;
+            left: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            transform: translateX(-50%);
+
+            color: #646464;
+
+            font-size: 11px;
+
+            letter-spacing: 0.08em;
+
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 30px;
+            height: 1px;
+
+            background: #555555;
+        }
+
+        /* general sections */
+
+        section.content-section {
+            padding:
+                110px
+                0;
+        }
+
+        .section-head {
+            display: flex;
+
+            margin-bottom: 38px;
+
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 30px;
+        }
+
+        .section-kicker {
+            margin-bottom: 11px;
+
+            color: #777777;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.11em;
+
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            max-width: 660px;
+
+            font-size:
+                clamp(
+                    35px,
+                    5vw,
+                    57px
+                );
+
+            line-height: 1;
+
+            letter-spacing: -0.055em;
+
+            font-weight: 700;
+        }
+
+        .section-copy {
+            max-width: 350px;
+
+            color: #777777;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+        }
+
+        /* projects */
+
+        .projects {
+            display: grid;
+
+            grid-template-columns:
+                repeat(12, 1fr);
+
+            gap: 14px;
+        }
+
+        .project {
+            position: relative;
+
+            overflow: hidden;
+
+            min-height: 330px;
+
+            padding: 29px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.018)
+                );
+
+            transition:
+                transform 300ms cubic-bezier(.2, .8, .2, 1),
+                border-color 300ms ease,
+                background 300ms ease;
+        }
+
+        .project::before {
+            content: "";
+
+            position: absolute;
+
+            top: -130px;
+            right: -130px;
+
+            width: 290px;
+            height: 290px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--project-glow),
+                    transparent 68%
+                );
+
+            opacity: 0.26;
+
+            transition:
+                opacity 300ms ease,
+                transform 500ms ease;
+        }
+
+        .project:hover {
+            transform: translateY(-5px);
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.075),
+                    rgba(255, 255, 255, 0.02)
+                );
+        }
+
+        .project:hover::before {
+            opacity: 0.48;
+
+            transform: scale(1.1);
+        }
+
+        .project:nth-child(1) {
+            grid-column: span 7;
+
+            --project-glow:
+                #755dff;
+        }
+
+        .project:nth-child(2) {
+            grid-column: span 5;
+
+            --project-glow:
+                #44d8b0;
+        }
+
+        .project:nth-child(3) {
+            grid-column: span 12;
+
+            min-height: 280px;
+
+            --project-glow:
+                #448cff;
+        }
+
+        .project-number {
+            position: relative;
+
+            z-index: 2;
+
+            color: #626262;
+
+            font-family: monospace;
+
+            font-size: 12px;
+        }
+
+        .project-main {
+            position: absolute;
+
+            left: 29px;
+            right: 29px;
+            bottom: 29px;
+
+            z-index: 2;
+        }
+
+        .project-role {
+            margin-bottom: 9px;
+
+            color: #858585;
+
+            font-size: 12px;
+            font-weight: 500;
+
+            letter-spacing: 0.03em;
+        }
+
+        .project h3 {
+            font-size:
+                clamp(
+                    25px,
+                    3vw,
+                    38px
+                );
+
+            letter-spacing: -0.05em;
+
+            font-weight: 600;
+        }
+
+        .project-bottom {
+            display: flex;
+
+            margin-top: 22px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .project-description {
+            max-width: 420px;
+
+            color: #888888;
+
+            font-size: 13px;
+
+            line-height: 1.65;
+        }
+
+        .project-link {
+            display: grid;
+
+            width: 45px;
+            height: 45px;
+
+            flex: 0 0 auto;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.10);
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.05);
+
+            transition:
+                transform 180ms ease,
+                background 180ms ease;
+        }
+
+        .project-link:hover {
+            transform:
+                rotate(-8deg)
+                scale(1.05);
+
+            background:
+                rgba(255, 255, 255, 0.10);
+        }
+
+        /* stack */
+
+        .stack-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 12px;
+        }
+
+        .stack-item {
+            display: flex;
+
+            min-height: 135px;
+
+            padding: 19px;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 19px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            transition:
+                transform 220ms ease,
+                background 220ms ease,
+                border-color 220ms ease;
+        }
+
+        .stack-item:hover {
+            transform:
+                translateY(-4px);
+
+            border-color:
+                rgba(255, 255, 255, 0.18);
+
+            background:
+                rgba(255, 255, 255, 0.055);
+        }
+
+        .stack-item iconify-icon {
+            font-size: 29px;
+        }
+
+        .stack-name {
+            color: #bebebe;
+
+            font-size: 13px;
+
+            font-weight: 500;
+        }
+
+        /* about */
+
+        .about-card {
+            position: relative;
+
+            overflow: hidden;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 50px;
+
+            padding:
+                clamp(
+                    30px,
+                    6vw,
+                    70px
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    140deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.015)
+                );
+        }
+
+        .about-card::after {
+            content: "";
+
+            position: absolute;
+
+            right: -220px;
+            bottom: -300px;
+
+            width: 600px;
+            height: 600px;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(
+                    from 40deg,
+                    #5f41ff,
+                    #15c9e9,
+                    #66e59f,
+                    #ffcb52,
+                    #ff477c,
+                    #5f41ff
+                );
+
+            opacity: 0.09;
+
+            filter: blur(70px);
+        }
+
+        .about-card h2 {
+            position: relative;
+
+            z-index: 2;
+
+            font-size:
+                clamp(
+                    35px,
+                    5vw,
+                    59px
+                );
+
+            line-height: 1.04;
+
+            letter-spacing: -0.055em;
+        }
+
+        .about-text {
+            position: relative;
+
+            z-index: 2;
+
+            align-self: end;
+
+            color: #8f8f8f;
+
+            font-size: 15px;
+
+            line-height: 1.8;
+        }
+
+        .about-text strong {
+            color: #dddddd;
+
+            font-weight: 500;
+        }
+
+        /* MORE OF IZZY */
+
+        .site-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 14px;
+        }
+
+        .site-card {
+            position: relative;
+
+            overflow: hidden;
+
+            display: flex;
+
+            min-height: 280px;
+
+            padding: 27px;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.05),
+                    rgba(255, 255, 255, 0.015)
+                );
+
+            transition:
+                transform 260ms cubic-bezier(.2, .8, .2, 1),
+                border-color 260ms ease,
+                background 260ms ease;
+        }
+
+        .site-card:hover {
+            transform:
+                translateY(-5px);
+
+            border-color:
+                var(--border-hover);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.07),
+                    rgba(255, 255, 255, 0.02)
+                );
+        }
+
+        .site-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: -160px;
+            right: -140px;
+
+            width: 370px;
+            height: 370px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--site-glow),
+                    transparent 66%
+                );
+
+            opacity: 0.17;
+
+            filter: blur(5px);
+
+            transition:
+                opacity 350ms ease,
+                transform 500ms ease;
+        }
+
+        .site-card:hover::before {
+            opacity: 0.32;
+
+            transform: scale(1.12);
+        }
+
+        .site-card.github {
+            --site-glow:
+                #a96dff;
+        }
+
+        .site-card.discord {
+            --site-glow:
+                #5865f2;
+        }
+
+        .site-card.hire {
+            grid-column:
+                1 /
+                -1;
+
+            min-height: 245px;
+
+            --site-glow:
+                #318cff;
+        }
+
+        .site-top {
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-icon {
+            display: grid;
+
+            width: 52px;
+            height: 52px;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.09);
+
+            border-radius: 16px;
+
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            font-size: 25px;
+        }
+
+        .github .site-icon {
+            color: #d3b6ff;
+        }
+
+        .discord .site-icon {
+            color: #8791ff;
+        }
+
+        .hire .site-icon {
+            color: #83b8ff;
+        }
+
+        .site-arrow {
+            display: grid;
+
+            width: 43px;
+            height: 43px;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.09);
+
+            border-radius: 50%;
+
+            color: #777777;
+
+            background:
+                rgba(255, 255, 255, 0.03);
+
+            transition:
+                transform 180ms ease,
+                color 180ms ease,
+                background 180ms ease;
+        }
+
+        .site-card:hover .site-arrow {
+            transform:
+                rotate(-7deg)
+                scale(1.05);
+
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .site-content {
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .site-label {
+            margin-bottom: 7px;
+
+            color: #666666;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.09em;
+
+            text-transform: uppercase;
+        }
+
+        .site-name {
+            font-size:
+                clamp(
+                    27px,
+                    3vw,
+                    39px
+                );
+
+            letter-spacing: -0.055em;
+
+            font-weight: 650;
+        }
+
+        .site-description {
+            max-width: 500px;
+
+            margin-top: 11px;
+
+            color: #7d7d7d;
+
+            font-size: 13px;
+
+            line-height: 1.65;
+        }
+
+        .site-url {
+            display: inline-block;
+
+            margin-top: 18px;
+
+            color: #5d5d5d;
+
+            font-family: monospace;
+
+            font-size: 11px;
+
+            transition:
+                color 180ms ease;
+        }
+
+        .site-card:hover
+        .site-url {
+            color: #8d8d8d;
+        }
+
+        /* footer */
+
+        footer {
+            padding:
+                40px
+                0
+                30px;
+        }
+
+        .footer-inner {
+            display: flex;
+
+            padding-top: 25px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            color: #606060;
+
+            font-size: 12px;
+        }
+
+        .footer-name {
+            color: #aaaaaa;
+
+            font-weight: 600;
+        }
+
+        /* reveal */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(24px);
+
+            transition:
+                opacity 750ms cubic-bezier(.2, .75, .25, 1),
+                transform 750ms cubic-bezier(.2, .75, .25, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform: none;
+        }
+
+        /* mobile */
+
+        @media (max-width: 850px) {
+            .nav-links {
+                display: none;
+            }
+
+            .projects {
+                display: flex;
+
+                flex-direction: column;
+            }
+
+            .project {
+                min-height: 300px !important;
+            }
+
+            .stack-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .about-card {
+                grid-template-columns: 1fr;
+
+                gap: 70px;
+            }
+
+            .section-head {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .site-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .site-card.hire {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .container {
+                width:
+                    min(
+                        calc(100% - 26px),
+                        var(--container)
+                    );
+            }
+
+            .nav-wrap {
+                top: 12px;
+            }
+
+            nav {
+                width:
+                    calc(
+                        100% - 24px
+                    );
+
+                height: 57px;
+
+                padding-left: 18px;
+            }
+
+            .nav-button {
+                padding:
+                    10px
+                    14px;
+
+                font-size: 12px;
+            }
+
+            .hero {
+                padding-inline: 16px;
+            }
+
+            h1 {
+                font-size:
+                    clamp(
+                        72px,
+                        27vw,
+                        115px
+                    );
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .hero-actions {
+                width: 100%;
+
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            section.content-section {
+                padding:
+                    80px
+                    0;
+            }
+
+            .stack-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .project {
+                padding: 22px;
+            }
+
+            .project-main {
+                left: 22px;
+                right: 22px;
+                bottom: 22px;
+            }
+
+            .site-card {
+                min-height: 255px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 9px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration:
+                    0.01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                transition-duration:
+                    0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="audio-wave"></canvas>
+
+    <div class="background-fade"></div>
+    <div class="top-glow"></div>
+    <div class="grain"></div>
+
+    <!-- NAV -->
+
+    <div class="nav-wrap">
+
+        <nav>
+
+            <a
+                href="/"
+                class="logo"
+            >
+                izzy.
+            </a>
+
+            <div class="nav-links">
+
+                <a href="#work">
+                    Work
+                </a>
+
+                <a href="#stack">
+                    Stack
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+                <a href="#more">
+                    More
+                </a>
+
+            </div>
+
+            <a
+                href="/hire/"
+                class="nav-button"
+            >
+                Hire me
+                <span>↗</span>
+            </a>
+
+        </nav>
+
+    </div>
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-content reveal">
+
+                <div class="eyebrow">
+
+                    <span class="status-dot"></span>
+
+                    developer & community management
+
+                </div>
+
+                <h1>
+                    izzy.
+                </h1>
+
+                <p class="hero-description">
+                    I build things for the web,
+                    work with
+                    <strong>VR communities</strong>,
+                    and spend way too much time
+                    turning random ideas into
+                    actual projects.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a
+                        href="#work"
+                        class="button primary"
+                    >
+                        View my work
+                        ↓
+                    </a>
+
+                    <a
+                        href="#more"
+                        class="button secondary"
+                    >
+                        Explore my sites
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="scroll-note">
+
+                <span class="scroll-line"></span>
+
+                scroll to explore
+
+                <span class="scroll-line"></span>
+
+            </div>
+
+        </section>
+
+        <!-- WORK -->
+
+        <section
+            class="content-section"
+            id="work"
+        >
+
+            <div class="container">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-kicker">
+                            Experience
+                        </div>
+
+                        <h2 class="section-title">
+                            Communities I've worked with.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-copy">
+                        A few of the VR communities
+                        I've helped manage,
+                        moderate and test.
+                    </p>
+
+                </div>
+
+                <div class="projects">
+
+                    <article class="project reveal">
+
+                        <span class="project-number">
+                            01
+                        </span>
+
+                        <div class="project-main">
+
+                            <div class="project-role">
+                                Lead Manager
+                            </div>
+
+                            <h3>
+                                Fractured VR
+                            </h3>
+
+                            <div class="project-bottom">
+
+                                <p class="project-description">
+                                    Community management,
+                                    staff operations,
+                                    moderation and helping
+                                    keep the community
+                                    running smoothly.
+                                </p>
+
+                                <a
+                                    href="https://discord.gg/fracturedvr"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="project-link"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="project reveal">
+
+                        <span class="project-number">
+                            02
+                        </span>
+
+                        <div class="project-main">
+
+                            <div class="project-role">
+                                Beta Tester
+                            </div>
+
+                            <h3>
+                                Chimplab VR
+                            </h3>
+
+                            <div class="project-bottom">
+
+                                <p class="project-description">
+                                    Testing builds,
+                                    finding issues and
+                                    helping improve the
+                                    game before release.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="project reveal">
+
+                        <span class="project-number">
+                            03
+                        </span>
+
+                        <div class="project-main">
+
+                            <div class="project-role">
+                                Moderator
+                            </div>
+
+                            <h3>
+                                Wonder. VR
+                            </h3>
+
+                            <div class="project-bottom">
+
+                                <p class="project-description">
+                                    Helping moderate the
+                                    community and keeping
+                                    things organized for
+                                    players and members.
+                                </p>
+
+                                <a
+                                    href="https://discord.gg/wondervr"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="project-link"
+                                >
+                                    ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- STACK -->
+
+        <section
+            class="content-section"
+            id="stack"
+        >
+
+            <div class="container">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-kicker">
+                            Stack
+                        </div>
+
+                        <h2 class="section-title">
+                            Stuff I build with.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-copy">
+                        Languages, infrastructure
+                        and tools I use across my
+                        projects.
+                    </p>
+
+                </div>
+
+                <div class="stack-grid">
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:python"></iconify-icon>
+                        <span class="stack-name">Python</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:javascript"></iconify-icon>
+                        <span class="stack-name">JavaScript</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="simple-icons:sqlite"></iconify-icon>
+                        <span class="stack-name">SQLite</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:aws"></iconify-icon>
+                        <span class="stack-name">AWS</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:cloudflare-icon"></iconify-icon>
+                        <span class="stack-name">Cloudflare</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:html-5"></iconify-icon>
+                        <span class="stack-name">HTML</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:css-3"></iconify-icon>
+                        <span class="stack-name">CSS</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="logos:rust"></iconify-icon>
+                        <span class="stack-name">Rust</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="simple-icons:gnubash"></iconify-icon>
+                        <span class="stack-name">Bash</span>
+                    </div>
+
+                    <div class="stack-item reveal">
+                        <iconify-icon icon="simple-icons:claude"></iconify-icon>
+                        <span class="stack-name">Claude AI</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ABOUT -->
+
+        <section
+            class="content-section"
+            id="about"
+        >
+
+            <div class="container">
+
+                <div class="about-card reveal">
+
+                    <h2>
+                        code.<br>
+                        communities.<br>
+                        vr.
+                    </h2>
+
+                    <div class="about-text">
+
+                        <p>
+                            I'm
+                            <strong>Izzy</strong>.
+                            I like programming,
+                            building websites and
+                            systems, and working with
+                            communities around VR games.
+                        </p>
+
+                        <br>
+
+                        <p>
+                            Most of the time I'm
+                            either making something,
+                            breaking something I just
+                            made, or somehow ending up
+                            with another project idea.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- MORE -->
+
+        <section
+            class="content-section"
+            id="more"
+        >
+
+            <div class="container">
+
+                <div class="section-head reveal">
+
+                    <div>
+
+                        <div class="section-kicker">
+                            More of Izzy
+                        </div>
+
+                        <h2 class="section-title">
+                            There's more to see.
+                        </h2>
+
+                    </div>
+
+                    <p class="section-copy">
+                        Live profiles, projects,
+                        activity and ways to work
+                        with me.
+                    </p>
+
+                </div>
+
+                <div class="site-grid">
+
+                    <!-- GITHUB -->
+
+                    <a
+                        href="/github/"
+                        class="site-card github reveal"
+                    >
+
+                        <div class="site-top">
+
+                            <div class="site-icon">
+
+                                <iconify-icon
+                                    icon="mdi:github"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="site-arrow">
+                                ↗
+                            </div>
+
+                        </div>
+
+                        <div class="site-content">
+
+                            <div class="site-label">
+                                Development
+                            </div>
+
+                            <div class="site-name">
+                                GitHub
+                            </div>
+
+                            <p class="site-description">
+                                Repositories, languages,
+                                stars, contributions and
+                                live development activity.
+                            </p>
+
+                            <span class="site-url">
+                                izzyy.me/github
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <!-- DISCORD -->
+
+                    <a
+                        href="/discord/"
+                        class="site-card discord reveal"
+                    >
+
+                        <div class="site-top">
+
+                            <div class="site-icon">
+
+                                <iconify-icon
+                                    icon="ic:baseline-discord"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="site-arrow">
+                                ↗
+                            </div>
+
+                        </div>
+
+                        <div class="site-content">
+
+                            <div class="site-label">
+                                Presence
+                            </div>
+
+                            <div class="site-name">
+                                Discord
+                            </div>
+
+                            <p class="site-description">
+                                My live Discord presence,
+                                games, activities,
+                                devices and Spotify.
+                            </p>
+
+                            <span class="site-url">
+                                izzyy.me/discord
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <!-- HIRE -->
+
+                    <a
+                        href="/hire/"
+                        class="site-card hire reveal"
+                    >
+
+                        <div class="site-top">
+
+                            <div class="site-icon">
+
+                                <iconify-icon
+                                    icon="lucide:briefcase-business"
+                                ></iconify-icon>
+
+                            </div>
+
+                            <div class="site-arrow">
+                                ↗
+                            </div>
+
+                        </div>
+
+                        <div class="site-content">
+
+                            <div class="site-label">
+                                Work with me
+                            </div>
+
+                            <div class="site-name">
+                                Hire me.
+                            </div>
+
+                            <p class="site-description">
+                                Need a website,
+                                Discord bot, hosted bot,
+                                API, or custom project?
+                                Check out my pricing and
+                                contact information.
+                            </p>
+
+                            <span class="site-url">
+                                izzyy.me/hire
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <span class="footer-name">
+                izzy.
+            </span>
+
+            <span>
+                made with an unhealthy amount
+                of tabs open.
+            </span>
+
+        </div>
+
+    </footer>
+
+    <audio
+        id="music"
+        src="izzz.mp3"
+        preload="auto"
+        autoplay
+        loop
+        playsinline
+    ></audio>
+
+    <script>
+        /* reveals */
+
+        const reveals =
+            document.querySelectorAll(
+                ".reveal"
+            );
+
+        const revealObserver =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(
+                        entry => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target
+                                    .classList
+                                    .add(
+                                        "visible"
+                                    );
+
+                                revealObserver
+                                    .unobserve(
+                                        entry.target
+                                    );
+
+                            }
+
+                        }
+                    );
+
+                },
+
+                {
+                    threshold: 0.10
+                }
+            );
+
+        reveals.forEach(
+            element =>
+                revealObserver.observe(
+                    element
+                )
+        );
+
+        /* audio */
+
+        const audio =
+            document.getElementById(
+                "music"
+            );
+
+        audio.volume = 0.55;
+
+        let audioContext = null;
+        let analyser = null;
+        let source = null;
+        let frequencyData = null;
+
+        function setupAudioAnalyzer() {
+
+            if (audioContext) {
+                return;
+            }
+
+            const AudioContext =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            audioContext =
+                new AudioContext();
+
+            analyser =
+                audioContext.createAnalyser();
+
+            analyser.fftSize = 512;
+
+            analyser.smoothingTimeConstant =
+                0.86;
+
+            source =
+                audioContext
+                    .createMediaElementSource(
+                        audio
+                    );
+
+            source.connect(
+                analyser
+            );
+
+            analyser.connect(
+                audioContext.destination
+            );
+
+            frequencyData =
+                new Uint8Array(
+                    analyser
+                        .frequencyBinCount
+                );
+
+        }
+
+        async function startAudio() {
+
+            try {
+
+                setupAudioAnalyzer();
+
+                if (
+                    audioContext.state ===
+                    "suspended"
+                ) {
+
+                    await audioContext.resume();
+
+                }
+
+                await audio.play();
+
+            } catch (_) {}
+
+        }
+
+        audio.play().catch(
+            () => {}
+        );
+
+        window.addEventListener(
+            "pointerdown",
+            startAudio,
+            {
+                once: true
+            }
+        );
+
+        window.addEventListener(
+            "keydown",
+            startAudio,
+            {
+                once: true
+            }
+        );
+
+        /* canvas */
+
+        const canvas =
+            document.getElementById(
+                "audio-wave"
+            );
+
+        const ctx =
+            canvas.getContext("2d");
+
+        let width = 0;
+        let height = 0;
+        let pixelRatio = 1;
+
+        function resizeCanvas() {
+
+            pixelRatio =
+                Math.min(
+                    window.devicePixelRatio ||
+                    1,
+
+                    2
+                );
+
+            width =
+                window.innerWidth;
+
+            height =
+                window.innerHeight;
+
+            canvas.width =
+                width *
+                pixelRatio;
+
+            canvas.height =
+                height *
+                pixelRatio;
+
+            canvas.style.width =
+                `${width}px`;
+
+            canvas.style.height =
+                `${height}px`;
+
+            ctx.setTransform(
+                pixelRatio,
+                0,
+                0,
+                pixelRatio,
+                0,
+                0
+            );
+
+        }
+
+        resizeCanvas();
+
+        window.addEventListener(
+            "resize",
+            resizeCanvas
+        );
+
+        function getAudioEnergy() {
+
+            if (
+                !analyser ||
+                !frequencyData ||
+                audio.paused
+            ) {
+
+                return {
+                    subBass: 0,
+                    bass: 0,
+                    mids: 0
+                };
+
+            }
+
+            analyser.getByteFrequencyData(
+                frequencyData
+            );
+
+            const subBassEnd = 8;
+            const bassEnd = 24;
+            const midsEnd = 70;
+
+            let subBass = 0;
+            let bass = 0;
+            let mids = 0;
+
+            for (
+                let i = 0;
+                i < subBassEnd;
+                i++
+            ) {
+                subBass +=
+                    frequencyData[i];
+            }
+
+            for (
+                let i = subBassEnd;
+                i < bassEnd;
+                i++
+            ) {
+                bass +=
+                    frequencyData[i];
+            }
+
+            for (
+                let i = bassEnd;
+                i < midsEnd;
+                i++
+            ) {
+                mids +=
+                    frequencyData[i];
+            }
+
+            return {
+
+                subBass:
+                    (
+                        subBass /
+                        subBassEnd
+                    )
+                    /
+                    255,
+
+                bass:
+                    (
+                        bass /
+                        (
+                            bassEnd -
+                            subBassEnd
+                        )
+                    )
+                    /
+                    255,
+
+                mids:
+                    (
+                        mids /
+                        (
+                            midsEnd -
+                            bassEnd
+                        )
+                    )
+                    /
+                    255
+
+            };
+
+        }
+
+        function drawWave(
+            time,
+            centerY,
+            amplitude,
+            speed,
+            frequency,
+            opacity,
+            thickness = 2
+        ) {
+
+            const gradient =
+                ctx.createLinearGradient(
+                    0,
+                    0,
+                    width,
+                    0
+                );
+
+            gradient.addColorStop(
+                0.00,
+                "#704cff"
+            );
+
+            gradient.addColorStop(
+                0.13,
+                "#a44cff"
+            );
+
+            gradient.addColorStop(
+                0.27,
+                "#f649cf"
+            );
+
+            gradient.addColorStop(
+                0.41,
+                "#ff526e"
+            );
+
+            gradient.addColorStop(
+                0.55,
+                "#ffd64a"
+            );
+
+            gradient.addColorStop(
+                0.68,
+                "#58eaa0"
+            );
+
+            gradient.addColorStop(
+                0.80,
+                "#36d9ff"
+            );
+
+            gradient.addColorStop(
+                0.91,
+                "#5488ff"
+            );
+
+            gradient.addColorStop(
+                1.00,
+                "#8d5cff"
+            );
+
+            ctx.beginPath();
+
+            for (
+                let x = -30;
+                x <= width + 30;
+                x += 4
+            ) {
+
+                const normalized =
+                    Math.max(
+                        0,
+                        Math.min(
+                            1,
+                            x / width
+                        )
+                    );
+
+                const edgeFade =
+                    Math.pow(
+                        Math.sin(
+                            normalized *
+                            Math.PI
+                        ),
+                        0.55
+                    );
+
+                const mainWave =
+                    Math.sin(
+                        x *
+                        frequency
+                        +
+                        time *
+                        speed
+                    );
+
+                const detailWave =
+                    Math.sin(
+                        x *
+                        frequency *
+                        2.13
+                        -
+                        time *
+                        speed *
+                        0.64
+                    )
+                    *
+                    0.30;
+
+                const lowWave =
+                    Math.sin(
+                        x *
+                        frequency *
+                        0.39
+                        +
+                        time *
+                        speed *
+                        0.38
+                    )
+                    *
+                    0.48;
+
+                const y =
+                    centerY
+                    +
+                    (
+                        mainWave
+                        +
+                        detailWave
+                        +
+                        lowWave
+                    )
+                    *
+                    amplitude
+                    *
+                    edgeFade;
+
+                if (
+                    x === -30
+                ) {
+
+                    ctx.moveTo(
+                        x,
+                        y
+                    );
+
+                } else {
+
+                    ctx.lineTo(
+                        x,
+                        y
+                    );
+
+                }
+
+            }
+
+            ctx.save();
+
+            ctx.strokeStyle =
+                gradient;
+
+            ctx.globalAlpha =
+                opacity *
+                0.11;
+
+            ctx.lineWidth =
+                thickness *
+                14;
+
+            ctx.shadowColor =
+                "#8750ff";
+
+            ctx.shadowBlur =
+                70;
+
+            ctx.stroke();
+
+            ctx.restore();
+
+            ctx.save();
+
+            ctx.strokeStyle =
+                gradient;
+
+            ctx.globalAlpha =
+                opacity *
+                0.34;
+
+            ctx.lineWidth =
+                thickness *
+                5;
+
+            ctx.shadowColor =
+                "#ba58ff";
+
+            ctx.shadowBlur =
+                35;
+
+            ctx.stroke();
+
+            ctx.restore();
+
+            ctx.save();
+
+            ctx.strokeStyle =
+                gradient;
+
+            ctx.globalAlpha =
+                opacity;
+
+            ctx.lineWidth =
+                thickness;
+
+            ctx.shadowColor =
+                "#ffffff";
+
+            ctx.shadowBlur =
+                8;
+
+            ctx.stroke();
+
+            ctx.restore();
+
+        }
+
+        let smoothedBass = 0;
+        let smoothedSub = 0;
+        let smoothedMids = 0;
+
+        let previousSub = 0;
+        let bassPunch = 0;
+
+        function render(
+            timestamp
+        ) {
+
+            ctx.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+            const time =
+                timestamp *
+                0.001;
+
+            const audioData =
+                getAudioEnergy();
+
+            smoothedBass +=
+                (
+                    audioData.bass -
+                    smoothedBass
+                )
+                *
+                0.14;
+
+            smoothedSub +=
+                (
+                    audioData.subBass -
+                    smoothedSub
+                )
+                *
+                0.18;
+
+            smoothedMids +=
+                (
+                    audioData.mids -
+                    smoothedMids
+                )
+                *
+                0.10;
+
+            const difference =
+                audioData.subBass -
+                previousSub;
+
+            if (
+                difference >
+                0.035
+            ) {
+
+                bassPunch =
+                    Math.min(
+                        1,
+                        bassPunch +
+                        difference *
+                        5.5
+                    );
+
+            }
+
+            bassPunch *= 0.88;
+
+            previousSub =
+                audioData.subBass;
+
+            const amplitude =
+                28
+                +
+                smoothedBass * 150
+                +
+                smoothedSub * 245
+                +
+                bassPunch * 180;
+
+            const center =
+                height *
+                0.50
+                +
+                Math.sin(
+                    time *
+                    0.28
+                )
+                *
+                24;
+
+            const glow =
+                ctx.createRadialGradient(
+                    width / 2,
+                    center,
+                    0,
+
+                    width / 2,
+                    center,
+                    Math.max(
+                        width,
+                        height
+                    )
+                    *
+                    0.58
+                );
+
+            glow.addColorStop(
+                0,
+                `rgba(
+                    139,
+                    74,
+                    255,
+                    ${
+                        0.025
+                        +
+                        smoothedBass *
+                        0.09
+                        +
+                        bassPunch *
+                        0.06
+                    }
+                )`
+            );
+
+            glow.addColorStop(
+                1,
+                "rgba(0,0,0,0)"
+            );
+
+            ctx.fillStyle =
+                glow;
+
+            ctx.fillRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+            drawWave(
+                time,
+                center + 85,
+                amplitude * 0.48,
+                0.52,
+                0.0038,
+                0.12,
+                2.4
+            );
+
+            drawWave(
+                time + 8,
+                center + 18,
+                amplitude *
+                (
+                    0.40
+                    +
+                    smoothedSub *
+                    0.62
+                ),
+                0.40,
+                0.0030,
+                0.20,
+                3.2
+            );
+
+            drawWave(
+                time + 1,
+                center,
+                amplitude,
+                1.08
+                +
+                smoothedBass *
+                0.65,
+                0.0063,
+                0.72,
+                2.1
+            );
+
+            drawWave(
+                time + 4,
+                center - 42,
+                amplitude *
+                (
+                    0.43
+                    +
+                    smoothedMids *
+                    0.18
+                ),
+                -1.15,
+                0.009,
+                0.25,
+                1.4
+            );
+
+            requestAnimationFrame(
+                render
+            );
+
+        }
+
+        requestAnimationFrame(
+            render
+        );
+
+        /* project card tilt */
+
+        if (
+            window.matchMedia(
+                "(pointer: fine)"
+            ).matches
+        ) {
+
+            document
+                .querySelectorAll(
+                    ".project"
+                )
+                .forEach(
+                    card => {
+
+                        card.addEventListener(
+                            "mousemove",
+                            event => {
+
+                                const rect =
+                                    card.getBoundingClientRect();
+
+                                const x =
+                                    event.clientX -
+                                    rect.left;
+
+                                const y =
+                                    event.clientY -
+                                    rect.top;
+
+                                const rotateX =
+                                    (
+                                        (
+                                            y /
+                                            rect.height
+                                        )
+                                        -
+                                        0.5
+                                    )
+                                    *
+                                    -2;
+
+                                const rotateY =
+                                    (
+                                        (
+                                            x /
+                                            rect.width
+                                        )
+                                        -
+                                        0.5
+                                    )
+                                    *
+                                    2;
+
+                                card.style.transform =
+                                    `
+                                    perspective(900px)
+                                    translateY(-5px)
+                                    rotateX(${rotateX}deg)
+                                    rotateY(${rotateY}deg)
+                                    `;
+
+                            }
+                        );
+
+                        card.addEventListener(
+                            "mouseleave",
+                            () => {
+
+                                card.style.transform =
+                                    "";
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+    </script>
+
+</body>
+</html>
