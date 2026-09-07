@@ -6,7 +6,10 @@ const root = document.documentElement;
 const themeToggle = document.getElementById("themeToggle");
 const themeLabel = document.getElementById("themeLabel");
 
-/* theme */
+/* ---------------------------------------------------------
+   theme
+--------------------------------------------------------- */
+
 const savedTheme = localStorage.getItem("izzy-theme");
 
 if (savedTheme === "dark" || savedTheme === "light") {
@@ -28,34 +31,46 @@ themeToggle.addEventListener("click", () => {
       ? "light"
       : "dark";
 
-  localStorage.setItem("izzy-theme", root.dataset.theme);
+  localStorage.setItem(
+    "izzy-theme",
+    root.dataset.theme
+  );
+
   updateThemeText();
 });
 
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
-/* discord link */
-document.getElementById("discordLink").addEventListener("click", async (event) => {
-  event.preventDefault();
+/* ---------------------------------------------------------
+   discord
+--------------------------------------------------------- */
 
-  const username =
-    document.getElementById("discordUsername").textContent.replace(/^@/, "") ||
-    "izzy.js";
+document.getElementById("discordLink").addEventListener(
+  "click",
+  async (event) => {
+    event.preventDefault();
 
-  try {
-    await navigator.clipboard.writeText(username);
-    event.currentTarget.textContent = `copied: ${username}`;
-  } catch {
-    event.currentTarget.textContent = username;
+    const username =
+      document
+        .getElementById("discordUsername")
+        .textContent
+        .replace(/^@/, "") || "izzy.js";
+
+    try {
+      await navigator.clipboard.writeText(username);
+      event.currentTarget.textContent =
+        `copied: ${username}`;
+    } catch {
+      event.currentTarget.textContent = username;
+    }
+
+    setTimeout(() => {
+      event.currentTarget.textContent = "discord";
+    }, 1400);
   }
+);
 
-  setTimeout(() => {
-    event.currentTarget.textContent = "discord";
-  }, 1400);
-});
-
-/* lanyard */
 const statusColors = {
   online: "#23a55a",
   idle: "#f0b232",
@@ -66,40 +81,119 @@ const statusColors = {
 function getDiscordAvatar(user) {
   if (!user?.id || !user?.avatar) return "";
 
-  const ext = user.avatar.startsWith("a_") ? "gif" : "webp";
+  const ext =
+    user.avatar.startsWith("a_")
+      ? "gif"
+      : "webp";
 
-  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256`;
+  return (
+    `https://cdn.discordapp.com/avatars/` +
+    `${user.id}/${user.avatar}.${ext}?size=256`
+  );
 }
 
 function getDecoration(user) {
-  const asset = user?.avatar_decoration_data?.asset;
+  const asset =
+    user?.avatar_decoration_data?.asset;
 
   if (!asset) return "";
 
-  return `https://cdn.discordapp.com/avatar-decoration-presets/${asset}.png?size=240`;
+  return (
+    "https://cdn.discordapp.com/" +
+    `avatar-decoration-presets/${asset}.png?size=240`
+  );
 }
 
 function getCustomStatus(activities = []) {
-  const custom = activities.find((activity) => activity.type === 4);
+  const custom =
+    activities.find(
+      (activity) => activity.type === 4
+    );
 
   if (!custom) return "";
 
-  const emoji = custom.emoji?.name
-    ? `${custom.emoji.name} `
-    : "";
+  const emoji =
+    custom.emoji?.name
+      ? `${custom.emoji.name} `
+      : "";
 
   return `${emoji}${custom.state || ""}`.trim();
 }
 
+/* ---------------------------------------------------------
+   spotify metadata + official embed player
+--------------------------------------------------------- */
+
 let spotifyTimer = null;
 let spotifyTimestamps = null;
+let currentSpotify = null;
+let currentTrackId = null;
+
+/* Spotify iframe controller */
+let spotifyIframeApi = null;
+let spotifyController = null;
+let spotifyControllerReady = false;
+let listenHereEnabled = false;
+let lastLoadedTrackId = null;
+
+window.onSpotifyIframeApiReady = (IFrameAPI) => {
+  spotifyIframeApi = IFrameAPI;
+
+  const element =
+    document.getElementById("spotifyPlayer");
+
+  const options = {
+    width: "100%",
+    height: 152,
+    theme: "dark"
+  };
+
+  IFrameAPI.createController(
+    element,
+    options,
+    (controller) => {
+      spotifyController = controller;
+
+      controller.addListener("ready", () => {
+        spotifyControllerReady = true;
+
+        if (listenHereEnabled && currentSpotify) {
+          loadCurrentTrackIntoPlayer(true);
+        }
+      });
+
+      controller.addListener(
+        "playback_started",
+        () => {
+          setListenButtonState(true);
+        }
+      );
+
+      controller.addListener(
+        "playback_update",
+        (event) => {
+          if (event?.data?.isPaused) {
+            setListenButtonState(false);
+          }
+        }
+      );
+    }
+  );
+};
 
 function formatTime(ms) {
-  if (!Number.isFinite(ms) || ms < 0) return "0:00";
+  if (!Number.isFinite(ms) || ms < 0) {
+    return "0:00";
+  }
 
-  const total = Math.floor(ms / 1000);
-  const minutes = Math.floor(total / 60);
-  const seconds = String(total % 60).padStart(2, "0");
+  const total =
+    Math.floor(ms / 1000);
+
+  const minutes =
+    Math.floor(total / 60);
+
+  const seconds =
+    String(total % 60).padStart(2, "0");
 
   return `${minutes}:${seconds}`;
 }
@@ -107,56 +201,229 @@ function formatTime(ms) {
 function updateSpotifyProgress() {
   if (!spotifyTimestamps) return;
 
-  const start = Number(spotifyTimestamps.start);
-  const end = Number(spotifyTimestamps.end);
+  const start =
+    Number(spotifyTimestamps.start);
+
+  const end =
+    Number(spotifyTimestamps.end);
 
   if (!start || !end) return;
 
-  const duration = Math.max(0, end - start);
-  const elapsed = Math.min(
-    Math.max(0, Date.now() - start),
-    duration
-  );
+  const duration =
+    Math.max(0, end - start);
+
+  const elapsed =
+    Math.min(
+      Math.max(0, Date.now() - start),
+      duration
+    );
 
   const percent =
     duration > 0
       ? (elapsed / duration) * 100
       : 0;
 
-  document.getElementById("spotifyProgress").style.width =
-    `${percent}%`;
+  document
+    .getElementById("spotifyProgress")
+    .style.width = `${percent}%`;
 
-  document.getElementById("spotifyElapsed").textContent =
-    formatTime(elapsed);
+  document
+    .getElementById("spotifyElapsed")
+    .textContent = formatTime(elapsed);
 
-  document.getElementById("spotifyDuration").textContent =
-    formatTime(duration);
+  document
+    .getElementById("spotifyDuration")
+    .textContent = formatTime(duration);
 }
 
+function getLiveStartSeconds() {
+  if (!spotifyTimestamps?.start) return 0;
+
+  return Math.max(
+    0,
+    Math.floor(
+      (Date.now() -
+        Number(spotifyTimestamps.start)) /
+      1000
+    )
+  );
+}
+
+function setListenButtonState(playing) {
+  const button =
+    document.getElementById("listenLiveBtn");
+
+  const label =
+    document.getElementById("listenLiveLabel");
+
+  button.classList.toggle(
+    "is-live",
+    Boolean(playing)
+  );
+
+  label.textContent =
+    playing
+      ? "playing here"
+      : "listen here";
+}
+
+async function loadCurrentTrackIntoPlayer(playAfterLoad = false) {
+  if (
+    !spotifyControllerReady ||
+    !spotifyController ||
+    !currentTrackId
+  ) {
+    return;
+  }
+
+  const spotifyUri =
+    `spotify:track:${currentTrackId}`;
+
+  const startAt =
+    getLiveStartSeconds();
+
+  try {
+    /*
+      loadEntity's startAt gives the embed a reasonable place
+      to begin when the user chooses to listen on the site.
+    */
+    spotifyController.loadEntity(
+      spotifyUri,
+      false,
+      startAt
+    );
+
+    lastLoadedTrackId =
+      currentTrackId;
+
+    if (playAfterLoad) {
+      /*
+        Some browsers still require a direct user interaction.
+        This works best after the user clicked "listen here".
+      */
+      setTimeout(() => {
+        try {
+          spotifyController.play();
+        } catch {}
+      }, 250);
+    }
+  } catch {
+    console.log(
+      "[izzy] spotify embed could not load track"
+    );
+  }
+}
+
+document
+  .getElementById("listenLiveBtn")
+  .addEventListener(
+    "click",
+    async () => {
+      if (!currentTrackId) return;
+
+      listenHereEnabled = true;
+
+      document
+        .getElementById("spotifyPlayerShell")
+        .hidden = false;
+
+      if (
+        spotifyControllerReady &&
+        spotifyController
+      ) {
+        if (
+          lastLoadedTrackId !==
+          currentTrackId
+        ) {
+          await loadCurrentTrackIntoPlayer(
+            true
+          );
+        } else {
+          try {
+            spotifyController.resume();
+          } catch {
+            try {
+              spotifyController.play();
+            } catch {}
+          }
+        }
+      }
+
+      setListenButtonState(true);
+    }
+  );
+
 function renderSpotify(spotify) {
-  const liveLabel = document.getElementById("spotifyLiveLabel");
-  const subtitle = document.getElementById("spotifySubtitle");
-  const art = document.getElementById("spotifyAlbumArt");
-  const album = document.getElementById("spotifyAlbum");
-  const song = document.getElementById("spotifySong");
-  const artist = document.getElementById("spotifyArtist");
-  const progressWrap = document.getElementById("spotifyProgressWrap");
-  const open = document.getElementById("spotifyOpen");
+  const liveLabel =
+    document.getElementById(
+      "spotifyLiveLabel"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "spotifySubtitle"
+    );
+
+  const art =
+    document.getElementById(
+      "spotifyAlbumArt"
+    );
+
+  const album =
+    document.getElementById(
+      "spotifyAlbum"
+    );
+
+  const song =
+    document.getElementById(
+      "spotifySong"
+    );
+
+  const artist =
+    document.getElementById(
+      "spotifyArtist"
+    );
+
+  const progressWrap =
+    document.getElementById(
+      "spotifyProgressWrap"
+    );
+
+  const open =
+    document.getElementById(
+      "spotifyOpen"
+    );
+
+  const listenButton =
+    document.getElementById(
+      "listenLiveBtn"
+    );
 
   clearInterval(spotifyTimer);
   spotifyTimer = null;
+
   spotifyTimestamps = null;
+  currentSpotify = spotify || null;
+  currentTrackId =
+    spotify?.track_id || null;
 
   if (!spotify) {
-    liveLabel.classList.remove("is-live");
-    liveLabel.innerHTML = "<i></i> not playing";
+    liveLabel.classList.remove(
+      "is-live"
+    );
+
+    liveLabel.innerHTML =
+      "<i></i> not playing";
 
     subtitle.textContent =
       "when spotify is active on discord, it shows here automatically.";
 
     album.textContent = "spotify";
-    song.textContent = "nothing playing rn";
-    artist.textContent = "check back later.";
+    song.textContent =
+      "nothing playing rn";
+
+    artist.textContent =
+      "check back later.";
 
     art.removeAttribute("src");
     art.style.opacity = "0";
@@ -164,12 +431,17 @@ function renderSpotify(spotify) {
     progressWrap.hidden = true;
     open.hidden = true;
 
-    visualizer.setLive(false);
+    listenButton.disabled = true;
+    setListenButtonState(false);
+
+    visualizer.setSpotifyActive(false);
+
     return;
   }
 
   liveLabel.classList.add("is-live");
-  liveLabel.innerHTML = "<i></i> listening now";
+  liveLabel.innerHTML =
+    "<i></i> listening now";
 
   subtitle.textContent =
     "live from my discord spotify presence.";
@@ -183,8 +455,12 @@ function renderSpotify(spotify) {
   artist.textContent =
     spotify.artist || "unknown artist";
 
+  listenButton.disabled =
+    !spotify.track_id;
+
   if (spotify.album_art_url) {
-    art.src = spotify.album_art_url;
+    art.src =
+      spotify.album_art_url;
 
     art.onload = () => {
       art.style.opacity = "1";
@@ -193,42 +469,98 @@ function renderSpotify(spotify) {
 
   if (spotify.track_id) {
     open.href =
-      `https://open.spotify.com/track/${spotify.track_id}`;
+      `https://open.spotify.com/track/` +
+      spotify.track_id;
 
     open.hidden = false;
   } else {
     open.hidden = true;
   }
 
-  if (spotify.timestamps?.start && spotify.timestamps?.end) {
-    spotifyTimestamps = spotify.timestamps;
+  if (
+    spotify.timestamps?.start &&
+    spotify.timestamps?.end
+  ) {
+    spotifyTimestamps =
+      spotify.timestamps;
+
     progressWrap.hidden = false;
 
     updateSpotifyProgress();
 
     spotifyTimer =
-      setInterval(updateSpotifyProgress, 1000);
+      setInterval(
+        updateSpotifyProgress,
+        1000
+      );
   } else {
     progressWrap.hidden = true;
   }
 
-  visualizer.setLive(true);
+  visualizer.setSpotifyActive(true);
+
+  /*
+    If the user already opted into audio on this page,
+    update the embed whenever their live track changes.
+  */
+  if (
+    listenHereEnabled &&
+    spotify.track_id &&
+    spotify.track_id !==
+      lastLoadedTrackId
+  ) {
+    loadCurrentTrackIntoPlayer(true);
+  }
 }
 
 function renderDiscord(data) {
-  const user = data.discord_user;
+  const user =
+    data.discord_user;
 
-  const avatar = document.getElementById("discordAvatar");
-  const decor = document.getElementById("discordDecor");
-  const fallback = document.getElementById("avatarFallback");
+  const avatar =
+    document.getElementById(
+      "discordAvatar"
+    );
 
-  const displayName = document.getElementById("discordDisplayName");
-  const username = document.getElementById("discordUsername");
-  const customStatus = document.getElementById("discordCustomStatus");
+  const decor =
+    document.getElementById(
+      "discordDecor"
+    );
 
-  const statusText = document.getElementById("discordStatusText");
-  const statusDot = document.getElementById("discordStatusDot");
-  const presenceDot = document.getElementById("discordPresenceDot");
+  const fallback =
+    document.getElementById(
+      "avatarFallback"
+    );
+
+  const displayName =
+    document.getElementById(
+      "discordDisplayName"
+    );
+
+  const username =
+    document.getElementById(
+      "discordUsername"
+    );
+
+  const customStatus =
+    document.getElementById(
+      "discordCustomStatus"
+    );
+
+  const statusText =
+    document.getElementById(
+      "discordStatusText"
+    );
+
+  const statusDot =
+    document.getElementById(
+      "discordStatusDot"
+    );
+
+  const presenceDot =
+    document.getElementById(
+      "discordPresenceDot"
+    );
 
   const display =
     user?.global_name ||
@@ -236,28 +568,37 @@ function renderDiscord(data) {
     user?.username ||
     "izzy";
 
-  displayName.textContent = display;
+  displayName.textContent =
+    display;
 
   if (user?.username) {
-    username.textContent = `@${user.username}`;
+    username.textContent =
+      `@${user.username}`;
+
     fallback.textContent =
-      user.username.slice(0, 1).toLowerCase();
+      user.username
+        .slice(0, 1)
+        .toLowerCase();
   }
 
-  const avatarUrl = getDiscordAvatar(user);
+  const avatarUrl =
+    getDiscordAvatar(user);
 
   if (avatarUrl) {
-    avatar.src = avatarUrl;
+    avatar.src =
+      avatarUrl;
 
     avatar.onload = () => {
       avatar.style.opacity = "1";
     };
   }
 
-  const decorUrl = getDecoration(user);
+  const decorUrl =
+    getDecoration(user);
 
   if (decorUrl) {
-    decor.src = decorUrl;
+    decor.src =
+      decorUrl;
 
     decor.onload = () => {
       decor.style.opacity = "1";
@@ -268,25 +609,34 @@ function renderDiscord(data) {
   }
 
   const status =
-    data.discord_status || "offline";
+    data.discord_status ||
+    "offline";
 
   const color =
     statusColors[status] ||
     statusColors.offline;
 
-  statusDot.style.background = color;
-  presenceDot.style.background = color;
+  statusDot.style.background =
+    color;
 
-  statusText.textContent = status;
+  presenceDot.style.background =
+    color;
+
+  statusText.textContent =
+    status;
 
   const custom =
-    getCustomStatus(data.activities);
+    getCustomStatus(
+      data.activities
+    );
 
   customStatus.textContent =
     custom ||
-    (status === "offline"
-      ? "offline rn"
-      : "student developer · probably in vscode");
+    (
+      status === "offline"
+        ? "offline rn"
+        : "student developer · probably in vscode"
+    );
 
   renderSpotify(
     data.listening_to_spotify
@@ -298,27 +648,43 @@ function renderDiscord(data) {
 async function loadLanyard() {
   try {
     const response =
-      await fetch(LANYARD_URL, {
-        cache: "no-store"
-      });
+      await fetch(
+        LANYARD_URL,
+        { cache: "no-store" }
+      );
 
     if (!response.ok) {
-      throw new Error("lanyard request failed");
+      throw new Error(
+        "lanyard request failed"
+      );
     }
 
     const payload =
       await response.json();
 
-    if (!payload.success || !payload.data) {
-      throw new Error("invalid lanyard payload");
+    if (
+      !payload.success ||
+      !payload.data
+    ) {
+      throw new Error(
+        "invalid lanyard payload"
+      );
     }
 
-    renderDiscord(payload.data);
-  } catch (error) {
-    console.log("[izzy] lanyard unavailable");
+    renderDiscord(
+      payload.data
+    );
+  } catch {
+    console.log(
+      "[izzy] lanyard unavailable"
+    );
 
-    document.getElementById("discordStatusText").textContent =
-      "lanyard unavailable";
+    document
+      .getElementById(
+        "discordStatusText"
+      )
+      .textContent =
+        "lanyard unavailable";
 
     renderSpotify(null);
   }
@@ -326,10 +692,16 @@ async function loadLanyard() {
 
 loadLanyard();
 
-/* refresh live presence every 30s */
-setInterval(loadLanyard, 30000);
+/* 15s feels live without hammering the endpoint */
+setInterval(
+  loadLanyard,
+  15000
+);
 
-/* github */
+/* ---------------------------------------------------------
+   github
+--------------------------------------------------------- */
+
 async function loadGitHub() {
   try {
     const response =
@@ -339,26 +711,38 @@ async function loadGitHub() {
       );
 
     if (!response.ok) {
-      throw new Error("github api unavailable");
+      throw new Error(
+        "github api unavailable"
+      );
     }
 
     const user =
       await response.json();
 
-    document.getElementById("githubName").textContent =
-      user.login || GITHUB_USER;
+    document
+      .getElementById("githubName")
+      .textContent =
+        user.login || GITHUB_USER;
 
-    document.getElementById("repoCount").textContent =
-      user.public_repos ?? "--";
+    document
+      .getElementById("repoCount")
+      .textContent =
+        user.public_repos ?? "--";
 
-    document.getElementById("followerCount").textContent =
-      user.followers ?? "--";
+    document
+      .getElementById("followerCount")
+      .textContent =
+        user.followers ?? "--";
 
-    document.getElementById("followingCount").textContent =
-      user.following ?? "--";
+    document
+      .getElementById("followingCount")
+      .textContent =
+        user.following ?? "--";
 
     const avatar =
-      document.getElementById("githubAvatarLarge");
+      document.getElementById(
+        "githubAvatarLarge"
+      );
 
     avatar.src =
       user.avatar_url;
@@ -367,41 +751,76 @@ async function loadGitHub() {
       avatar.style.opacity = "1";
     };
   } catch {
-    console.log("[izzy] github stats unavailable");
+    console.log(
+      "[izzy] github stats unavailable"
+    );
   }
 }
 
 loadGitHub();
 
-/* card movement */
+/* ---------------------------------------------------------
+   card hover
+--------------------------------------------------------- */
+
 const cards =
   document.querySelectorAll(".card");
 
 cards.forEach((card) => {
-  card.addEventListener("mousemove", (event) => {
-    if (window.innerWidth < 841) return;
+  card.addEventListener(
+    "mousemove",
+    (event) => {
+      if (
+        window.innerWidth < 841
+      ) {
+        return;
+      }
 
-    const rect =
-      card.getBoundingClientRect();
+      const rect =
+        card.getBoundingClientRect();
 
-    const x =
-      (event.clientX - rect.left) / rect.width - .5;
+      const x =
+        (
+          event.clientX -
+          rect.left
+        ) /
+        rect.width -
+        .5;
 
-    const y =
-      (event.clientY - rect.top) / rect.height - .5;
+      const y =
+        (
+          event.clientY -
+          rect.top
+        ) /
+        rect.height -
+        .5;
 
-    card.style.transform =
-      `translateY(-4px) rotateX(${y * -1.4}deg) rotateY(${x * 1.4}deg)`;
-  });
+      card.style.transform =
+        `translateY(-4px) ` +
+        `rotateX(${y * -1.15}deg) ` +
+        `rotateY(${x * 1.15}deg)`;
+    }
+  );
 
-  card.addEventListener("mouseleave", () => {
-    card.style.transform = "";
-  });
+  card.addEventListener(
+    "mouseleave",
+    () => {
+      card.style.transform = "";
+    }
+  );
 });
 
-/* background visualizer */
+/* ---------------------------------------------------------
+   soundwave
+   intentionally NOT analyzing Spotify audio.
+   It becomes richer while Spotify is active, but the motion
+   is independent of the sound recording.
+--------------------------------------------------------- */
+
 const canvas =
-  document.getElementById("soundwave");
+  document.getElementById(
+    "soundwave"
+  );
 
 const ctx =
   canvas.getContext("2d");
@@ -412,44 +831,74 @@ function themeColors() {
 
   return light
     ? {
-        strings: [
-          "#173b24",
-          "#1c5f7a",
-          "#7a2159",
-          "#8a7a1c"
+        lines: [
+          [23, 59, 36],
+          [28, 95, 122],
+          [122, 33, 89],
+          [138, 122, 28]
         ],
-        node: "rgba(20,20,25,.5)"
+        particle: [35, 35, 40]
       }
     : {
-        strings: [
-          "#d8ffd8",
-          "#8fe0ff",
-          "#ff8fd0",
-          "#ffe28f"
+        lines: [
+          [216, 255, 216],
+          [143, 224, 255],
+          [255, 143, 208],
+          [255, 226, 143]
         ],
-        node: "rgba(255,255,255,.55)"
+        particle: [255, 255, 255]
       };
 }
 
 class Visualizer {
   constructor(canvas, ctx) {
-    this.canvas = canvas;
-    this.ctx = ctx;
+    this.canvas =
+      canvas;
 
-    this.live = false;
-    this.energy = .12;
-    this.targetEnergy = .12;
+    this.ctx =
+      ctx;
+
+    this.spotifyActive =
+      false;
+
+    this.energy =
+      .12;
+
+    this.targetEnergy =
+      .12;
 
     this.t = 0;
-    this.beatClock = 0;
-    this.nextBeat =
-      .6 + Math.random() * .4;
 
-    this.strings = 4;
     this.dpr =
       Math.min(
         window.devicePixelRatio || 1,
         2
+      );
+
+    this.pointer = {
+      x: .5,
+      y: .5,
+      active: false
+    };
+
+    this.particles =
+      Array.from(
+        { length: 38 },
+        (_, i) => ({
+          seed: Math.random() * 100,
+          speed:
+            .08 +
+            Math.random() * .16,
+          size:
+            .5 +
+            Math.random() * 1.3,
+          lane:
+            Math.random(),
+          phase:
+            Math.random() *
+            Math.PI *
+            2
+        })
       );
 
     this.resize();
@@ -459,10 +908,28 @@ class Visualizer {
       () => this.resize()
     );
 
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        this.pointer.x =
+          event.clientX /
+          window.innerWidth;
+
+        this.pointer.y =
+          event.clientY /
+          window.innerHeight;
+
+        this.pointer.active = true;
+      },
+      { passive: true }
+    );
+
     this.loop =
       this.loop.bind(this);
 
-    requestAnimationFrame(this.loop);
+    requestAnimationFrame(
+      this.loop
+    );
   }
 
   resize() {
@@ -497,82 +964,161 @@ class Visualizer {
     this.h = h;
   }
 
-  setLive(live) {
-    this.live = live;
+  setSpotifyActive(active) {
+    this.spotifyActive =
+      Boolean(active);
   }
 
-  readEnergy(dt) {
-    if (this.live) {
-      this.beatClock += dt;
+  updateEnergy() {
+    const base =
+      this.spotifyActive
+        ? .55
+        : .12;
 
-      if (this.beatClock >= this.nextBeat) {
-        this.beatClock = 0;
+    const breathe =
+      Math.sin(this.t * .8) *
+      (
+        this.spotifyActive
+          ? .08
+          : .025
+      );
 
-        this.nextBeat =
-          .42 + Math.random() * .5;
-
-        this.targetEnergy =
-          .65 + Math.random() * .35;
-      } else {
-        this.targetEnergy =
-          Math.max(
-            this.targetEnergy * .96,
-            .3
-          );
-      }
-    } else {
-      this.targetEnergy =
-        .1 + Math.sin(this.t * .6) * .03;
-    }
+    this.targetEnergy =
+      base + breathe;
 
     this.energy +=
-      (this.targetEnergy - this.energy) * .12;
+      (
+        this.targetEnergy -
+        this.energy
+      ) * .06;
   }
 
-  drawString(index, colors) {
-    const { ctx, w, h } = this;
+  waveY(x, lane, phase) {
+    const center =
+      this.h *
+      (
+        .18 +
+        lane * .21
+      );
 
-    const color =
-      colors.strings[
-        index % colors.strings.length
-      ];
-
-    const baseY =
-      h * (.22 + index * .19);
+    const mousePull =
+      this.pointer.active
+        ? (
+            this.pointer.y -
+            .5
+          ) * 18
+        : 0;
 
     const amp =
-      (10 + index * 4) +
-      this.energy * (60 + index * 22);
+      16 +
+      lane * 7 +
+      this.energy * 58;
 
-    const freq =
-      .0018 + index * .0004;
+    const n1 =
+      Math.sin(
+        x * .002 +
+        this.t *
+          (
+            .42 +
+            lane * .11
+          ) +
+        phase
+      );
 
-    const speed =
-      .6 + index * .18;
+    const n2 =
+      Math.sin(
+        x * .0054 -
+        this.t *
+          (
+            .25 +
+            lane * .07
+          ) -
+        phase * 1.7
+      ) * .31;
+
+    const n3 =
+      Math.cos(
+        x * .00115 +
+        this.t * .18 +
+        lane
+      ) * .18;
+
+    return (
+      center +
+      (n1 + n2 + n3) *
+        amp +
+      mousePull *
+        (
+          .15 +
+          lane * .12
+        )
+    );
+  }
+
+  drawWave(index, rgb) {
+    const ctx =
+      this.ctx;
+
+    const lane =
+      index;
 
     const phase =
-      this.t * speed + index * 1.3;
+      index * 1.31;
+
+    const [r, g, b] =
+      rgb;
+
+    const gradient =
+      ctx.createLinearGradient(
+        0,
+        0,
+        this.w,
+        0
+      );
+
+    gradient.addColorStop(
+      0,
+      `rgba(${r},${g},${b},0)`
+    );
+
+    gradient.addColorStop(
+      .16,
+      `rgba(${r},${g},${b},.5)`
+    );
+
+    gradient.addColorStop(
+      .5,
+      `rgba(${r},${g},${b},.8)`
+    );
+
+    gradient.addColorStop(
+      .84,
+      `rgba(${r},${g},${b},.5)`
+    );
+
+    gradient.addColorStop(
+      1,
+      `rgba(${r},${g},${b},0)`
+    );
 
     ctx.beginPath();
 
-    const segments = 64;
+    const steps = 100;
 
     for (
       let i = 0;
-      i <= segments;
+      i <= steps;
       i++
     ) {
       const x =
-        (w / segments) * i;
-
-      const wobble =
-        Math.sin(x * freq + phase) * amp +
-        Math.sin(
-          x * freq * 2.3 - phase * 1.4
-        ) * amp * .25;
+        (this.w / steps) * i;
 
       const y =
-        baseY + wobble;
+        this.waveY(
+          x,
+          lane,
+          phase
+        );
 
       if (i === 0) {
         ctx.moveTo(x, y);
@@ -581,76 +1127,180 @@ class Visualizer {
       }
     }
 
-    ctx.strokeStyle = color;
+    ctx.strokeStyle =
+      gradient;
+
     ctx.lineWidth =
-      1.4 + this.energy * 1.6;
+      1.15 +
+      this.energy * 1.35;
+
+    ctx.shadowColor =
+      `rgba(${r},${g},${b},.65)`;
+
+    ctx.shadowBlur =
+      8 +
+      this.energy * 26;
 
     ctx.globalAlpha =
-      .16 + this.energy * .35;
-
-    ctx.shadowColor = color;
-    ctx.shadowBlur =
-      6 + this.energy * 22;
+      .38 +
+      this.energy * .25;
 
     ctx.stroke();
 
-    if (this.energy > .3) {
-      ctx.globalAlpha =
-        Math.min(
-          .6,
-          (this.energy - .3) * 1.2
+    /* thin echo line */
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = .12;
+
+    ctx.save();
+    ctx.translate(
+      0,
+      7 + index * 2
+    );
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.globalAlpha = 1;
+  }
+
+  drawParticles(colors) {
+    const ctx =
+      this.ctx;
+
+    const [
+      pr,
+      pg,
+      pb
+    ] =
+      colors.particle;
+
+    for (
+      const p of
+      this.particles
+    ) {
+      const x =
+        (
+          (
+            p.seed +
+            this.t *
+              p.speed *
+              10
+          ) %
+          100
+        ) /
+        100 *
+        this.w;
+
+      const lane =
+        p.lane * 3;
+
+      const y =
+        this.waveY(
+          x,
+          lane,
+          p.phase
         );
+
+      const alpha =
+        (
+          this.spotifyActive
+            ? .26
+            : .08
+        ) *
+        (
+          .55 +
+          .45 *
+            Math.sin(
+              this.t *
+                .9 +
+              p.phase
+            )
+        );
+
+      ctx.beginPath();
+      ctx.arc(
+        x,
+        y,
+        p.size +
+          this.energy * .7,
+        0,
+        Math.PI * 2
+      );
 
       ctx.fillStyle =
-        colors.node;
+        `rgba(${pr},${pg},${pb},${Math.max(.02, alpha)})`;
 
-      const nodeCount = 6;
-
-      for (
-        let n = 1;
-        n < nodeCount;
-        n++
-      ) {
-        const x =
-          (w / nodeCount) * n;
-
-        const wobble =
-          Math.sin(x * freq + phase) * amp +
-          Math.sin(
-            x * freq * 2.3 - phase * 1.4
-          ) * amp * .25;
-
-        const y =
-          baseY + wobble;
-
-        ctx.beginPath();
-
-        ctx.arc(
-          x,
-          y,
-          1.6 + this.energy * 2.2,
-          0,
-          Math.PI * 2
-        );
-
-        ctx.fill();
-      }
+      ctx.fill();
     }
+  }
 
-    ctx.shadowBlur = 0;
-    ctx.globalAlpha = 1;
+  drawGlow() {
+    const ctx =
+      this.ctx;
+
+    const x =
+      this.pointer.active
+        ? this.pointer.x *
+          this.w
+        : this.w * .5;
+
+    const y =
+      this.pointer.active
+        ? this.pointer.y *
+          this.h
+        : this.h * .45;
+
+    const radius =
+      Math.max(
+        this.w,
+        this.h
+      ) * .42;
+
+    const glow =
+      ctx.createRadialGradient(
+        x,
+        y,
+        0,
+        x,
+        y,
+        radius
+      );
+
+    glow.addColorStop(
+      0,
+      root.dataset.theme ===
+        "light"
+        ? "rgba(60,80,90,.035)"
+        : "rgba(150,190,255,.045)"
+    );
+
+    glow.addColorStop(
+      1,
+      "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle = glow;
+    ctx.fillRect(
+      0,
+      0,
+      this.w,
+      this.h
+    );
   }
 
   loop(now) {
     const dt =
       this.lastTime
-        ? (now - this.lastTime) / 1000
+        ? (
+            now -
+            this.lastTime
+          ) /
+          1000
         : .016;
 
     this.lastTime = now;
     this.t += dt;
 
-    this.readEnergy(dt);
+    this.updateEnergy();
 
     this.ctx.clearRect(
       0,
@@ -659,20 +1309,31 @@ class Visualizer {
       this.h
     );
 
+    this.drawGlow();
+
     const colors =
       themeColors();
 
-    for (
-      let i = 0;
-      i < this.strings;
-      i++
-    ) {
-      this.drawString(i, colors);
-    }
+    colors.lines.forEach(
+      (rgb, index) =>
+        this.drawWave(
+          index,
+          rgb
+        )
+    );
 
-    requestAnimationFrame(this.loop);
+    this.drawParticles(
+      colors
+    );
+
+    requestAnimationFrame(
+      this.loop
+    );
   }
 }
 
 const visualizer =
-  new Visualizer(canvas, ctx);
+  new Visualizer(
+    canvas,
+    ctx
+  );
