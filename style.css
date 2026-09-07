@@ -367,7 +367,6 @@ html[data-theme="light"] #soundwave {
   color: var(--muted);
 
   font-size: 8px;
-  text-transform: uppercase;
   letter-spacing: .08em;
 }
 
@@ -376,7 +375,6 @@ html[data-theme="light"] #soundwave {
   margin: 0;
   font: 600 20px/1.08 "Oswald", sans-serif;
   letter-spacing: .03em;
-  text-transform: uppercase;
 }
 
 .section-tag {
@@ -624,7 +622,6 @@ html[data-theme="light"] #soundwave {
 .info-list span {
   color: var(--muted);
   font-size: 7px;
-  text-transform: uppercase;
   letter-spacing: .06em;
 }
 
@@ -988,5 +985,201 @@ footer {
 
   .now-playing {
     flex-wrap: wrap;
+  }
+}
+
+/* =========================================================
+   lanyard discord profile
+========================================================= */
+
+.discord-avatar-shell {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex: 0 0 88px;
+  display: grid;
+  place-items: center;
+}
+
+.discord-avatar-shell .pfp {
+  position: absolute;
+  inset: 8px;
+  width: 72px;
+  height: 72px;
+}
+
+.discord-decor {
+  position: absolute;
+  z-index: 5;
+  inset: -1px;
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.discord-presence-dot {
+  position: absolute;
+  right: 4px;
+  bottom: 5px;
+  z-index: 7;
+  width: 17px;
+  height: 17px;
+  border: 4px solid var(--card);
+  border-radius: 50%;
+  background: #80848e;
+}
+
+#discordDisplayName {
+  text-transform: none;
+}
+
+/* =========================================================
+   live spotify card
+========================================================= */
+
+.spotify-live-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.spotify-live-label i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #80848e;
+}
+
+.spotify-live-label.is-live i {
+  background: #1ed760;
+  box-shadow: 0 0 12px rgba(30, 215, 96, .5);
+}
+
+.spotify-now {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.spotify-art-wrap {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--chip);
+}
+
+#spotifyAlbumArt {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.spotify-art-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 26px;
+}
+
+.spotify-info {
+  min-width: 0;
+}
+
+.spotify-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.spotify-info h3 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-family: "Oswald", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spotify-info p {
+  margin: 6px 0 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spotify-progress-wrap {
+  margin-top: 17px;
+}
+
+.spotify-progress {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.spotify-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text);
+}
+
+.spotify-times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 7px;
+}
+
+.spotify-open {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.spotify-open:hover {
+  color: var(--text);
+}
+
+@media (max-width: 560px) {
+  .spotify-now {
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 13px;
+  }
+
+  .spotify-art-wrap {
+    width: 86px;
+    height: 86px;
+  }
+
+  .spotify-info h3 {
+    font-size: 18px;
   }
 }
