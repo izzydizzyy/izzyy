@@ -15,7 +15,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
@@ -30,28 +30,41 @@
   <main class="page">
     <section class="dashboard">
 
+      <!-- discord / lanyard -->
       <article class="card profile-card enter">
         <div class="card-inner">
           <div class="profile-top">
-            <div class="pfp">
+            <div class="discord-avatar-shell">
+              <div class="pfp">
+                <img id="discordAvatar" src="" alt="izzy discord avatar" />
+                <span class="pfp-fallback" id="avatarFallback">i</span>
+              </div>
+
               <img
-                id="githubAvatar"
+                id="discordDecor"
+                class="discord-decor"
                 src=""
-                alt="izzy profile picture"
+                alt=""
+                aria-hidden="true"
               />
-              <span class="pfp-fallback">i</span>
+
+              <span
+                class="discord-presence-dot"
+                id="discordPresenceDot"
+                title="Discord status"
+              ></span>
             </div>
 
             <div class="online-pill">
-              <span></span>
-              online-ish
+              <span id="discordStatusDot"></span>
+              <span id="discordStatusText">loading discord...</span>
             </div>
           </div>
 
           <div class="identity">
-            <h1>izzy</h1>
-            <p>@izzydizzyy</p>
-            <span>student developer</span>
+            <h1 id="discordDisplayName">izzy</h1>
+            <p id="discordUsername">@izzy.js</p>
+            <span id="discordCustomStatus">student developer</span>
           </div>
 
           <div class="social-row">
@@ -63,79 +76,58 @@
         </div>
       </article>
 
+      <!-- live spotify via lanyard -->
       <article class="card listening-card enter">
         <div class="card-inner">
           <div class="section-head">
             <div>
-              <p class="tiny-label">headphones on</p>
-              <h2>what i've been listening to</h2>
+              <p class="tiny-label">spotify</p>
+              <h2>what i'm listening to</h2>
             </div>
 
-            <span class="section-tag">recent</span>
+            <span class="spotify-live-label" id="spotifyLiveLabel">
+              <i></i>
+              checking...
+            </span>
           </div>
 
-          <p class="section-sub">
-            probably replaying the same songs for the 40th time.
+          <p class="section-sub" id="spotifySubtitle">
+            pulls my live spotify presence from discord.
           </p>
 
-          <div class="album-strip" aria-label="Favorite / recent music">
-            <button class="album a1" type="button" aria-label="track 1">
-              <span>01</span>
-            </button>
-            <button class="album a2" type="button" aria-label="track 2">
-              <span>02</span>
-            </button>
-            <button class="album a3" type="button" aria-label="track 3">
-              <span>03</span>
-            </button>
-            <button class="album a4" type="button" aria-label="track 4">
-              <span>04</span>
-            </button>
-            <button class="album a5" type="button" aria-label="track 5">
-              <span>05</span>
-            </button>
-            <button class="album a6" type="button" aria-label="track 6">
-              <span>06</span>
-            </button>
-            <button class="album a7" type="button" aria-label="track 7">
-              <span>07</span>
-            </button>
-            <button class="album a8" type="button" aria-label="track 8">
-              <span>08</span>
-            </button>
-          </div>
-
-          <div class="now-playing">
-            <div class="now-playing-left">
-              <span class="bars" id="npBars" aria-hidden="true">
-                <i></i><i></i><i></i>
-              </span>
-
-              <div>
-                <strong id="npTitle">nothing live right now</strong>
-                <span id="npSub">tap listen live to pull up what's playing</span>
-              </div>
+          <div class="spotify-now">
+            <div class="spotify-art-wrap">
+              <img id="spotifyAlbumArt" src="" alt="Spotify album artwork" />
+              <span class="spotify-art-fallback">♪</span>
             </div>
 
-            <button class="listen-live-btn" id="listenLiveBtn" type="button">
-              <span class="dot"></span>
-              <span id="listenLiveLabel">listen live</span>
-            </button>
-          </div>
+            <div class="spotify-info">
+              <span class="spotify-kicker" id="spotifyAlbum">spotify</span>
+              <h3 id="spotifySong">nothing playing rn</h3>
+              <p id="spotifyArtist">when i'm listening, it'll show here live.</p>
 
-          <div class="spotify-embed-wrap" id="spotifyEmbedWrap">
-            <!--
-              Set this to whatever you're currently playing —
-              open the track/playlist on open.spotify.com, "Share > Embed"
-              and swap the src below. This one is just a placeholder.
-            -->
-            <iframe
-              id="spotifyEmbed"
-              src=""
-              data-src="https://open.spotify.com/embed/track/2takcwOaAZWiXQijPHIx7B?utm_source=generator&theme=0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-            ></iframe>
+              <div class="spotify-progress-wrap" id="spotifyProgressWrap" hidden>
+                <div class="spotify-progress">
+                  <span id="spotifyProgress"></span>
+                </div>
+
+                <div class="spotify-times">
+                  <span id="spotifyElapsed">0:00</span>
+                  <span id="spotifyDuration">0:00</span>
+                </div>
+              </div>
+
+              <a
+                class="spotify-open"
+                id="spotifyOpen"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+                hidden
+              >
+                open in spotify ↗
+              </a>
+            </div>
           </div>
         </div>
       </article>
@@ -170,23 +162,16 @@
           </div>
 
           <div class="character-art" aria-hidden="true">
-            <!--
-              Add your own transparent PNGs here:
-              assets/mai.png
-              assets/marin.png
-
-              The site swaps which one is featured depending on the theme.
-            -->
             <img
               class="character mai"
-              src="assets/mai.png"
+              src="./assets/mai.png"
               alt=""
               onerror="this.style.display='none'"
             />
 
             <img
               class="character marin"
-              src="assets/marin.png"
+              src="./assets/marin.png"
               alt=""
               onerror="this.style.display='none'"
             />
@@ -274,6 +259,6 @@
     </footer>
   </main>
 
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
