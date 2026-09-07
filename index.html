@@ -76,7 +76,7 @@
         </div>
       </article>
 
-      <!-- live spotify via lanyard -->
+      <!-- live spotify via lanyard + official Spotify embed -->
       <article class="card listening-card enter">
         <div class="card-inner">
           <div class="section-head">
@@ -117,17 +117,31 @@
                 </div>
               </div>
 
-              <a
-                class="spotify-open"
-                id="spotifyOpen"
-                href="#"
-                target="_blank"
-                rel="noreferrer"
-                hidden
-              >
-                open in spotify ↗
-              </a>
+              <div class="spotify-actions">
+                <button class="listen-live-btn" id="listenLiveBtn" type="button" disabled>
+                  <span class="dot"></span>
+                  <span id="listenLiveLabel">listen here</span>
+                </button>
+
+                <a
+                  class="spotify-open"
+                  id="spotifyOpen"
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer"
+                  hidden
+                >
+                  open in spotify ↗
+                </a>
+              </div>
             </div>
+          </div>
+
+          <div class="spotify-player-shell" id="spotifyPlayerShell" hidden>
+            <div id="spotifyPlayer"></div>
+            <p class="spotify-player-note">
+              audio starts after you click “listen here” — browsers can block autoplay.
+            </p>
           </div>
         </div>
       </article>
@@ -260,5 +274,6 @@
   </main>
 
   <script src="./script.js"></script>
+  <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 </body>
 </html>
