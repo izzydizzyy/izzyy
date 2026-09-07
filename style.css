@@ -1183,3 +1183,87 @@ footer {
     font-size: 18px;
   }
 }
+
+/* =========================================================
+   spotify playback controls
+========================================================= */
+
+.spotify-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.listen-live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 8px;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    opacity .18s ease;
+}
+
+.listen-live-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #1ed760;
+}
+
+.listen-live-btn:disabled {
+  cursor: default;
+  opacity: .45;
+}
+
+.listen-live-btn .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.listen-live-btn.is-live {
+  border-color: #1ed760;
+  background: color-mix(in srgb, #1ed760 13%, var(--chip));
+}
+
+.listen-live-btn.is-live .dot {
+  background: #1ed760;
+  box-shadow: 0 0 12px rgba(30, 215, 96, .55);
+}
+
+.spotify-player-shell {
+  margin-top: 16px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--chip) 88%, transparent);
+}
+
+.spotify-player-shell iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+}
+
+.spotify-player-note {
+  margin: 7px 4px 1px;
+  color: var(--muted);
+  font-size: 7px;
+}
+
+/* make the background wave feel more like part of the site */
+#soundwave {
+  filter: saturate(1.08) contrast(1.03);
+}
+
