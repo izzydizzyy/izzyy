@@ -4,15 +4,17 @@
 ========================================================= */
 
 :root {
-  --bg: #070707;
-  --card: #0d0d0f;
-  --card-soft: #111114;
+  --bg: #000000;
+  --card: #070707;
+  --card-soft: #0b0b0c;
   --text: #f3f3f3;
   --muted: #85858d;
-  --line: #242428;
-  --chip: #151518;
+  --line: #1c1c1f;
+  --chip: #101012;
   --accent: #d8ffd8;
-  --shadow: 0 24px 60px rgba(0, 0, 0, .22);
+  --accent-2: #8fe0ff;
+  --accent-3: #ff8fd0;
+  --shadow: 0 24px 60px rgba(0, 0, 0, .5);
 }
 
 html[data-theme="light"] {
@@ -24,6 +26,8 @@ html[data-theme="light"] {
   --line: #d7d7dc;
   --chip: #eeeeef;
   --accent: #173b24;
+  --accent-2: #1c5f7a;
+  --accent-3: #7a2159;
   --shadow: 0 24px 55px rgba(0, 0, 0, .09);
 }
 
@@ -44,9 +48,7 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--text);
-  background:
-    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, .025), transparent 32%),
-    var(--bg);
+  background: var(--bg);
   font-family: "DM Mono", monospace;
   transition:
     background .3s ease,
@@ -81,6 +83,29 @@ button {
       transparent 2px
     );
   background-size: 4px 4px;
+}
+
+/* ---------- soundwave background canvas ---------- */
+#soundwave {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: .85;
+  transition: opacity .4s ease;
+}
+
+html[data-theme="light"] #soundwave {
+  opacity: .35;
+  mix-blend-mode: multiply;
+}
+
+.page,
+.theme-toggle {
+  position: relative;
+  z-index: 2;
 }
 
 .theme-toggle {
@@ -126,40 +151,86 @@ button {
   gap: 16px;
 }
 
+/* ---------- cooler card shell: animated gradient rim ---------- */
 .card {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 
-  border: 1px solid var(--line);
   border-radius: 17px;
-  background:
-    linear-gradient(145deg, var(--card), var(--card-soft));
+  padding: 1px;
+  background: var(--line);
 
   box-shadow: var(--shadow);
 
   transition:
-    transform .2s ease,
-    border-color .2s ease,
-    background .3s ease,
+    transform .25s cubic-bezier(.2,.8,.2,1),
     box-shadow .3s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  z-index: 0;
+
+  background: conic-gradient(
+    from 0deg,
+    var(--accent-3),
+    var(--accent-2),
+    var(--accent),
+    var(--accent-3)
+  );
+
+  opacity: 0;
+  animation: spin 6s linear infinite;
+  transition: opacity .35s ease;
+}
+
+.card:hover::before {
+  opacity: .55;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.card > *:not(.card-inner) {
+  position: relative;
+  z-index: 1;
+}
+
+.card-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--card), var(--card-soft));
+  backdrop-filter: blur(18px);
 }
 
 .card::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 1px;
+  z-index: 0;
+  border-radius: 16px;
   pointer-events: none;
 
   background:
     linear-gradient(
       120deg,
-      rgba(255,255,255,.035),
+      rgba(255,255,255,.05),
       transparent 30%
     );
 }
 
 .card:hover {
-  border-color: color-mix(in srgb, var(--line) 65%, var(--text));
+  transform: translateY(-3px);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, .6),
+    0 0 40px -10px color-mix(in srgb, var(--accent-2) 45%, transparent);
 }
 
 .profile-card,
@@ -167,7 +238,7 @@ button {
   min-height: 220px;
 }
 
-.profile-card {
+.profile-card .card-inner {
   padding: 26px;
   display: flex;
   flex-direction: column;
@@ -188,6 +259,7 @@ button {
   overflow: hidden;
   border-radius: 50%;
   background: #000;
+  box-shadow: 0 0 0 1px var(--line), 0 0 24px -6px var(--accent-2);
 }
 
 .pfp img {
@@ -269,15 +341,17 @@ button {
   font-size: 9px;
   transition:
     transform .15s ease,
-    background .15s ease;
+    background .15s ease,
+    border-color .15s ease;
 }
 
 .social-row a:hover {
   transform: translateY(-1px);
   background: var(--card-soft);
+  border-color: var(--accent-2);
 }
 
-.listening-card {
+.listening-card .card-inner {
   padding: 24px;
 }
 
@@ -380,8 +454,15 @@ button {
 .now-playing {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 9px;
   margin-top: 15px;
+}
+
+.now-playing-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
 .now-playing strong,
@@ -430,15 +511,86 @@ button {
   }
 }
 
+/* ---------- listen live button ---------- */
+.listen-live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--text);
+  cursor: pointer;
+
+  font-size: 8px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+}
+
+.listen-live-btn:hover {
+  border-color: #66d27b;
+  transform: translateY(-1px);
+}
+
+.listen-live-btn.is-live {
+  background: color-mix(in srgb, #66d27b 16%, var(--chip));
+  border-color: #66d27b;
+}
+
+.listen-live-btn .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #66d27b;
+  box-shadow: 0 0 10px rgba(102, 210, 123, .55);
+}
+
+.listen-live-btn:not(.is-live) .dot {
+  background: var(--muted);
+  box-shadow: none;
+}
+
+.spotify-embed-wrap {
+  max-height: 0;
+  overflow: hidden;
+  margin-top: 0;
+  border-radius: 12px;
+
+  transition:
+    max-height .4s ease,
+    margin-top .4s ease;
+}
+
+.spotify-embed-wrap.open {
+  max-height: 160px;
+  margin-top: 16px;
+}
+
+.spotify-embed-wrap iframe {
+  width: 100%;
+  height: 152px;
+  border: 0;
+  border-radius: 12px;
+  display: block;
+}
+
 .about-card,
 .github-card {
   min-height: 285px;
 }
 
-.about-card {
+.about-card .card-inner {
   display: grid;
   grid-template-columns: 1.2fr .8fr;
   padding: 26px;
+  height: 100%;
 }
 
 .about-copy {
@@ -579,7 +731,7 @@ html[data-theme="light"] .about-card:hover .marin {
   font-weight: 500;
 }
 
-.github-card {
+.github-card .card-inner {
   padding: 26px;
 }
 
@@ -716,6 +868,8 @@ html[data-theme="light"] .about-card:hover .marin {
 }
 
 footer {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -789,14 +943,18 @@ footer {
     border-radius: 14px;
   }
 
-  .profile-card,
-  .listening-card,
-  .about-card,
-  .github-card {
+  .card-inner {
+    border-radius: 13px;
+  }
+
+  .profile-card .card-inner,
+  .listening-card .card-inner,
+  .about-card .card-inner,
+  .github-card .card-inner {
     padding: 20px;
   }
 
-  .about-card {
+  .about-card .card-inner {
     grid-template-columns: 1fr;
   }
 
@@ -826,5 +984,9 @@ footer {
 
   footer {
     flex-direction: column;
+  }
+
+  .now-playing {
+    flex-wrap: wrap;
   }
 }
